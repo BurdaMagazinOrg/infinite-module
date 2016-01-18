@@ -1,0 +1,24 @@
+langcode: de
+status: true
+dependencies:
+  config:
+    - image.style.inline_l
+    - image.style.inline_m
+    - image.style.inline_s
+  theme:
+    - burda_infinite
+id: inline
+label: Inline
+image_style_mappings:
+  -
+    breakpoint_id: burda_infinite.md
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: inline_l
+  -
+    breakpoint_id: burda_infinite.xxs
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: inline_m
+breakpoint_group: burda_infinite
+fallback_image_style: inline_s

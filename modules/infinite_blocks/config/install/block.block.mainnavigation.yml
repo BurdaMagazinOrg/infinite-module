@@ -1,0 +1,29 @@
+uuid: 317ef957-30a3-4453-8910-16cfa7be611c
+langcode: de
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - infinite_blocks
+    - system
+  theme:
+    - burda_infinite
+third_party_settings:
+  infinite_blocks:
+    classes: block-system-menu-blockmain
+    title_tag: div
+id: mainnavigation
+theme: burda_infinite
+region: header
+weight: -3
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Main navigation'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+visibility: {  }

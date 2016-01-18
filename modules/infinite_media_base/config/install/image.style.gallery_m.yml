@@ -1,0 +1,17 @@
+uuid: a1672f17-0f2f-46b0-b65a-903c4f2abc03
+langcode: en
+status: true
+dependencies:
+  module:
+    - infinite_media_base
+name: gallery_m
+label: 'Gallery M'
+effects:
+  9aa5f674-b338-4b99-9f2a-42241c810e86:
+    uuid: 9aa5f674-b338-4b99-9f2a-42241c810e86
+    id: infinite_media_auto_aspect
+    weight: 1
+    data:
+      landscape: gallery_landscape_m
+      portrait: gallery_portrait_m
+      ratio_adjustment: 1

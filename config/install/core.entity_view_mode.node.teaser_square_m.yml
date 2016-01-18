@@ -1,0 +1,10 @@
+uuid: 4ec152fa-3693-4541-9043-670be1883a62
+langcode: de
+status: true
+dependencies:
+  module:
+    - node
+id: node.teaser_square_m
+label: 'Teaser Square M'
+targetEntityType: node
+cache: true

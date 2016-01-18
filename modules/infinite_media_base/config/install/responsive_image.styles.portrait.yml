@@ -1,0 +1,38 @@
+langcode: de
+status: true
+dependencies:
+  config:
+    - image.style.portrait_m
+    - image.style.portrait_s
+  theme:
+    - burda_infinite
+id: portrait
+label: Portrait
+image_style_mappings:
+  -
+    breakpoint_id: burda_infinite.extra_large
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: portrait_m
+  -
+    breakpoint_id: burda_infinite.large
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: portrait_m
+  -
+    breakpoint_id: burda_infinite.wide
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: portrait_m
+  -
+    breakpoint_id: burda_infinite.narrow
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: portrait_s
+  -
+    breakpoint_id: burda_infinite.mobile
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: portrait_s
+breakpoint_group: burda_infinite
+fallback_image_style: portrait_s

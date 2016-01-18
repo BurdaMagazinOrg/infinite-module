@@ -1,0 +1,26 @@
+uuid: 84aed275-2a55-46da-aa07-7fdd1fd740dc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_advertising
+    - taxonomy.vocabulary.channel
+  module:
+    - ad_integration
+id: taxonomy_term.channel.field_advertising
+field_name: field_advertising
+entity_type: taxonomy_term
+bundle: channel
+label: Advertising
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    adsc_unit1: null
+    adsc_unit2: null
+    adsc_unit3: null
+    adsc_mode: null
+default_value_callback: ''
+settings: {  }
+field_type: ad_integration_settings

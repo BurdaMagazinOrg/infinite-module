@@ -1,0 +1,46 @@
+uuid: d1f32090-9cce-496c-9e00-c3ea44ae8c08
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.gallery.field_media_images
+    - media_entity.bundle.gallery
+  module:
+    - inline_entity_form
+id: media.gallery.default
+targetEntityType: media
+bundle: gallery
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+  field_media_images:
+    weight: 1
+    settings:
+      label_singular: ''
+      label_plural: ''
+      allow_new: true
+      allow_existing: true
+      match_operator: CONTAINS
+      override_labels: false
+    third_party_settings: {  }
+    type: inline_entity_form_complex
+  name:
+    type: string_textfield
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 2
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

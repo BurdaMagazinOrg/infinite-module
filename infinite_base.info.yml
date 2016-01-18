@@ -1,0 +1,22 @@
+name: Infinite Base
+type: module
+description: Provide base functions for Infinite.
+package: Infinite
+core: 8.x
+version: 8.x-1.x-dev
+dependencies:
+  - block
+  - image
+  - node
+  - views
+config_devel:
+  - core.date_format.infinite_timestamp
+  - core.entity_view_mode.node.presenter_full
+  - core.entity_view_mode.node.presenter_half
+  - core.entity_view_mode.node.presenter_home_selectable
+  - core.entity_view_mode.node.teaser_landscape_m
+  - core.entity_view_mode.node.teaser_portrait_m
+  - core.entity_view_mode.node.teaser_selectable
+  - core.entity_view_mode.node.teaser_square_m
+  - core.entity_view_mode.node.teaser_square_s
+  - core.entity_view_mode.node.token

@@ -1,0 +1,25 @@
+
+langcode: de
+status: true
+dependencies:
+  config:
+    - block.block.lazyloadingsimple
+    - field.storage.node.field_footer_blocks
+    - node.type.article
+id: node.article.field_footer_blocks
+field_name: field_footer_blocks
+entity_type: node
+bundle: article
+label: 'Footer Blocks'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    target_ 56c4f3d2-4a92-4432-9e37-558de6538454
+default_value_callback: ''
+settings:
+  handler: 'default:block'
+  handler_settings:
+    target_bundles: null
+field_type: entity_reference

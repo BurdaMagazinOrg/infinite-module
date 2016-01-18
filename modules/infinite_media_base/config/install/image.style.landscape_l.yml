@@ -1,0 +1,15 @@
+langcode: de
+status: true
+dependencies:
+  module:
+    - focal_point
+name: landscape_l
+label: 'Landscape L'
+effects:
+  75cae416-df96-45ac-8e09-09659b750bae:
+    uuid: 75cae416-df96-45ac-8e09-09659b750bae
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: '1000'
+      height: '613'

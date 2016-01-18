@@ -1,0 +1,10 @@
+node.lazyloading:
+  path: '/lazyloading/node/{node}/{js}'
+  defaults:
+    _title: '\Drupal\infinite_base\Controller\LazyLoadingNodeViewController::title'
+    _controller: '\Drupal\infinite_base\Controller\LazyLoadingNodeViewController::ajaxView'
+  options:
+    _theme: ajax_base_page
+  requirements:
+    _entity_access: 'node.view'
+    js: 'nojs|ajax'

@@ -1,0 +1,12 @@
+uuid: 3fa669fe-4793-41de-aa00-bcde6f387e0d
+langcode: en
+status: true
+dependencies:
+  module:
+    - infinite_media_base
+id: image
+label: Image
+description: ''
+type: infinite_image
+type_configuration: {  }
+field_map: {  }

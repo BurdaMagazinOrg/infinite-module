@@ -1,0 +1,10 @@
+uuid: 32e2749c-f6dc-4b0e-8e44-68efe07c7cc5
+langcode: en
+status: true
+dependencies: {  }
+id: gallery
+label: Gallery
+description: ''
+type: generic
+type_configuration: {  }
+field_map: {  }

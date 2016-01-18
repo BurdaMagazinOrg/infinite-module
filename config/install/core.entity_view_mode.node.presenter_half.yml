@@ -1,0 +1,9 @@
+langcode: de
+status: true
+dependencies:
+  module:
+    - node
+id: node.presenter_half
+label: 'Presenter Half'
+targetEntityType: node
+cache: true

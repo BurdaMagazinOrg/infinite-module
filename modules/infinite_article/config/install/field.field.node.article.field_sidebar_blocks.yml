@@ -1,0 +1,25 @@
+
+langcode: de
+status: true
+dependencies:
+  config:
+    - block.block.advertisingslot_rectangle_top
+    - field.storage.node.field_sidebar_blocks
+    - node.type.article
+id: node.article.field_sidebar_blocks
+field_name: field_sidebar_blocks
+entity_type: node
+bundle: article
+label: 'Sidebar Blocks'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    target_ c8e8a798-f651-4f71-a504-4b9e1e1ff22c
+default_value_callback: ''
+settings:
+  handler: 'default:block'
+  handler_settings:
+    target_bundles: null
+field_type: entity_reference

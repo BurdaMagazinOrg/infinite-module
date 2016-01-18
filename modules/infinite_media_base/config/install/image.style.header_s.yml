@@ -1,0 +1,16 @@
+uuid: e5c15fdf-17c0-4d1f-9434-52cb2611d01e
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: header_s
+label: 'Header S'
+effects:
+  9a40bde8-859d-41fb-b800-0c669e2334f6:
+    uuid: 9a40bde8-859d-41fb-b800-0c669e2334f6
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: '480'
+      height: '160'

@@ -1,0 +1,19 @@
+uuid: adec6d16-c447-4076-8100-ebc336a6ae3a
+langcode: en
+status: true
+dependencies:
+  module:
+    - ivw_integration
+    - taxonomy
+id: taxonomy_term.field_ivw
+field_name: field_ivw
+entity_type: taxonomy_term
+type: ivw_integration_settings
+settings: {  }
+module: ivw_integration
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,11 @@
+services:
+  infinite_base.twig.filter_extension:
+    class: Drupal\infinite_base\Twig\FilterExtension
+    tags:
+      - { name: twig.extension }
+
+  infinity_base.event_subscriber:
+    class: Drupal\infinite_base\EventSubscriber\InfiniteEventSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@config.factory']

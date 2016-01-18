@@ -1,0 +1,85 @@
+<?php
+
+use Drupal\Core\Language\LanguageManager;
+use Drupal\node\Entity\Node;;
+use Drupal\Core\Entity\EntityDefinitionUpdateManager;
+use Drupal\Core\Database\Database;
+
+/**
+ * Implements hook_install().
+ */
+function infinite_base_install() {
+  // Add our base fields to the schema.
+  \Drupal::service('entity.definition_update_manager')->applyUpdates();
+
+  // Create basic nodes.
+  $basic_nodes = array(
+    'Imprint',
+    'Disclaimer',
+    '403',
+    '404',
+    'Terms & Conditions',
+    'Home',
+  );
+  $default_language_id = \Drupal::service('language_manager')->getDefaultLanguage()->getId();
+  foreach ($basic_nodes as $basic_node) {
+    $node = Node::create(array(
+      'type' => 'page',
+      'title' => $basic_node,
+      'langcode' => $default_language_id,
+      'uid' => '1',
+      'status' => 1,
+      'field_fields' => array(),
+    ));
+    $node->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function infinite_base_uninstall() {
+  // Remove our base fields from the schema.
+  \Drupal::service('entity.definition_update_manager')->applyUpdates();
+}
+
+/**
+ * Update base fields to the schema.
+ */
+function infinite_base_update_8101() {
+  // Add our base fields to the schema.
+  \Drupal::service('entity.definition_update_manager')->applyUpdates();
+}
+
+/**
+ * Update base fields to the schema.
+ */
+function infinite_base_update_8102() {
+  // Add our base fields to the schema.
+  \Drupal::service('entity.definition_update_manager')->applyUpdates();
+}
+
+/**
+ * Update base fields to the schema.
+ */
+function infinite_base_update_8103() {
+  // Do nothing here any more and see @infinite_base_update_8104.
+  // Do NOT use applyUpdates() from EntityDefinitionUpdateManager!
+}
+
+/**
+ * Update base fields to the schema.
+ */
+function infinite_base_update_8104() {
+  // todo: does exists a better D8 way to do this
+  $spec = array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'description' => 'Promoted to top presenter',
+    'not null' => FALSE,
+    'default' => NULL,
+  );
+  $schema = Database::getConnection()->schema();
+  $schema->addField('node_field_data', 'promote_top_presenter', $spec);
+  $schema->addField('node_field_revision', 'promote_top_presenter', $spec);
+}

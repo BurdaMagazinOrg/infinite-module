@@ -1,0 +1,173 @@
+<?php
+
+/**
+ * @file
+ * Module for adding custom Infinite blocks and block functions.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\block\Entity\Block;
+use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\user\Entity\User;
+
+
+function infinite_blocks_theme() {
+  return [
+    'header_media' => array(
+      'variables' => array('header_media' => NULL, 'header_title' => NULL),
+    ),
+    'logo' => array(
+      'variables' => array('logo' => NULL, 'front_page' => NULL)
+    ),
+    'modal_search' => array(
+      'variables' => array()
+    ),
+    'newsletter' => array(
+      'variables' => array()
+    ),
+    'newsletter_large' => array(
+      'variables' => array()
+    ),
+    'newsletter_men_large' => array(
+      'variables' => array()
+    ),
+    'socials_bar' => array(
+      'variables' => array(
+        'use_parent_container' => NULL,
+        'follow' => NULL,
+      )
+    ),
+  ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function infinite_blocks_form_block_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  /* @var \Drupal\block\BlockInterface $block */
+  $block = $form_state->getFormObject()->getEntity();
+  $default_class = 'block-' . Html::getClass($block->getPluginId());
+  $default_id = 'block-' . Html::getId($block->getPluginId());
+
+  // This will automatically be saved in the third party settings.
+  $form['third_party_settings']['#tree'] = TRUE;
+
+  $form['third_party_settings']['infinite_blocks']['id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('CSS id'),
+    '#description' => t('Customize the styling of this block by adding id. (Default CSS id: %default_id)', array('%default_id' => $default_id)),
+    '#default_value' => !empty ($block->getThirdPartySetting('infinite_blocks', 'id')) ? $block->getThirdPartySetting('infinite_blocks', 'id') : [],
+  );
+
+  $form['third_party_settings']['infinite_blocks']['classes'] = array(
+    '#type' => 'textfield',
+    '#title' => t('CSS class(es)'),
+    '#description' => t('Customize the styling of this block by adding CSS classes. Separate multiple classes by spaces. (Default CSS class: %default_class)', array('%default_class' => $default_class)),
+    '#default_value' => !empty ($block->getThirdPartySetting('infinite_blocks', 'classes')) ? $block->getThirdPartySetting('infinite_blocks', 'classes') : [],
+  );
+  $form['third_party_settings']['infinite_blocks']['title_tag'] = array(
+    '#type' => 'select',
+    '#title' => t('Title Tag'),
+    '#description' => t('Customize the output of this title tag.'),
+    '#default_value' => !empty ($block->getThirdPartySetting('infinite_blocks', 'title_tag')) ? $block->getThirdPartySetting('infinite_blocks', 'title_tag') : 'div',
+    '#options' => array(
+      'nav' => 'nav',
+      'div' => 'div',
+      'span' => 'span',
+      'h1' => 'h1',
+      'h2' => 'h2',
+      'h3' => 'h3',
+      'h4' => 'h4',
+      'h5' => 'h5',
+      'h6' => 'h6',
+    ),
+  );
+  $form['third_party_settings']['infinite_blocks']['block_tag'] = array(
+    '#type' => 'select',
+    '#title' => t('Block Tag'),
+    '#description' => t('Customize the type of this block tag.'),
+    '#default_value' => !empty ($block->getThirdPartySetting('infinite_blocks', 'block_tag')) ? $block->getThirdPartySetting('infinite_blocks', 'block_tag') : 'div',
+    '#options' => array(
+      'nav' => 'nav',
+      'div' => 'div',
+      'span' => 'span',
+    ),
+  );
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function infinite_blocks_preprocess_block(&$variables) {
+  // Blocks coming from page manager widget does not have id.
+  if (!empty($variables['elements']['#id'])) {
+    $block = Block::load($variables['elements']['#id']);
+    $id = !empty ($block->getThirdPartySetting('infinite_blocks', 'id')) ? $block->getThirdPartySetting('infinite_blocks', 'id') : [];
+    $classes = !empty ($block->getThirdPartySetting('infinite_blocks', 'classes')) ? explode(' ', $block->getThirdPartySetting('infinite_blocks', 'classes')) : [];
+    $title_tag = !empty ($block->getThirdPartySetting('infinite_blocks', 'title_tag')) ? $block->getThirdPartySetting('infinite_blocks', 'title_tag') : 'div';
+    $block_tag = !empty ($block->getThirdPartySetting('infinite_blocks', 'block_tag')) ? $block->getThirdPartySetting('infinite_blocks', 'block_tag') : 'div';
+
+    $variables['attributes']['id'] = $id;
+    $variables['attributes']['class'] = $classes;
+    $variables['title_tag'] = $title_tag;
+    $variables['block_tag'] = $block_tag;
+    $variables['use_container'] = !(empty($id) && empty($classes));
+
+    $variables['content']['#use_parent_container'] = $variables['use_container'];
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function infinite_blocks_preprocess_node(&$variables) {
+  if ($variables['view_mode'] == 'default' || $variables['view_mode'] == 'full') {
+
+    /* @var Drupal\node\Entity\Node $node */
+    $node = $variables['elements']['#node'];
+
+    // Used for H1 and H2 tag handling on term pages with header block.
+    if (($node->hasField('field_header_media') && !$node->field_header_media->isEmpty()) ||
+      ($node->hasField('field_header_title') && !$node->field_header_title->isEmpty())) {
+
+      $variables['has_header_block'] = TRUE;
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_taxonomy_term().
+ */
+function infinite_blocks_preprocess_taxonomy_term(&$variables) {
+  if ($variables['view_mode'] == 'default' || $variables['view_mode'] == 'full') {
+
+    /* @var Drupal\taxonomy\Entity\Term $term */
+    $term = $variables['elements']['#taxonomy_term'];
+
+    // Used for H1 and H2 tag handling on term pages with header block.
+    if (($term->hasField('field_header_media') && !$term->field_header_media->isEmpty()) ||
+      ($term->hasField('field_header_title') && !$term->field_header_title->isEmpty())) {
+
+      $variables['has_header_block'] = TRUE;
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_user().
+ */
+function infinite_blocks_preprocess_user(&$variables) {
+  if ($variables['elements']['#view_mode'] == 'default' || $variables['elements']['#view_mode'] == 'full') {
+
+    /* @var Drupal\user\Entity\User $user */
+    $user = $variables['elements']['#user'];
+
+    // Used for H1 and H2 tag handling on term pages with header block.
+    if (($user->hasField('field_header_media') && !$user->field_header_media->isEmpty()) ||
+      ($user->hasField('field_header_title') && !$user->field_header_title->isEmpty())) {
+
+      $variables['has_header_block'] = TRUE;
+    }
+  }
+}

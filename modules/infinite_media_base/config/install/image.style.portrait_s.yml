@@ -1,0 +1,15 @@
+langcode: de
+status: true
+dependencies:
+  module:
+    - focal_point
+name: portrait_s
+label: 'Portrait S'
+effects:
+  ec11e6ba-2c22-4d80-ba56-86d273ca7a0b:
+    uuid: ec11e6ba-2c22-4d80-ba56-86d273ca7a0b
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: '264'
+      height: '412'

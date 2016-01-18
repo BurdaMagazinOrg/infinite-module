@@ -1,0 +1,16 @@
+uuid: fb7f105f-260e-44b1-b600-a57149a91445
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: landscape_xs
+label: 'Landscape XS'
+effects:
+  00b771a2-b1b7-49ad-851d-29fb1b72d2d1:
+    uuid: 00b771a2-b1b7-49ad-851d-29fb1b72d2d1
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: '160'
+      height: '100'

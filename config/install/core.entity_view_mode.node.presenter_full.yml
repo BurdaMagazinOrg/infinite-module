@@ -1,0 +1,9 @@
+langcode: de
+status: true
+dependencies:
+  module:
+    - node
+id: node.presenter_full
+label: 'Presenter Full'
+targetEntityType: node
+cache: true

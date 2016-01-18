@@ -1,0 +1,187 @@
+<?php
+
+use Drupal\Core\Image\Image;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Url;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\media_entity\Entity\Media;
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function infinite_media_theme_suggestions_image_alter(array &$suggestions, array $variables) {
+  $style_name = $variables['style_name'];
+  if ($style_name === NULL) {
+    $style_name = 'default';
+  }
+  $suggestions[] = 'image__' . $style_name;
+}
+
+/**
+ * Implements hook_preprocess_media().
+ */
+function infinite_media_preprocess_media(&$variables) {
+
+  // todo: later possible switch to media URL for sharing media items.
+  $current_url = Url::fromRoute('<current>');
+  if ($current_url->toString() != '/') {
+    $absolute_url = Url::fromUri('base:/' . $current_url->toString(), array('absolute' => TRUE))->toString();
+    $variables['absolute_node_url'] = $absolute_url;
+  }
+  else {
+    $variables['absolute_node_url'] = Url::fromRoute('<front>')->toString();
+  }
+
+  /* @var Media $media */
+  $media = $variables['elements']['#media'];
+  $variables['media_type'] = $media->bundle();
+  $variables['media_id'] = $media->id();
+
+  if ($media->bundle() === 'image') {
+
+    // Get image dimension.
+    // todo: is this really the right way?
+    /* @var Image $image */
+    if (!$media->field_image->isEmpty()) {
+      $image_url = $media->field_image->entity->getFileUri();
+      $image = \Drupal::service('image.factory')->get($image_url);
+      if ($image->isValid()) {
+        $variables['calculated_dimension'] = _infinite_media_image_dimension($image->getHeight(), $image->getWidth());
+
+        /* @var ImageStyle $share_img */
+        $share_img = ImageStyle::load('inline_l');
+        if(is_object($share_img)) {
+          $variables['share_img_url'] = $share_img->buildUrl($image_url);
+        }
+      }
+    }
+  }
+  else if ($media->bundle() === 'video') {
+  }
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function infinite_media_token_info() {
+  $nodeType = array(
+    'name' => t('Nodes'),
+    'description' => t('Tokens related to individual nodes.'),
+    'needs-data' => 'node',
+  );
+  $node['og-image'] = array(
+    'name' => t('OG Image'),
+    'description' => t("The OG image of a node."),
+  );
+
+  $termType = array(
+    'name' => t('Terms'),
+    'description' => t('Tokens related to individual terms.'),
+    'needs-data' => 'term',
+  );
+  // Core tokens for nodes.
+  $term['og-image'] = array(
+    'name' => t('OG Image'),
+    'description' => t("The OG image of a term."),
+  );
+
+  return array(
+    'types' => array('node' => $nodeType, 'term' => $termType),
+    'tokens' => array('node' => $node, 'term' => $term),
+  );
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function infinite_media_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  $replacements = array();
+
+  if ($type == 'node' && !empty($data['node'])) {
+    /** @var \Drupal\node\NodeInterface $node */
+    $node = $data['node'];
+
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        // Simple key values on the node.
+        case 'og-image':
+
+          // Get OpenGraph image URL from teaser media.
+          if ($node->hasField('field_teaser_media') &&
+            !$node->field_teaser_media->isEmpty()) {
+
+            if (!empty($node->field_teaser_media->entity) &&  // todo: check wyh some media entity reference seems to be empty here after isEmpty() check? example: node 6001
+              $node->field_teaser_media->entity->hasField('field_image') &&
+              !$node->field_teaser_media->entity->field_image->isEmpty()) {
+
+              $og_img_path = $node->field_teaser_media->entity->field_image->entity->getFileUri();
+              $og_img = ImageStyle::load('og_image');
+
+              if (is_object($og_img)) {
+
+                // Remove itok from img url. With itok sharing with image doesn't work!
+                $itok = '?itok';
+                $og_img_url = $og_img->buildUrl($og_img_path);
+                if (substr($og_img_url, 0, strlen($itok)) == $itok) {
+                  $og_img_url = substr($og_img_url, strlen($itok));
+                }
+
+                $replacements[$original] = $og_img_url;
+              }
+            }
+          }
+          else {
+            $replacements[$original] = '';
+          }
+          break;
+      }
+    }
+  }
+  if ($type == 'term' && !empty($data['term'])) {
+    /** @var \Drupal\node\TermInterface $term */
+    $term = $data['term'];
+
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        // Simple key values on the node.
+        case 'og-image':
+
+          // Get OpenGraph image URL from teaser media.
+          if ($term->hasField('field_teaser_media') &&
+            !$term->field_teaser_media->isEmpty()) {
+
+            if (!empty($term->field_teaser_media->entity) &&  // todo: check wyh some media entity reference seems to be empty here after isEmpty() check? example: node 6001
+              $term->field_teaser_media->entity->hasField('field_image') &&
+              !$term->field_teaser_media->entity->field_image->isEmpty()) {
+
+              $og_img_path = $term->field_header_media->entity->field_image->entity->getFileUri();
+              $og_img = ImageStyle::load('og_image');
+
+              if (is_object($og_img)) {
+                $replacements[$original] = $og_img->buildUrl($og_img_path);
+              }
+            }
+          }
+          else {
+            $replacements[$original] = '';
+          }
+          break;
+      }
+    }
+  }
+
+  return $replacements;
+}
+
+/**
+ * Helper function for getting dimension of an image.
+ */
+function _infinite_media_image_dimension($height, $width) {
+  // todo: should we handle square?
+  if ($height < $width) {
+    return 'landscape';
+  }
+  else {
+    return 'portrait';
+  }
+}

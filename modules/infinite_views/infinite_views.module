@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * @file
+ * Primarily Drupal hooks and global API functions to manipulate infinite_views.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\block\Entity\Block;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\views\Entity\View;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_pre_view().
+ *
+ * Exclude previous loaded NIDs from presenter views.
+ *
+ * Switch view display on channel taxonomy terms.
+ */
+function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
+
+  // Switch to other views display in infinite_taxonomy_term view for page displays.
+  if ($view->id() == 'infinite_taxonomy_term' && $view->getDisplay()->getBaseId() == 'page' && $display_id != 'rss') {
+
+    if (\Drupal::service('path.matcher')->isFrontPage()) {
+      $view->setDisplay('front');
+    }
+    else {
+      /* @var Drupal\taxonomy\Entity\Term $term */
+      $term = Term::load($args[0]);
+      if ($term->getVocabularyId() == 'channel') {
+        $view->setDisplay('channel');
+      }
+      else {
+        $view->setDisplay('term');
+      }
+    }
+  }
+
+  // Exclude front / channel presenter nodes from infinite_front / infinite_taxonomy_term streaming view.
+  if (($view->id() == 'infinite_front_presenter' && $view->current_display == 'four_teasers') ||
+    ($view->id() == 'infinite_taxonomy_term' && ($view->getDisplay()->display['id'] == 'front' || $view->getDisplay()->display['id'] == 'channel'))) {
+
+    $presenter_view = 'infinite_channel_presenter';
+    $exclude_displays = array('exclude');
+    if (\Drupal::service('path.matcher')->isFrontPage()) {
+
+      $presenter_view = 'infinite_front_presenter';
+      $exclude_displays[] = 'exclude_top';
+
+      if ($view->current_display == 'four_teasers') {
+        $exclude_displays = array('exclude_top');  // Here we must use only exclude_top display.
+      }
+    }
+    _infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
+  }
+}
+
+/**
+ * Implements hook_preprocess_views().
+ */
+function infinite_views_preprocess_views_view(&$variables) {
+
+  // todo: replace with configurable sidebar views UI plugin.
+  /* @var Drupal\views\ViewExecutable $view */
+  $view = $variables['view'];
+  switch ($view->id()) {
+    case 'infinite_author':
+    case 'infinite_front':
+    case 'infinite_taxonomy_term':
+      $load_sidebar_ad_blocks = TRUE;
+      $sidebar_ad_block = 'advertisingslot_rectangle_any';
+      if ($view->current_display != 'front' &&
+          $view->current_display != 'channel' &&
+          $view->current_display != 'term') {
+
+        $sidebar_ad_block = 'advertisingslot_rectangle_any_2';
+      }
+      break;
+    default:
+      $load_sidebar_ad_blocks = FALSE;
+  }
+
+  if ($load_sidebar_ad_blocks) {
+
+    /* @var Drupal\block\Entity\Block $block */
+    $block = Block::load($sidebar_ad_block);
+
+    if (is_object($block)) {
+      $block_content = \Drupal::entityManager()
+        ->getViewBuilder('block')
+        ->view($block, 'default');
+      $variables['sidebar'] = $block_content;
+    }
+  }
+}
+
+function _infinite_views_get_exclude_nids_helper($views_id, $exclude_displays, array &$args) {
+  $exclude_nids = array();
+  foreach($exclude_displays as $views_display) {
+    $exclude_view = views_get_view_result($views_id, $views_display);
+    foreach ($exclude_view as $exclude_node) {
+      $exclude_nids[] = $exclude_node->nid;
+    }
+  }
+
+  if (!empty($exclude_nids)) {
+    $args[] = implode('+', $exclude_nids);
+  }
+}

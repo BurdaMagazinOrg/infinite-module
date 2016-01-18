@@ -1,0 +1,15 @@
+langcode: de
+status: true
+dependencies:
+  module:
+    - focal_point
+name: portrait_m
+label: 'Portrait M'
+effects:
+  c9fe6e8d-eea5-4bc6-9a06-6f7a896d15e2:
+    uuid: c9fe6e8d-eea5-4bc6-9a06-6f7a896d15e2
+    id: focal_point_scale_and_crop
+    weight: 2
+    data:
+      width: '360'
+      height: '581'

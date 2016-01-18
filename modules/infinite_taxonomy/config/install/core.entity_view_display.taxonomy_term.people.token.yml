@@ -1,0 +1,49 @@
+langcode: de
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.token
+    - field.field.taxonomy_term.people.field_advertising
+    - field.field.taxonomy_term.people.field_header_media
+    - field.field.taxonomy_term.people.field_header_title
+    - field.field.taxonomy_term.people.field_ivw
+    - field.field.taxonomy_term.people.field_meta_tags
+    - taxonomy.vocabulary.people
+  module:
+    - ad_integration
+    - ivw_integration
+    - metatag
+    - text
+id: taxonomy_term.people.token
+targetEntityType: taxonomy_term
+bundle: people
+mode: token
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+  field_advertising:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: ad_empty_formatter
+  field_ivw:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: ivw_empty_formatter
+  field_meta_tags:
+    weight: 3
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: metatag_empty_formatter
+hidden:
+  field_header_media: true
+  field_header_title: true
+  langcode: true

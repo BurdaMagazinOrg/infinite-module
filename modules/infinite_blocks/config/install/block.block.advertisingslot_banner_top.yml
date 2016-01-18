@@ -1,0 +1,30 @@
+uuid: 00bffb83-2008-4a22-b400-be0a8954b8f3
+langcode: de
+status: true
+dependencies:
+  module:
+    - ad_integration
+    - infinite_blocks
+  theme:
+    - burda_infinite
+third_party_settings:
+  infinite_blocks:
+    id: ''
+    classes: ''
+    title_tag: div
+    block_tag: div
+id: advertisingslot_banner_top
+theme: burda_infinite
+region: hidden
+weight: -12
+provider: null
+plugin: ad_integration_advertising_slot
+settings:
+  id: ad_integration_advertising_slot
+  label: 'Advertising slot BANNER TOP'
+  provider: ad_integration
+  label_display: '0'
+  smartphone: SMARTPHONE_BANNER_TOP
+  tablet: TABLET_BANNER_TOP
+  desktop: DESKTOP_BANNER_TOP
+visibility: {  }

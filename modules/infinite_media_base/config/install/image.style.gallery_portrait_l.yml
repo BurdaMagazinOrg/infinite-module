@@ -1,0 +1,16 @@
+uuid: 3dc5eda6-0bb3-4653-af01-1eaecb156513
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: gallery_portrait_l
+label: 'Gallery Portrait L'
+effects:
+  0184e81d-8f08-4576-bb00-dc67f5b28f76:
+    uuid: 0184e81d-8f08-4576-bb00-dc67f5b28f76
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: '400'
+      height: '600'

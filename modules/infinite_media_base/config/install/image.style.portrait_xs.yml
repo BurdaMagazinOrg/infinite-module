@@ -1,0 +1,15 @@
+langcode: de
+status: true
+dependencies:
+  module:
+    - focal_point
+name: portrait_xs
+label: 'Portrait XS'
+effects:
+  2c9f069f-6703-4815-8409-09639ece6994:
+    uuid: 2c9f069f-6703-4815-8409-09639ece6994
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: '100'
+      height: '160'

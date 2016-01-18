@@ -1,0 +1,54 @@
+name: Infinite Media
+type: module
+description: provide media bundles for infinite.
+package: Infinite
+core: 8.x
+version: 8.x-1.x-dev
+dependencies:
+  - field
+  - field_ui
+  - focal_point
+  - image
+  - inline_entity_form
+  - media_entity
+  - responsive_image
+  - infinite_base
+config_devel:
+  - image.style.gallery_l
+  - image.style.gallery_landscape_l
+  - image.style.gallery_landscape_m
+  - image.style.gallery_landscape_s
+  - image.style.gallery_m
+  - image.style.gallery_portrait_l
+  - image.style.gallery_portrait_m
+  - image.style.gallery_portrait_s
+  - image.style.gallery_s
+  - image.style.header_l
+  - image.style.header_m
+  - image.style.header_s
+  - image.style.header_xl
+  - image.style.inline_l
+  - image.style.inline_m
+  - image.style.inline_s
+  - image.style.inline_xl
+  - image.style.landscape_l
+  - image.style.landscape_m
+  - image.style.landscape_s
+  - image.style.landscape_xl
+  - image.style.landscape_xs
+  - image.style.portrait_m
+  - image.style.portrait_s
+  - image.style.portrait_xs
+  - image.style.presenter_l
+  - image.style.square_m
+  - image.style.square_s
+  - image.style.square_xxs
+  - media_entity.bundle.gallery
+  - media_entity.bundle.image
+  - media_entity.bundle.video
+  - responsive_image.styles.gallery
+  - responsive_image.styles.header
+  - responsive_image.styles.inline
+  - responsive_image.styles.landscape
+  - responsive_image.styles.portrait
+  - responsive_image.styles.square

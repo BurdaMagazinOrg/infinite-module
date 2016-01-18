@@ -1,0 +1,50 @@
+langcode: de
+status: true
+dependencies:
+  config:
+    - image.style.header_l
+    - image.style.header_m
+    - image.style.header_s
+    - image.style.header_xl
+  theme:
+    - burda_infinite
+id: header
+label: Header
+image_style_mappings:
+  -
+    breakpoint_id: burda_infinite.xxl
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: header_xl
+  -
+    breakpoint_id: burda_infinite.xl
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: header_xl
+  -
+    breakpoint_id: burda_infinite.lg
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: header_l
+  -
+    breakpoint_id: burda_infinite.md
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: header_l
+  -
+    breakpoint_id: burda_infinite.sm
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: header_m
+  -
+    breakpoint_id: burda_infinite.xs
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: header_m
+  -
+    breakpoint_id: burda_infinite.xxs
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: header_s
+breakpoint_group: burda_infinite
+fallback_image_style: header_s

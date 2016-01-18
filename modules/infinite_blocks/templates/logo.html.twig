@@ -1,0 +1,11 @@
+{% if front_page %}
+<h1>
+{% endif %}
+
+    <a class="logo" href="{{ front_page }}" title="{{ 'Home'|t }}">
+        <img src="{{ logo }}" alt="{{ 'Home'|t }}"/>
+    </a>
+
+    {% if front_page %}
+</h1>
+{% endif %}

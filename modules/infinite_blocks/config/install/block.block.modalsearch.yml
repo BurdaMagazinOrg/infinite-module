@@ -1,0 +1,24 @@
+uuid: af602848-46b6-406a-8200-c36e1d4909b2
+langcode: de
+status: true
+dependencies:
+  module:
+    - infinite_blocks
+  theme:
+    - burda_infinite
+third_party_settings:
+  infinite_blocks:
+    classes: block-infinite-blocks-modal-search
+    title_tag: div
+id: modalsearch
+theme: burda_infinite
+region: modal
+weight: -13
+provider: null
+plugin: infinite_blocks_modal_search
+settings:
+  id: infinite_blocks_modal_search
+  label: 'Modal Search'
+  provider: infinite_blocks
+  label_display: '0'
+visibility: {  }

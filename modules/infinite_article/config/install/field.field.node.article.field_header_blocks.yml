@@ -1,0 +1,28 @@
+
+langcode: de
+status: true
+dependencies:
+  config:
+    - block.block.advertisingslot_banner_top
+    - block.block.burda_infinite_breadcrumbs
+    - field.storage.node.field_header_blocks
+    - node.type.article
+id: node.article.field_header_blocks
+field_name: field_header_blocks
+entity_type: node
+bundle: article
+label: 'Header Blocks'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    target_ 00bffb83-2008-4a22-b400-be0a8954b8f3
+  -
+    target_ 860b8640-763a-4991-b312-18d185c27ebb
+default_value_callback: ''
+settings:
+  handler: 'default:block'
+  handler_settings:
+    target_bundles: null
+field_type: entity_reference

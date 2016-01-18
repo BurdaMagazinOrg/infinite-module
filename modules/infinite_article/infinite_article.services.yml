@@ -1,0 +1,6 @@
+services:
+  infinite_article.breadcrumb.default:
+    class: Drupal\infinite_article\Breadcrumb\InfiniteArticleBreadcrumbBuilder
+    arguments: ['@entity.manager']
+    tags:
+      - { name: breadcrumb_builder, priority: 100 }

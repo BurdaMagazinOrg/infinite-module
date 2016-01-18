@@ -1,0 +1,53 @@
+
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_top_paragraphs
+    - node.type.article
+  module:
+    - entity_reference_revisions
+id: node.article.field_top_paragraphs
+field_name: field_top_paragraphs
+entity_type: node
+bundle: article
+label: 'Top Paragraphs'
+description: 'Leave ''Top Paragraphs'' empty to use teaser media automatically as fallback for top region of article.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      media: media
+      quote: quote
+      text: text
+      gallery: gallery
+    target_bundles_drag_drop:
+      media:
+        enabled: true
+        weight: 4
+      quote:
+        enabled: true
+        weight: 5
+      text:
+        enabled: true
+        weight: 6
+      gallery:
+        enabled: true
+        weight: 9
+      instagram:
+        weight: 10
+        enabled: false
+      link:
+        weight: 11
+        enabled: false
+      pinterest:
+        weight: 13
+        enabled: false
+      twitter:
+        weight: 16
+        enabled: false
+field_type: entity_reference_revisions
