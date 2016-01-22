@@ -5,7 +5,6 @@ package: Infinite
 core: 8.x
 version: 8.x-1.x-dev
 dependencies:
-  - search
   - views
   - views_load_more
   - infinite_base
@@ -16,5 +15,4 @@ config_devel:
   - views.view.infinite_front
   - views.view.infinite_front_presenter
   - views.view.infinite_rss
-  - views.view.infinite_search
   - views.view.infinite_taxonomy_term
