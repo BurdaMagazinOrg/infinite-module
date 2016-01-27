@@ -2,9 +2,6 @@ langcode: de
 status: true
 dependencies:
   config:
-    - block.block.advertisingslot_banner_any
-    - block.block.advertisingslot_banner_any_2
-    - block.block.interruptersimple_channel
     - core.entity_view_mode.node.teaser_selectable
     - node.type.article
     - user.role.administrator
@@ -171,34 +168,6 @@ display:
           entity_field: created
           plugin_id: date
       title: 'Instyle Autor'
-      header:
-        entity_block:
-          id: entity_block
-          table: views
-          field: entity_block
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: false
-          target: advertisingslot_banner_any
-          view_mode: default
-          bypass_access: false
-          plugin_id: entity
-      footer:
-        entity_block:
-          id: entity_block
-          table: views
-          field: entity_block
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: false
-          target: interruptersimple_channel
-          view_mode: default
-          bypass_access: false
-          plugin_id: entity
       empty:
         http_status_code:
           id: http_status_code
@@ -305,19 +274,6 @@ display:
           target: '{{ raw_arguments.uid }}'
           view_mode: default
           bypass_access: true
-          plugin_id: entity
-        entity_block:
-          id: entity_block
-          table: views
-          field: entity_block
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: false
-          target: advertisingslot_banner_any_2
-          view_mode: default
-          bypass_access: false
           plugin_id: entity
     cache_metadata:
       contexts:

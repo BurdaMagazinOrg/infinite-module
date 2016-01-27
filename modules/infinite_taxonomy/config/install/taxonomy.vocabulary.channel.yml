@@ -1,9 +1,0 @@
-uuid: b5fa50aa-5b2e-47c3-9000-fee463b40c04
-langcode: de
-status: true
-dependencies: {  }
-name: Channel
-vid: channel
-description: ''
-hierarchy: 1
-weight: 0

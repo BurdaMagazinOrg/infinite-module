@@ -2,20 +2,8 @@ langcode: de
 status: true
 dependencies:
   config:
-    - block.block.advertisingslot_banner_any
-    - block.block.advertisingslot_banner_any_2
-    - block.block.interruptersimple_channel
-    - block.block.interruptersimple_front
     - core.entity_view_mode.node.teaser_selectable
-    - taxonomy.vocabulary.brands
     - taxonomy.vocabulary.channel
-    - taxonomy.vocabulary.events
-    - taxonomy.vocabulary.frisuren
-    - taxonomy.vocabulary.inspiration
-    - taxonomy.vocabulary.make_up_pflege
-    - taxonomy.vocabulary.mode
-    - taxonomy.vocabulary.model
-    - taxonomy.vocabulary.people
     - taxonomy.vocabulary.tags
   module:
     - node
@@ -134,16 +122,7 @@ display:
             type: 'entity:taxonomy_term'
             fail: 'not found'
           validate_options:
-            bundles:
-              brands: brands
-              events: events
-              frisuren: frisuren
-              inspiration: inspiration
-              make_up_pflege: make_up_pflege
-              mode: mode
-              model: model
-              people: people
-              tags: tags
+            bundles: {}
             access: true
             operation: view
             multiple: 0
@@ -278,34 +257,6 @@ display:
         options:
           relationship: none
           view_mode: teaser_selectable
-      header:
-        entity_block:
-          id: entity_block
-          table: views
-          field: entity_block
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: false
-          target: advertisingslot_banner_any
-          view_mode: default
-          bypass_access: false
-          plugin_id: entity
-      footer:
-        entity_block:
-          id: entity_block
-          table: views
-          field: entity_block
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: false
-          target: interruptersimple_channel
-          view_mode: default
-          bypass_access: false
-          plugin_id: entity
       empty: {  }
       relationships: {  }
       fields: {  }
@@ -354,19 +305,6 @@ display:
           empty: true
           tokenize: true
           target: '{{ raw_arguments.term_node_tid_depth }}'
-          view_mode: default
-          bypass_access: false
-          plugin_id: entity
-        entity_block:
-          id: entity_block
-          table: views
-          field: entity_block
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: false
-          target: advertisingslot_banner_any_2
           view_mode: default
           bypass_access: false
           plugin_id: entity
@@ -647,19 +585,6 @@ display:
           view_mode: default
           bypass_access: false
           plugin_id: entity
-        entity_block:
-          id: entity_block
-          table: views
-          field: entity_block
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: false
-          target: advertisingslot_banner_any_2
-          view_mode: default
-          bypass_access: false
-          plugin_id: entity
       pager:
         type: some
         options:
@@ -937,20 +862,6 @@ display:
           offset: 0
       displays:
         front: front
-      footer:
-        entity_block:
-          id: entity_block
-          table: views
-          field: entity_block
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: false
-          target: interruptersimple_front
-          view_mode: default
-          bypass_access: false
-          plugin_id: entity
     cache_metadata:
       max-age: -1
       contexts:
@@ -1477,20 +1388,7 @@ display:
           entity_type: node
           entity_field: nid
           plugin_id: node_nid
-      footer:
-        entity_block:
-          id: entity_block
-          table: views
-          field: entity_block
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: false
-          target: interruptersimple_front
-          view_mode: default
-          bypass_access: false
-          plugin_id: entity
+      footer: { }
     cache_metadata:
       max-age: -1
       contexts:

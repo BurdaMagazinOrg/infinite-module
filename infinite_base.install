@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\Core\Language\LanguageManager;
-use Drupal\node\Entity\Node;;
+use Drupal\node\Entity\Node;
 use Drupal\Core\Entity\EntityDefinitionUpdateManager;
 use Drupal\Core\Database\Database;
 
@@ -12,27 +12,6 @@ function infinite_base_install() {
   // Add our base fields to the schema.
   \Drupal::service('entity.definition_update_manager')->applyUpdates();
 
-  // Create basic nodes.
-  $basic_nodes = array(
-    'Imprint',
-    'Disclaimer',
-    '403',
-    '404',
-    'Terms & Conditions',
-    'Home',
-  );
-  $default_language_id = \Drupal::service('language_manager')->getDefaultLanguage()->getId();
-  foreach ($basic_nodes as $basic_node) {
-    $node = Node::create(array(
-      'type' => 'page',
-      'title' => $basic_node,
-      'langcode' => $default_language_id,
-      'uid' => '1',
-      'status' => 1,
-      'field_fields' => array(),
-    ));
-    $node->save();
-  }
 }
 
 /**
