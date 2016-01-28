@@ -218,7 +218,7 @@ function infinite_base_tokens($type, $tokens, array $data = array(), array $opti
         case 'root-channel':
 
           if ($node->field_channel->entity) {
-            $parents = \Drupal::entityManager()
+            $parents = \Drupal::entityTypeManager()
               ->getStorage('taxonomy_term')
               ->loadAllParents($node->field_channel->entity->id());
 
@@ -272,7 +272,7 @@ function infinite_base_get_all_parents($term) {
   $parents_tokens = [];
 
   if ($term) {
-    $parents = \Drupal::entityManager()
+    $parents = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term')
       ->loadAllParents($term->id());
 
