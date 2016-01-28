@@ -1,8 +1,0 @@
-uuid: a2aa21bf-f221-4819-b43d-61c2052f4765
-langcode: de
-status: true
-dependencies: {  }
-id: channel
-label: Channel
-vocabulary: channel
-menu: main
