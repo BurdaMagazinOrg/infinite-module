@@ -3,21 +3,24 @@ status: true
 dependencies:
   module:
     - infinite_blocks
+    - system
   theme:
     - burda_infinite
 third_party_settings:
   infinite_blocks:
-    classes: block-infinite-blocks-modal-search
+    id: ''
+    classes: ''
     title_tag: div
-id: modalsearch
+    block_tag: div
+id: messages
 theme: burda_infinite
-region: modal
-weight: -13
+region: help
+weight: -8
 provider: null
-plugin: infinite_blocks_modal_search
+plugin: system_messages_block
 settings:
-  id: infinite_blocks_modal_search
-  label: 'Modal Search'
-  provider: infinite_blocks
+  id: system_messages_block
+  label: Messages
+  provider: system
   label_display: '0'
 visibility: {  }

@@ -17,3 +17,4 @@ dependencies:
   - options
   - paragraphs
   - scheduler
+  - infinite_base

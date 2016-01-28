@@ -47,7 +47,7 @@ config_devel:
   - field.field.media.image.field_copyright
   - field.field.media.image.field_description
   - field.field.media.image.field_events
-  - field.field.media.image.field_expire_date
+  - field.field.media.image.field_expires
   - field.field.media.image.field_image
   - field.field.media.image.field_people
   - field.field.media.image.field_source
@@ -55,7 +55,7 @@ config_devel:
   - field.field.media.video.field_caption
   - field.field.media.video.field_copyright
   - field.field.media.video.field_description
-  - field.field.media.video.field_expire_date
+  - field.field.media.video.field_expires
   - field.field.media.video.field_source
   - field.field.media.video.field_video_id
   - field.field.media.video.field_video_url
@@ -65,7 +65,7 @@ config_devel:
   - field.storage.media.field_copyright
   - field.storage.media.field_description
   - field.storage.media.field_events
-  - field.storage.media.field_expire_date
+  - field.storage.media.field_expires
   - field.storage.media.field_image
   - field.storage.media.field_media_images
   - field.storage.media.field_people

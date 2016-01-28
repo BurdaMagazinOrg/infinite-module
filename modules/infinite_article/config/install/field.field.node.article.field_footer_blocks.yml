@@ -1,4 +1,3 @@
-
 langcode: de
 status: true
 dependencies:
@@ -6,6 +5,8 @@ dependencies:
     - block.block.lazyloadingsimple
     - field.storage.node.field_footer_blocks
     - node.type.article
+_core:
+  default_config_hash: ngyd29fZG2euqTpzs3PVDcr94Aa_KCZTucimpAw0NSo
 id: node.article.field_footer_blocks
 field_name: field_footer_blocks
 entity_type: node
@@ -16,7 +17,7 @@ required: false
 translatable: false
 default_value:
   -
-    target_ 56c4f3d2-4a92-4432-9e37-558de6538454
+    target_uuid: 4863f89c-18be-4a41-b400-f7b2b5b64509
 default_value_callback: ''
 settings:
   handler: 'default:block'

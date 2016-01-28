@@ -6,7 +6,7 @@ dependencies:
     - field.field.media.video.field_caption
     - field.field.media.video.field_copyright
     - field.field.media.video.field_description
-    - field.field.media.video.field_expire_date
+    - field.field.media.video.field_expires
     - field.field.media.video.field_source
     - field.field.media.video.field_video_id
     - field.field.media.video.field_video_url
@@ -41,7 +41,7 @@ content:
 hidden:
   created: true
   field_caption: true
-  field_expire_date: true
+  field_expires: true
   field_source: true
   field_video_url: true
   name: true

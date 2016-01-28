@@ -3,6 +3,7 @@ status: true
 dependencies:
   module:
     - node
+    - infinite_base
 id: node.presenter_full
 label: 'Presenter Full'
 targetEntityType: node

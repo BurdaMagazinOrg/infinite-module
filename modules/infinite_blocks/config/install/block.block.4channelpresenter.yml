@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - infinite_blocks
+    - system
+  theme:
+    - burda_infinite
+third_party_settings:
+  infinite_blocks:
+    id: ''
+    classes: ''
+    title_tag: div
+    block_tag: div
+id: 4channelpresenter
+theme: burda_infinite
+region: content
+weight: -4
+provider: null
+plugin: infinite_blocks_channel_presenter
+settings:
+  id: infinite_blocks_channel_presenter
+  label: '4 Channel Presenter'
+  provider: infinite_blocks
+  label_display: '0'
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: true
+    context_mapping: {  }

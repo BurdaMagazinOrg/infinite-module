@@ -7,17 +7,19 @@ dependencies:
     - burda_infinite
 third_party_settings:
   infinite_blocks:
-    classes: block-infinite-blocks-modal-search
+    id: ''
+    classes: ''
     title_tag: div
-id: modalsearch
+    block_tag: div
+id: headermediablock
 theme: burda_infinite
-region: modal
-weight: -13
+region: header
+weight: -8
 provider: null
-plugin: infinite_blocks_modal_search
+plugin: infinite_blocks_header_media
 settings:
-  id: infinite_blocks_modal_search
-  label: 'Modal Search'
+  id: infinite_blocks_header_media
+  label: 'Header Media Block'
   provider: infinite_blocks
   label_display: '0'
 visibility: {  }

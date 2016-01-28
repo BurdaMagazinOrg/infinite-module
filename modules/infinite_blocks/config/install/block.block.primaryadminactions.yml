@@ -7,17 +7,19 @@ dependencies:
     - burda_infinite
 third_party_settings:
   infinite_blocks:
-    classes: block-infinite-blocks-modal-search
+    id: ''
+    classes: ''
     title_tag: div
-id: modalsearch
+    block_tag: div
+id: primaryadminactions
 theme: burda_infinite
-region: modal
-weight: -13
+region: content
+weight: -7
 provider: null
-plugin: infinite_blocks_modal_search
+plugin: local_actions_block
 settings:
-  id: infinite_blocks_modal_search
-  label: 'Modal Search'
-  provider: infinite_blocks
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
   label_display: '0'
 visibility: {  }

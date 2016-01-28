@@ -1,49 +1,98 @@
 <?php
 
-use Drupal\Core\Language\LanguageManager;
-use Drupal\node\Entity\Node;
-use Drupal\Core\Entity\EntityDefinitionUpdateManager;
 use Drupal\Core\Database\Database;
 
 /**
  * Implements hook_install().
  */
 function infinite_base_install() {
-  // Add our base fields to the schema.
-  \Drupal::service('entity.definition_update_manager')->applyUpdates();
+
+  $spec = array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'description' => 'Promoted to top presenter',
+    'not null' => FALSE,
+    'default' => NULL,
+  );
+  $schema = Database::getConnection()->schema();
+  $schema->addField('node_field_data', 'promote_top_presenter', $spec);
+  $schema->addField('node_field_revision', 'promote_top_presenter', $spec);
+
+
+  $spec = array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'description' => 'Promoted to frontpage presenter',
+    'not null' => FALSE,
+    'default' => NULL,
+  );
+  $schema = Database::getConnection()->schema();
+  $schema->addField('node_field_data', 'promote_front_presenter', $spec);
+  $schema->addField('node_field_revision', 'promote_front_presenter', $spec);
+
+
+  $spec = array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'description' => 'Promoted to channel page',
+    'not null' => FALSE,
+    'default' => NULL,
+  );
+  $schema = Database::getConnection()->schema();
+  $schema->addField('node_field_data', 'promote_channel', $spec);
+  $schema->addField('node_field_revision', 'promote_channel', $spec);
+
+
+  $spec = array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'description' => 'Promoted to channel presenter',
+    'not null' => FALSE,
+    'default' => NULL,
+  );
+  $schema = Database::getConnection()->schema();
+  $schema->addField('node_field_data', 'promote_channel_presenter', $spec);
+  $schema->addField('node_field_revision', 'promote_channel_presenter', $spec);
+
+
+  $spec = array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'description' => 'Mark as sponsored',
+    'not null' => FALSE,
+    'default' => NULL,
+  );
+  $schema = Database::getConnection()->schema();
+  $schema->addField('node_field_data', 'sponsored', $spec);
+  $schema->addField('node_field_revision', 'sponsored', $spec);
+
+
+  \Drupal::configFactory()
+    ->getEditable('system.theme')
+    ->set('default', 'burda_infinite')
+    ->save(TRUE);
+
+
+  \Drupal::service('module_installer')->install([
+    'infinite_article',
+  ], TRUE);
 
 }
 
-/**
- * Implements hook_uninstall().
- */
 function infinite_base_uninstall() {
-  // Remove our base fields from the schema.
-  \Drupal::service('entity.definition_update_manager')->applyUpdates();
-}
 
-/**
- * Update base fields to the schema.
- */
-function infinite_base_update_8101() {
-  // Add our base fields to the schema.
-  \Drupal::service('entity.definition_update_manager')->applyUpdates();
-}
+  $schema = Database::getConnection()->schema();
+  $schema->dropField('node_field_data', 'sponsored');
+  $schema->dropField('node_field_revision', 'sponsored');
+  $schema->dropField('node_field_data', 'promote_front_presenter');
+  $schema->dropField('node_field_revision', 'promote_front_presenter');
+  $schema->dropField('node_field_data', 'promote_top_presenter');
+  $schema->dropField('node_field_revision', 'promote_top_presenter');
+  $schema->dropField('node_field_data', 'promote_channel');
+  $schema->dropField('node_field_revision', 'promote_channel');
+  $schema->dropField('node_field_data', 'promote_channel_presenter');
+  $schema->dropField('node_field_revision', 'promote_channel_presenter');
 
-/**
- * Update base fields to the schema.
- */
-function infinite_base_update_8102() {
-  // Add our base fields to the schema.
-  \Drupal::service('entity.definition_update_manager')->applyUpdates();
-}
-
-/**
- * Update base fields to the schema.
- */
-function infinite_base_update_8103() {
-  // Do nothing here any more and see @infinite_base_update_8104.
-  // Do NOT use applyUpdates() from EntityDefinitionUpdateManager!
 }
 
 /**
@@ -61,4 +110,33 @@ function infinite_base_update_8104() {
   $schema = Database::getConnection()->schema();
   $schema->addField('node_field_data', 'promote_top_presenter', $spec);
   $schema->addField('node_field_revision', 'promote_top_presenter', $spec);
+}
+
+function infinite_base_requirements($phase) {
+
+  $requirements = [];
+
+  switch ($phase) {
+    case 'install':
+
+      $theme_handler = \Drupal::service('theme_handler');
+      $themes = $theme_handler->listInfo();  // Get a list of available themes.
+
+      if (empty($themes['burda_infinite'])) {
+
+        try {
+
+          \Drupal::service('theme_installer')
+            ->install(['burda_infinite'], TRUE);
+
+        } catch (InvalidArgumentException $e) {
+          $requirements['burda_infinite']['severity'] = REQUIREMENT_ERROR;;
+          $requirements['burda_infinite']['description'] = 'Please place the burda_infinite in the theme folder';
+        }
+
+
+      }
+      break;
+  }
+  return $requirements;
 }

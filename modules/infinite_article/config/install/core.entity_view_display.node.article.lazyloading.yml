@@ -4,13 +4,11 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.lazyloading
-    - field.field.node.article.field_advertising
     - field.field.node.article.field_channel
     - field.field.node.article.field_footer_blocks
     - field.field.node.article.field_header_blocks
     - field.field.node.article.field_header_media
     - field.field.node.article.field_hp_display_mode
-    - field.field.node.article.field_ivw
     - field.field.node.article.field_meta_tags
     - field.field.node.article.field_paragraphs
     - field.field.node.article.field_presenter_media
@@ -23,10 +21,8 @@ dependencies:
     - field.field.node.article.field_top_paragraphs
     - node.type.article
   module:
-    - ad_integration
     - entity_reference_revisions
     - infinite_base
-    - ivw_integration
     - metatag
     - user
 id: node.article.lazyloading
@@ -34,12 +30,6 @@ targetEntityType: node
 bundle: article
 mode: lazyloading
 content:
-  field_advertising:
-    weight: 11
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: ad_empty_formatter
   field_channel:
     type: data_internal_url
     weight: 1
@@ -62,12 +52,6 @@ content:
       link: false
     third_party_settings: {  }
     type: entity_reference_entity_view
-  field_ivw:
-    weight: 12
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: ivw_empty_formatter
   field_meta_tags:
     weight: 10
     label: hidden

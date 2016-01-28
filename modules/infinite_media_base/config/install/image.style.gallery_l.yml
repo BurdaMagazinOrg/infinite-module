@@ -9,7 +9,7 @@ label: 'Gallery L'
 effects:
   b2f34a25-82d2-4910-a400-cdc0dbbdf764:
     uuid: b2f34a25-82d2-4910-a400-cdc0dbbdf764
-    id: infinite_media_auto_aspect
+    id: thunder_media_auto_aspect
     weight: 1
     data:
       landscape: gallery_landscape_l

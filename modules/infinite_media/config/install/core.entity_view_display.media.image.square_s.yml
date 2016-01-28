@@ -9,7 +9,7 @@ dependencies:
     - field.field.media.image.field_copyright
     - field.field.media.image.field_description
     - field.field.media.image.field_events
-    - field.field.media.image.field_expire_date
+    - field.field.media.image.field_expires
     - field.field.media.image.field_image
     - field.field.media.image.field_people
     - field.field.media.image.field_source
@@ -37,7 +37,7 @@ hidden:
   field_copyright: true
   field_description: true
   field_events: true
-  field_expire_date: true
+  field_expires: true
   field_people: true
   field_source: true
   field_tags: true

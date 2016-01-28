@@ -3,7 +3,6 @@ langcode: de
 status: true
 dependencies:
   config:
-    - block.block.advertisingslot_rectangle_top
     - field.storage.node.field_sidebar_blocks
     - node.type.article
 id: node.article.field_sidebar_blocks
@@ -14,9 +13,7 @@ label: 'Sidebar Blocks'
 description: ''
 required: false
 translatable: false
-default_value:
-  -
-    target_ c8e8a798-f651-4f71-a504-4b9e1e1ff22c
+default_value: null
 default_value_callback: ''
 settings:
   handler: 'default:block'

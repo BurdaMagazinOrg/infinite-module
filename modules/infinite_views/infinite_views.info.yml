@@ -8,7 +8,6 @@ dependencies:
   - views
   - views_load_more
   - infinite_base
-  - infinite_article
 config_devel:
   - views.view.infinite_author
   - views.view.infinite_channel_presenter

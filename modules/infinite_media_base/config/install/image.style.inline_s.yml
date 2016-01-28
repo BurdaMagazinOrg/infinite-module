@@ -9,7 +9,7 @@ label: 'Inline S'
 effects:
   bf8988b4-49c6-4a0d-a009-9c0064c5ec78:
     uuid: bf8988b4-49c6-4a0d-a009-9c0064c5ec78
-    id: infinite_media_auto_aspect
+    id: thunder_media_auto_aspect
     weight: 1
     data:
       landscape: landscape_xs

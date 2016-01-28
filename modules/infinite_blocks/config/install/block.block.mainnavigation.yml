@@ -1,5 +1,4 @@
-uuid: 317ef957-30a3-4453-8910-16cfa7be611c
-langcode: de
+langcode: en
 status: true
 dependencies:
   config:
@@ -11,12 +10,14 @@ dependencies:
     - burda_infinite
 third_party_settings:
   infinite_blocks:
-    classes: block-system-menu-blockmain
+    id: ''
+    classes: ''
     title_tag: div
+    block_tag: div
 id: mainnavigation
 theme: burda_infinite
 region: header
-weight: -3
+weight: -8
 provider: null
 plugin: 'system_menu_block:main'
 settings:

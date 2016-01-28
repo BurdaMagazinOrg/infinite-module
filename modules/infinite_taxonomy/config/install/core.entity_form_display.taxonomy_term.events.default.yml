@@ -2,16 +2,12 @@ langcode: de
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.events.field_advertising
     - field.field.taxonomy_term.events.field_header_media
     - field.field.taxonomy_term.events.field_header_title
-    - field.field.taxonomy_term.events.field_ivw
     - field.field.taxonomy_term.events.field_meta_tags
     - taxonomy.vocabulary.events
   module:
-    - ad_integration
     - inline_entity_form
-    - ivw_integration
     - metatag
     - path
     - text
@@ -27,11 +23,6 @@ content:
       placeholder: ''
       rows: 5
     third_party_settings: {  }
-  field_advertising:
-    weight: 7
-    settings: {  }
-    third_party_settings: {  }
-    type: ad_integration_widget
   field_header_media:
     type: inline_entity_form_complex
     weight: 3
@@ -50,11 +41,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-  field_ivw:
-    weight: 8
-    settings: {  }
-    third_party_settings: {  }
-    type: ivw_integration_widget
   field_meta_tags:
     type: metatag_firehose
     weight: 6

@@ -9,7 +9,7 @@ label: 'Inline XL'
 effects:
   fa5e9e5e-ef06-4867-8c09-0907de74937f:
     uuid: fa5e9e5e-ef06-4867-8c09-0907de74937f
-    id: infinite_media_auto_aspect
+    id: thunder_media_auto_aspect
     weight: 1
     data:
       landscape: landscape_xl

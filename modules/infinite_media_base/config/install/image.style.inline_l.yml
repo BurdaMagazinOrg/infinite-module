@@ -9,7 +9,7 @@ label: 'Inline L'
 effects:
   d7d8444d-3b95-40e9-8107-073734ec5756:
     uuid: d7d8444d-3b95-40e9-8107-073734ec5756
-    id: infinite_media_auto_aspect
+    id: thunder_media_auto_aspect
     weight: 1
     data:
       landscape: landscape_l

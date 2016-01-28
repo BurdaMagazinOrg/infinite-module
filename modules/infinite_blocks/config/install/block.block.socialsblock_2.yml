@@ -7,17 +7,20 @@ dependencies:
     - burda_infinite
 third_party_settings:
   infinite_blocks:
-    classes: block-infinite-blocks-modal-search
+    id: ''
+    classes: ''
     title_tag: div
-id: modalsearch
+    block_tag: div
+id: socialsblock_2
 theme: burda_infinite
-region: modal
-weight: -13
+region: sidebar
+weight: -8
 provider: null
-plugin: infinite_blocks_modal_search
+plugin: infinite_blocks_socials
 settings:
-  id: infinite_blocks_modal_search
-  label: 'Modal Search'
+  id: infinite_blocks_socials
+  label: 'Socials Block'
   provider: infinite_blocks
   label_display: '0'
+  follow: 0
 visibility: {  }

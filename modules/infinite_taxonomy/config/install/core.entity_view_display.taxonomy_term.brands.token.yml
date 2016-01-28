@@ -3,15 +3,11 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.taxonomy_term.token
-    - field.field.taxonomy_term.brands.field_advertising
     - field.field.taxonomy_term.brands.field_header_media
     - field.field.taxonomy_term.brands.field_header_title
-    - field.field.taxonomy_term.brands.field_ivw
     - field.field.taxonomy_term.brands.field_meta_tags
     - taxonomy.vocabulary.brands
   module:
-    - ad_integration
-    - ivw_integration
     - metatag
     - text
 id: taxonomy_term.brands.token
@@ -25,18 +21,6 @@ content:
     weight: 0
     settings: {  }
     third_party_settings: {  }
-  field_advertising:
-    weight: 2
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: ad_empty_formatter
-  field_ivw:
-    weight: 3
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: ivw_empty_formatter
   field_meta_tags:
     weight: 1
     label: hidden

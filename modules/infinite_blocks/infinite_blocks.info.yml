@@ -4,11 +4,11 @@ description: provide blocks for infinite.
 package: Infinite
 # core: 8.x
 dependencies:
-  - ad_integration
   - block
   - block_content
   - help
   - infinite_base
+  - infinite_views
 
 # Information added by Drupal.org packaging script on 2015-08-09
 version: '8.x-1.x-dev'
