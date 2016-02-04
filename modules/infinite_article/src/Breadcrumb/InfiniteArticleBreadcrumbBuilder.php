@@ -134,7 +134,12 @@ class InfiniteArticleBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // This breadcrumb apply only for all articles
     $parameters = $route_match->getParameters()->all();
     if (isset($parameters['node'])) {
-      return $parameters['node']->getType() == 'article';
+      $node = $parameters['node'];
+      // Check if node has been loaded or is only the node id.
+      if (is_numeric($node)) {
+        $node = \Drupal\node\Entity\Node::load($parameters['node']);
+      }
+      return $node->getType() == 'article';
     }
     return FALSE;
   }
@@ -153,7 +158,7 @@ class InfiniteArticleBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     // Add all parent forums to breadcrumbs.
     /** @var \Drupal\Taxonomy\TermInterface $term */
-    $term = $node->field_channel->entity;
+    $term = !empty($node->field_channel) ? $node->field_channel->entity : '' ;
 
     if ($term) {
       $breadcrumb->addCacheableDependency($term);
