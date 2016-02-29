@@ -6,19 +6,19 @@ dependencies:
     - image.style.gallery_m
     - image.style.gallery_s
   theme:
-    - burda_infinite
+    - infinite
 id: gallery
 label: Gallery
 image_style_mappings:
   -
-    breakpoint_id: burda_infinite.md
+    breakpoint_id: infinite.md
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: gallery_l
   -
-    breakpoint_id: burda_infinite.xxs
+    breakpoint_id: infinite.xxs
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: gallery_m
-breakpoint_group: burda_infinite
+breakpoint_group: infinite
 fallback_image_style: gallery_s

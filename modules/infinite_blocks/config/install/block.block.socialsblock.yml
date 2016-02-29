@@ -4,7 +4,7 @@ dependencies:
   module:
     - infinite_blocks
   theme:
-    - burda_infinite
+    - infinite
 third_party_settings:
   infinite_blocks:
     id: ''
@@ -12,7 +12,7 @@ third_party_settings:
     title_tag: div
     block_tag: div
 id: socialsblock
-theme: burda_infinite
+theme: infinite
 region: header_large
 weight: -8
 provider: null

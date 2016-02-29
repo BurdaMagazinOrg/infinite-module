@@ -7,7 +7,7 @@ dependencies:
     - infinite_blocks
     - system
   theme:
-    - burda_infinite
+    - infinite
 third_party_settings:
   infinite_blocks:
     id: ''
@@ -15,7 +15,7 @@ third_party_settings:
     title_tag: div
     block_tag: div
 id: mainnavigation_2
-theme: burda_infinite
+theme: infinite
 region: secondary_menu
 weight: -8
 provider: null

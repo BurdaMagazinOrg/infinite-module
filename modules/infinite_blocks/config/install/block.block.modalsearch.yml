@@ -4,13 +4,13 @@ dependencies:
   module:
     - infinite_blocks
   theme:
-    - burda_infinite
+    - infinite
 third_party_settings:
   infinite_blocks:
     classes: block-infinite-blocks-modal-search
     title_tag: div
 id: modalsearch
-theme: burda_infinite
+theme: infinite
 region: modal
 weight: -13
 provider: null

@@ -5,19 +5,19 @@ dependencies:
     - image.style.landscape_l
     - image.style.landscape_m
   theme:
-    - burda_infinite
+    - infinite
 id: landscape
 label: Landscape
 image_style_mappings:
   -
-    breakpoint_id: burda_infinite.xl
+    breakpoint_id: infinite.xl
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: ''
   -
-    breakpoint_id: burda_infinite.md
+    breakpoint_id: infinite.md
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: landscape_l
-breakpoint_group: burda_infinite
+breakpoint_group: infinite
 fallback_image_style: landscape_m

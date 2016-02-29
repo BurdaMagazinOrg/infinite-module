@@ -5,7 +5,7 @@ dependencies:
     - infinite_blocks
     - system
   theme:
-    - burda_infinite
+    - infinite
 third_party_settings:
   infinite_blocks:
     id: ''
@@ -13,7 +13,7 @@ third_party_settings:
     title_tag: div
     block_tag: div
 id: breadcrumbs
-theme: burda_infinite
+theme: infinite
 region: breadcrumb
 weight: -8
 provider: null

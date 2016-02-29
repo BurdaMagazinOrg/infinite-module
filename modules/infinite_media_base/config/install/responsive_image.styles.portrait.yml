@@ -5,34 +5,34 @@ dependencies:
     - image.style.portrait_m
     - image.style.portrait_s
   theme:
-    - burda_infinite
+    - infinite
 id: portrait
 label: Portrait
 image_style_mappings:
   -
-    breakpoint_id: burda_infinite.extra_large
+    breakpoint_id: infinite.extra_large
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: portrait_m
   -
-    breakpoint_id: burda_infinite.large
+    breakpoint_id: infinite.large
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: portrait_m
   -
-    breakpoint_id: burda_infinite.wide
+    breakpoint_id: infinite.wide
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: portrait_m
   -
-    breakpoint_id: burda_infinite.narrow
+    breakpoint_id: infinite.narrow
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: portrait_s
   -
-    breakpoint_id: burda_infinite.mobile
+    breakpoint_id: infinite.mobile
     multiplier: 1x
     image_mapping_type: image_style
     image_mapping: portrait_s
-breakpoint_group: burda_infinite
+breakpoint_group: infinite
 fallback_image_style: portrait_s

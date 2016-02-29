@@ -69,7 +69,7 @@ function infinite_base_install() {
 
   \Drupal::configFactory()
     ->getEditable('system.theme')
-    ->set('default', 'burda_infinite')
+    ->set('default', 'infinite')
     ->save(TRUE);
 
 
@@ -122,16 +122,16 @@ function infinite_base_requirements($phase) {
       $theme_handler = \Drupal::service('theme_handler');
       $themes = $theme_handler->listInfo();  // Get a list of available themes.
 
-      if (empty($themes['burda_infinite'])) {
+      if (empty($themes['infinite'])) {
 
         try {
 
           \Drupal::service('theme_installer')
-            ->install(['burda_infinite'], TRUE);
+            ->install(['infinite'], TRUE);
 
         } catch (InvalidArgumentException $e) {
-          $requirements['burda_infinite']['severity'] = REQUIREMENT_ERROR;;
-          $requirements['burda_infinite']['description'] = 'Please place the burda_infinite in the theme folder';
+          $requirements['infinite']['severity'] = REQUIREMENT_ERROR;;
+          $requirements['infinite']['description'] = 'Please place the infinite in the theme folder';
         }
 
 

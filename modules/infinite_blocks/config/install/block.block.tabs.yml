@@ -4,15 +4,15 @@ dependencies:
   module:
     - infinite_blocks
   theme:
-    - burda_infinite
+    - infinite
 third_party_settings:
   infinite_blocks:
-    id: ''
+    id: 'tabs'
     classes: ''
     title_tag: div
     block_tag: div
 id: tabs
-theme: burda_infinite
+theme: infinite
 region: help
 weight: -8
 provider: null
