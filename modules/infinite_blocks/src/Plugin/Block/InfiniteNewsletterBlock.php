@@ -27,10 +27,14 @@ class InfiniteNewsletterBlock extends BlockBase {
   public function build() {
 
     $config = $this->getConfiguration();
-
+    
     return array(
       '#theme' => $this->theme,
-      '#groupId' => !empty($config['group_id']) ? $config['group_id'] : ''
+      '#groupId' => !empty($config['group_id']) ? $config['group_id'] : '',
+      '#headline' => !empty($config['headline']) ? $config['headline'] : '',
+      '#text' => !empty($config['text']) ? $config['text']['value'] : '',
+      '#confirmation_headline' => !empty($config['confirmation_headline']) ? $config['confirmation_headline'] : '',
+      '#confirmation_text' => !empty($config['confirmation_text']) ? $config['confirmation_text']['value'] : '',
     );
 
   }
@@ -47,6 +51,42 @@ class InfiniteNewsletterBlock extends BlockBase {
       '#required' => TRUE,
     );
 
+    $form['headline'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Headline'),
+      '#default_value' => !empty($config['headline']) ? $config['headline'] : '',
+      '#size' => 256,
+      '#maxlength' => 512,
+      '#required' => TRUE,
+    );
+
+    $form['text'] = array(
+      '#type' => 'text_format',
+      '#title' => t('Text'),
+      '#default_value' => !empty($config['text']) ? $config['text']['value'] : '',
+      '#rows' => 8,
+      '#cols' => 128,
+    );
+
+    $form['confirmation_headline'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Confirmation headline'),
+      '#default_value' => !empty($config['confirmation_headline']) ? $config['confirmation_headline'] : '',
+      '#size' => 256,
+      '#maxlength' => 512,
+      '#required' => TRUE,
+    );
+
+    $form['confirmation_text'] = array(
+      '#type' => 'text_format',
+      '#title' => t('Confirmation text'),
+      '#default_value' => !empty($config['confirmation_text']) ? $config['confirmation_text']['value'] : '',
+      '#rows' => 8,
+      '#cols' => 128,
+    );
+
+
+
     return $form;
   }
 
@@ -55,6 +95,10 @@ class InfiniteNewsletterBlock extends BlockBase {
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->setConfigurationValue('group_id', $form_state->getValue('group_id'));
+    $this->setConfigurationValue('headline', $form_state->getValue('headline'));
+    $this->setConfigurationValue('text', $form_state->getValue('text'));
+    $this->setConfigurationValue('confirmation_headline', $form_state->getValue('confirmation_headline'));
+    $this->setConfigurationValue('confirmation_text', $form_state->getValue('confirmation_text'));
   }
 
 }

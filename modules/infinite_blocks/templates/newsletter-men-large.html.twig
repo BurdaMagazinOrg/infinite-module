@@ -2,9 +2,9 @@
     <div class="container-content">
 
         <form class="container-form container-content-item">
-            <div class="text-headline text-headline-size-h3">TAUSCHE E-MAIL-ADRESSE GEGEN COOLE TRENDS</div>
+            <div class="text-headline text-headline-size-h3">{{ headline }}</div>
 
-            <p class="text-description">Der InStyle Men Newsletter liefert dir täglich News aus Mode, Technik und Lifestyle. Eben alles, was man als cooler Kerl so drauf haben muss.</p>
+            <p class="text-description">{{ text|raw }}</p>
 
             <div class="form-group">
                 <input class="input-lg input-email" type="email" name="email" required
@@ -26,13 +26,8 @@
         </form>
 
         <div class="container-success container-content-item">
-            <div class="text-headline text-headline-size-h3">ANMELDEN ZUM INSTYLE-NEWSLETTER</div>
-            <p>Willkommen bei InStyle! Danke für deine Anmeldung für unseren Newsletter.</p>
-
-            <p>Wir schicken dir in Kürze eine Bestätigungs-E-Mail zu. Bitte klicke auf den Aktivierungslink in
-                dieser
-                Mail, dann liefern wir dir alles rund um Fashion, Beauty und Lifestyle direkt ins Postfach.
-                Keine Mail von uns bekommen? Bitte sieh in deinem Spam-Ordner nach.</p>
+            <div class="text-headline text-headline-size-h3">{{ confirmation_headline }}</div>
+            {{ confirmation_text|raw }}
         </div>
 
         <div class="container-privacy container-content-item">
