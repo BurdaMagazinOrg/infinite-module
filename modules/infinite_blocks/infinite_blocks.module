@@ -24,13 +24,19 @@ function infinite_blocks_theme() {
       'variables' => array()
     ),
     'newsletter' => array(
-      'variables' => array()
+      'variables' => array(
+        'groupId' => NULL
+      )
     ),
     'newsletter_large' => array(
-      'variables' => array()
+      'variables' => array(
+        'groupId' => NULL
+      )
     ),
     'newsletter_men_large' => array(
-      'variables' => array()
+      'variables' => array(
+        'groupId' => NULL
+      )
     ),
     'socials_bar' => array(
       'variables' => array(

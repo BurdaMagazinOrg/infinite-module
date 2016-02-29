@@ -7,8 +7,6 @@
 
 namespace Drupal\infinite_blocks\Plugin\Block;
 
-use Drupal\Core\Block\BlockBase;
-
 /**
  *
  * @Block(
@@ -16,17 +14,9 @@ use Drupal\Core\Block\BlockBase;
  *   admin_label = @Translation("Newsletter Large Men Block")
  * )
  */
-class InfiniteNewsletterMenLargeBlock extends BlockBase {
+class InfiniteNewsletterMenLargeBlock extends InfiniteNewsletterBlock {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function build() {
+  protected $theme = 'newsletter_men_large';
 
-    return array(
-      '#theme' => 'newsletter_men_large',
-      'variables' => [],
-    );
-  }
 
 }
