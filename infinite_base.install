@@ -99,17 +99,7 @@ function infinite_base_uninstall() {
  * Update base fields to the schema.
  */
 function infinite_base_update_8104() {
-  // todo: does exists a better D8 way to do this
-  $spec = array(
-    'type' => 'int',
-    'size' => 'tiny',
-    'description' => 'Promoted to top presenter',
-    'not null' => FALSE,
-    'default' => NULL,
-  );
-  $schema = Database::getConnection()->schema();
-  $schema->addField('node_field_data', 'promote_top_presenter', $spec);
-  $schema->addField('node_field_revision', 'promote_top_presenter', $spec);
+  // Do nothing here any more. Add 8105 with migrate code when new field type is ready.
 }
 
 function infinite_base_requirements($phase) {
