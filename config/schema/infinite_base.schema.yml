@@ -1,0 +1,10 @@
+infinite_base.filter_external_links:
+  type: config_object
+  label: 'Settings for external link filter'
+  mapping:
+    internal_domains:
+      type: sequence
+      label: 'Domains considered internal'
+      sequence:
+        type: string
+        label: 'Domain'

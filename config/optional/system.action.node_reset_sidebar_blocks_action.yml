@@ -1,0 +1,10 @@
+id: node_reset_sidebar_blocks_action
+label: 'Reset sidebar blocks'
+status: true
+langcode: de
+type: node
+plugin: node_reset_sidebar_blocks_action
+dependencies:
+  module:
+    - infinite_base
+    - node
