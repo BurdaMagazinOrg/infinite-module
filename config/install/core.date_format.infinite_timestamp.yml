@@ -1,7 +1,0 @@
-langcode: de
-status: true
-dependencies: {  }
-id: infinite_timestamp
-label: 'Infinite Timestamp'
-locked: false
-pattern: U

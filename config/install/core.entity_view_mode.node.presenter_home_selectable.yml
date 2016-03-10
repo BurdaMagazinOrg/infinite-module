@@ -1,9 +1,0 @@
-langcode: de
-status: true
-dependencies:
-  module:
-    - node
-id: node.presenter_home_selectable
-label: 'Presenter Home Selectable'
-targetEntityType: node
-cache: true
