@@ -1,4 +1,3 @@
-uuid: e044ac73-e3ec-41cf-be1f-31fe1738a6ad
 langcode: en
 status: true
 dependencies:
@@ -20,7 +19,11 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      tags: tags
+      tags:
+        - tags
+        - brands
+        - events
+        - people
     sort:
       field: _none
     auto_create: false
