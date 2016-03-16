@@ -2,33 +2,29 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.media.square_m
-    - field.field.media.image.field_brands
-    - field.field.media.image.field_channel
+    - core.entity_view_mode.media.portrait_m
     - field.field.media.image.field_copyright
     - field.field.media.image.field_description
-    - field.field.media.image.field_events
     - field.field.media.image.field_expires
     - field.field.media.image.field_image
-    - field.field.media.image.field_people
     - field.field.media.image.field_source
     - field.field.media.image.field_tags
     - media_entity.bundle.image
   module:
-    - responsive_image
-id: media.image.square_m
+    - image
+id: media.image.portrait_m
 targetEntityType: media
 bundle: image
-mode: square_m
+mode: portrait_m
 content:
   field_image:
     weight: 0
     label: hidden
     settings:
-      responsive_image_style: square
+      image_style: portrait_m
       image_link: ''
     third_party_settings: {  }
-    type: responsive_image
+    type: image
 hidden:
   created: true
   field_brands: true

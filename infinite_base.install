@@ -66,17 +66,6 @@ function infinite_base_install() {
   $schema->addField('node_field_data', 'sponsored', $spec);
   $schema->addField('node_field_revision', 'sponsored', $spec);
 
-
-  \Drupal::configFactory()
-    ->getEditable('system.theme')
-    ->set('default', 'infinite')
-    ->save(TRUE);
-
-
-  \Drupal::service('module_installer')->install([
-    'infinite_article',
-  ], TRUE);
-
 }
 
 function infinite_base_uninstall() {
@@ -112,31 +101,3 @@ function infinite_base_update_8104() {
   $schema->addField('node_field_revision', 'promote_top_presenter', $spec);
 }
 
-function infinite_base_requirements($phase) {
-
-  $requirements = [];
-
-  switch ($phase) {
-    case 'install':
-
-      $theme_handler = \Drupal::service('theme_handler');
-      $themes = $theme_handler->listInfo();  // Get a list of available themes.
-
-      if (empty($themes['infinite'])) {
-
-        try {
-
-          \Drupal::service('theme_installer')
-            ->install(['infinite'], TRUE);
-
-        } catch (InvalidArgumentException $e) {
-          $requirements['infinite']['severity'] = REQUIREMENT_ERROR;;
-          $requirements['infinite']['description'] = 'Please place the infinite in the theme folder';
-        }
-
-
-      }
-      break;
-  }
-  return $requirements;
-}

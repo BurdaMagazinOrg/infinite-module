@@ -2,43 +2,57 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.media.presenter_l
-    - field.field.media.image.field_brands
-    - field.field.media.image.field_channel
+    - core.entity_view_mode.media.gallery
     - field.field.media.image.field_copyright
     - field.field.media.image.field_description
-    - field.field.media.image.field_events
     - field.field.media.image.field_expires
     - field.field.media.image.field_image
-    - field.field.media.image.field_people
     - field.field.media.image.field_source
     - field.field.media.image.field_tags
     - media_entity.bundle.image
   module:
-    - image
-id: media.image.presenter_l
+    - responsive_image
+    - text
+id: media.image.gallery
 targetEntityType: media
 bundle: image
-mode: presenter_l
+mode: gallery
 content:
+  field_copyright:
+    weight: 1
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_description:
+    weight: 4
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
   field_image:
     weight: 0
     label: hidden
     settings:
-      image_style: presenter_l
+      responsive_image_style: gallery
       image_link: ''
     third_party_settings: {  }
-    type: image
+    type: responsive_image
+  field_source:
+    weight: 2
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
 hidden:
   created: true
   field_brands: true
   field_channel: true
-  field_copyright: true
-  field_description: true
   field_events: true
   field_expires: true
   field_people: true
-  field_source: true
   field_tags: true
   name: true
   thumbnail: true

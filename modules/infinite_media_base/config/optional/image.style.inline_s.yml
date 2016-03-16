@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - infinite_media_base
+    - thunder_media
 name: inline_s
 label: 'Inline S'
 effects:
