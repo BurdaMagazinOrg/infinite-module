@@ -12,7 +12,7 @@ third_party_settings:
 id: modalsearch
 theme: infinite
 region: modal
-weight: -13
+weight: -9
 provider: null
 plugin: infinite_blocks_modal_search
 settings:

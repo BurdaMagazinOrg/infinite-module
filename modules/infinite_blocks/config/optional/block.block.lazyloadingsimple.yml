@@ -16,7 +16,7 @@ third_party_settings:
 id: lazyloadingsimple
 theme: infinite
 region: hidden
-weight: null
+weight: -8
 provider: null
 plugin: infinite_base_lazy_loading_simple
 settings:

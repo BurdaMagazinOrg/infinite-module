@@ -14,8 +14,8 @@ third_party_settings:
     block_tag: div
 id: newsletterblock
 theme: infinite
-region: content
-weight: -9
+region: hidden
+weight: -7
 provider: null
 plugin: infinite_blocks_newsletter
 settings:
