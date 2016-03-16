@@ -21,7 +21,7 @@ class FilterExtension extends \Twig_Extension {
   public static function plainText($value) {
     $element = render($value);
     $element = strip_tags($element);
-    $element = html_entity_decode($element);
+    $element = html_entity_decode($element, ENT_QUOTES);
     return $element;
   }
 }
