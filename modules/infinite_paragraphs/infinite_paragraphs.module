@@ -8,8 +8,24 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\image\Entity\ImageStyle;
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function infinite_paragraphs_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (!isset($form['field_paragraph'])) {
+    return;
+  }
+
+  foreach (Element::children($form['field_paragraph']['widget']) as $index) {
+    if (isset($form['field_paragraph']['widget'][$index]['subform']['field_p_view_mode'])) {
+      _infinite_paragraphs_view_mode_widget_alter($form['field_paragraph']['widget'][$index]['subform']['field_p_view_mode']['widget'], $index);
+    }
+  }
+}
 
 /**
  * Implements hook_entity_view_mode_alter().
@@ -191,4 +207,27 @@ function _infinite_paragraphs_allowed_view_modes(FieldStorageDefinitionInterface
   }
 
   return $allowed_view_modes;
+}
+
+/**
+ * Modifies widget for paragraph view mode.
+ *
+ * - Disables widget if there is only one choice.
+ * - Disables widget if the user is not allowed to use the current selection.
+ *
+ * @param array $form_element
+ */
+function _infinite_paragraphs_view_mode_widget_alter(array &$element, $index) {
+  if (empty($element['#default_value'])) {
+    if ($index == 0 && array_key_exists('middle', $element['#options'])) {
+      $element['#default_value'] = array('middle');
+    }
+    elseif (array_key_exists('small', $element['#options'])) {
+      $element['#default_value'] = array('small');
+    }
+  }
+
+  if (count(array_diff(array_keys($element['#options']), array('_none'))) == 1) {
+    $element['#disabled'] = TRUE;
+  }
 }
