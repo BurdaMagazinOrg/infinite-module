@@ -176,19 +176,16 @@ function _infinite_paragraphs_decorate_group(&$paragraphs, $group, $type, $build
  */
 function _infinite_paragraphs_allowed_view_modes(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL, &$cacheable = TRUE) {
   $cacheable = FALSE;
-  $allowed_view_modes = [
-    'full' => 'Volle Breite',
-    'middle' => 'Mittel',
-    'small' => 'Schmal',
-  ];
 
-  if (in_array('editor', \Drupal::currentUser()->getRoles())) {
-    unset($allowed_view_modes['full']);
+  if (in_array($entity->bundle(), array('text', 'twitter', 'pinterest', 'instagram', 'tracdelight', 'content_teaser', 'term_teaser'))) {
+    $allowed_view_modes = ['small'];
   }
-
-  if (in_array($entity->bundle(), array('text', 'twitter', 'pinterest', 'instagram'))) {
-    unset($allowed_view_modes['full']);
-    unset($allowed_view_modes['middle']);
+  else {
+    $allowed_view_modes = [
+      'full' => 'Volle Breite',
+      'middle' => 'Mittel',
+      'small' => 'Schmal',
+    ];
   }
 
   return $allowed_view_modes;
