@@ -23,7 +23,7 @@ function drush_infinite_paragraphs_update_paragraphs() {
   $query = \Drupal::entityQuery('node')->condition('type', 'article')->sort('changed');
   $count = $query->count()->execute();
 
-  drush_log(\Drupal::translation()->formatPlural($count, 'Updating 1 article...', 'Updating @count articles...'));
+  print(\Drupal::translation()->formatPlural($count, 'Updating 1 article...', 'Updating @count articles...') . "\n");
 
   $query = \Drupal::entityQuery('node')->condition('type', 'article')->sort('changed');
   $progress = 0;
@@ -42,15 +42,16 @@ function drush_infinite_paragraphs_update_paragraphs() {
     }
     $progress++;
     if ($progress % 100 == 0) {
-      drush_log(Drupal::translation()->translate('Updated @progress of @count articles...', array(
+      \Drupal::entityTypeManager()->getStorage('node')->resetCache();
+      print(Drupal::translation()->translate('Updated @progress of @count articles...', array(
         '@progress' => $progress,
         '@count' => $count,
-      )));
+      )) . "\n");
     }
   }
 
-  drush_log('Finished moving paraphraphs from field_top_paragraphs to field_paragraphs.');
-  drush_log('Setting view modes on all paragraphs...');
+  print("Finished moving paraphraphs from field_top_paragraphs to field_paragraphs.\n");
+  print("Setting view modes on all paragraphs...\n");
 
   $query = \Drupal::entityQuery('node')->condition('type', 'article')->sort('changed');
   $progress = 0;
@@ -70,12 +71,14 @@ function drush_infinite_paragraphs_update_paragraphs() {
     }
     $progress++;
     if ($progress % 100 == 0) {
-      drush_log(Drupal::translation()->translate('Updated @progress of @count articles...', array(
+      \Drupal::entityTypeManager()->getStorage('node')->resetCache();
+      \Drupal::entityTypeManager()->getStorage('paragraph')->resetCache();
+      print(Drupal::translation()->translate('Updated @progress of @count articles...', array(
         '@progress' => $progress,
         '@count' => $count,
-      )));
+      )) . "\n");
     }
   }
 
-  drush_log('Finished setting view modes on paragraphs.');
+  print("Finished setting view modes on paragraphs.\n");
 }
