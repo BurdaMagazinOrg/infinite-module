@@ -28,6 +28,21 @@ function infinite_paragraphs_form_taxonomy_term_form_alter(&$form, FormStateInte
 }
 
 /**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function infinite_paragraphs_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (!isset($form['field_paragraphs'])) {
+    return;
+  }
+
+  foreach (Element::children($form['field_paragraphs']['widget']) as $index) {
+    if (isset($form['field_paragraphs']['widget'][$index]['subform']['field_p_view_mode'])) {
+      _infinite_paragraphs_view_mode_widget_alter($form['field_paragraphs']['widget'][$index]['subform']['field_p_view_mode']['widget'], $index);
+    }
+  }
+}
+
+/**
  * Implements hook_entity_view_mode_alter().
  */
 function infinite_paragraphs_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
