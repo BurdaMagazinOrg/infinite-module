@@ -59,7 +59,7 @@ function drush_infinite_paragraphs_update_paragraphs() {
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($id);
     if (!$node->field_paragraphs->isEmpty()) {
       for ($i = 0; $i < count($node->field_paragraphs); $i++) {
-        if ($i === 0) {
+        if ($i === 0 && $node->field_paragraphs[$i]->entity->bundle() == 'media') {
           $node->field_paragraphs[$i]->entity->field_p_view_mode->value = 'middle';
         }
         else {
