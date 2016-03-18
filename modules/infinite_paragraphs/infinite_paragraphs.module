@@ -98,7 +98,10 @@ function infinite_paragraphs_preprocess_container(&$variables) {
     }
     elseif (isset($variables['element']['#parent']['#taxonomy_term'])) {
       $term = $variables['element']['#parent']['#taxonomy_term'];
-      $variables['parent']['url'] = $term->url();
+      $variables['parent']['url'] = $term->url(array(
+        'absolute' => TRUE,
+      ));
+      $variables['parent']['label'] = $variables['parent']['name'];
     }
 
     $variables['parent']['facebook_share_button'] = theme_get_setting('facebook_share_button');
