@@ -10,6 +10,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
 
 /**
@@ -87,48 +88,12 @@ function infinite_paragraphs_preprocess_container(&$variables) {
 
     if (isset($variables['element']['#parent']['#node'])) {
       $node = $variables['element']['#parent']['#node'];
-      $variables['parent']['url'] = $node->url('canonical', array(
-        'language' => $node->language(),
-        'absolute' => TRUE,
-      ));
-      $variables['parent']['label'] = $variables['parent']['title'];
-      unset($variables['parent']['title']);
-
-      // Get share image URL from teaser media.
-      if ($node->hasField('field_teaser_media') && !$node->field_teaser_media->isEmpty()) {
-
-        if (!empty($node->field_teaser_media->entity) &&  // todo: check wyh some media entity reference seems to be empty here after isEmpty() check? example: node 6001
-          $node->field_teaser_media->entity->hasField('field_image') &&
-          !$node->field_teaser_media->entity->field_image->isEmpty()
-        ) {
-
-          $share_img_path = $node->field_teaser_media->entity->field_image->entity->getFileUri();
-          $share_img = ImageStyle::load('inline_l');
-          if (is_object($share_img)) {
-            $url = $share_img->buildUrl($share_img_path);
-            $variables['share_img_url'] = $url;
-          }
-        }
-      }
+      _infinite_paragraphs_get_parent_base_data($node, $variables);
     }
     elseif (isset($variables['element']['#parent']['#taxonomy_term'])) {
       $term = $variables['element']['#parent']['#taxonomy_term'];
-      $variables['parent']['url'] = $term->url(array(
-        'absolute' => TRUE,
-      ));
-      $variables['parent']['label'] = $variables['parent']['name'];
+      _infinite_paragraphs_get_parent_base_data($term, $variables);
     }
-
-    $variables['parent']['facebook_share_button'] = theme_get_setting('facebook_share_button');
-    $variables['parent']['whatsapp_share_button'] = theme_get_setting('whatsapp_share_button');
-    $variables['parent']['pinterest_share_button'] = theme_get_setting('pinterest_share_button');
-    $variables['parent']['twitter_share_button'] = theme_get_setting('twitter_share_button');
-    $variables['parent']['twitter_share_via'] = theme_get_setting('twitter_share_via');
-    $variables['parent']['email_share_button'] = theme_get_setting('email_share_button');
-    $variables['parent']['whatsapp_share_text'] = theme_get_setting('whatsapp_share_text');
-    $variables['parent']['email_share_text'] = theme_get_setting('email_share_text');
-    $variables['parent']['email_subject'] = theme_get_setting('email_subject');
-
   }
 }
 
@@ -248,4 +213,49 @@ function _infinite_paragraphs_view_mode_widget_alter(array &$element, $index) {
   if (count(array_diff(array_keys($element['#options']), array('_none'))) == 1) {
     $element['#disabled'] = TRUE;
   }
+}
+
+function _infinite_paragraphs_get_parent_base_data($entity, &$variables) {
+  if ($entity->getEntityTypeId() == 'node') {
+    $node = $entity;
+    $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $node->id());
+    $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
+    $variables['parent']['url'] = $absolute_url;
+    $variables['parent']['label'] = $variables['parent']['title'];
+    unset($variables['parent']['title']);
+  }
+  elseif ($entity->getEntityTypeId() == 'taxonomy_term') {
+    $term = $entity;
+    $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/taxonomy/term/' . $term->id());
+    $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
+    $variables['parent']['url'] = $absolute_url;
+    $variables['parent']['label'] = $term->name->value;
+  }
+
+  // Get share image URL from teaser media.
+  if ($entity->hasField('field_teaser_media') && !$entity->field_teaser_media->isEmpty()) {
+
+    if (!empty($entity->field_teaser_media->entity) &&  // todo: check wyh some media entity reference seems to be empty here after isEmpty() check? example: node 6001
+      $entity->field_teaser_media->entity->hasField('field_image') &&
+      !$entity->field_teaser_media->entity->field_image->isEmpty()
+    ) {
+
+      $share_img_path = $entity->field_teaser_media->entity->field_image->entity->getFileUri();
+      $share_img = ImageStyle::load('inline_l');
+      if (is_object($share_img)) {
+        $url = $share_img->buildUrl($share_img_path);
+        $variables['share_img_url'] = $url;
+      }
+    }
+  }
+
+  $variables['parent']['facebook_share_button'] = theme_get_setting('facebook_share_button');
+  $variables['parent']['whatsapp_share_button'] = theme_get_setting('whatsapp_share_button');
+  $variables['parent']['pinterest_share_button'] = theme_get_setting('pinterest_share_button');
+  $variables['parent']['twitter_share_button'] = theme_get_setting('twitter_share_button');
+  $variables['parent']['twitter_share_via'] = theme_get_setting('twitter_share_via');
+  $variables['parent']['email_share_button'] = theme_get_setting('email_share_button');
+  $variables['parent']['whatsapp_share_text'] = theme_get_setting('whatsapp_share_text');
+  $variables['parent']['email_share_text'] = theme_get_setting('email_share_text');
+  $variables['parent']['email_subject'] = theme_get_setting('email_subject');
 }
