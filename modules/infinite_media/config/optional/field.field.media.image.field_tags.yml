@@ -19,11 +19,10 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      tags:
-        - tags
-        - brands
-        - events
-        - people
+      tags: tags
+      brands: brands
+      events: events
+      people: people
     sort:
       field: _none
     auto_create: false
