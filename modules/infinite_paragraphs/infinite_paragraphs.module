@@ -176,7 +176,7 @@ function _infinite_paragraphs_decorate_group(&$paragraphs, $group, $type, $build
 function _infinite_paragraphs_allowed_view_modes(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL, &$cacheable = TRUE) {
   $cacheable = FALSE;
 
-  if (in_array($entity->bundle(), array('content_teaser', 'gallery', 'instagram', 'pinterest', 'term_teaser', 'text', 'tracdelight', 'twitter'))) {
+  if (in_array($entity->bundle(), array('content_teaser', 'gallery', 'instagram', 'pinterest', 'recent_content', 'term_teaser', 'text', 'tracdelight', 'twitter'))) {
     $allowed_view_modes = [
       'small' => 'Schmal',
     ];
