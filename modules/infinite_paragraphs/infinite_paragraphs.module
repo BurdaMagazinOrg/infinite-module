@@ -220,7 +220,7 @@ function _infinite_paragraphs_get_parent_base_data($entity, &$variables) {
     $node = $entity;
     $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $node->id());
     $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
-    $variables['parent']['url'] = $absolute_url;
+    $variables['parent']['url'] = $absolute_url->toString();
     $variables['parent']['label'] = $variables['parent']['title'];
     unset($variables['parent']['title']);
   }
@@ -228,7 +228,7 @@ function _infinite_paragraphs_get_parent_base_data($entity, &$variables) {
     $term = $entity;
     $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/taxonomy/term/' . $term->id());
     $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
-    $variables['parent']['url'] = $absolute_url;
+    $variables['parent']['url'] = $absolute_url->toString();
     $variables['parent']['label'] = $term->name->value;
   }
 
