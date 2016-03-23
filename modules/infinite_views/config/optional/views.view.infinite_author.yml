@@ -1,4 +1,4 @@
-langcode: de
+langcode: en
 status: true
 dependencies:
   config:
@@ -215,12 +215,12 @@ display:
           validate_options:
             operation: view
             multiple: 0
-            restrict_roles: '1'
             roles:
-              administrator: administrator
               editor: editor
               seo: seo
+              administrator: administrator
             access: false
+            restrict_roles: false
           break_phrase: false
           not: false
           entity_type: node
