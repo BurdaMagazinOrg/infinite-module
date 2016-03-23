@@ -1,2 +1,14 @@
 {% set attributes = attributes.addClass('region-newsletter-page instyle-men') %}
-{% include '@instyle_blocks/newsletter/newsletter.html.twig' %}
+{% extends 'newsletter.html.twig' %}  
+
+{% block container_privacy %}
+    <div class="container-privacy container-content-item container-content-item--centered">
+        <div class="content-wrapper">
+            <span class="icon icon-close"></span>
+
+            <div class="container-content-dynamic">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
