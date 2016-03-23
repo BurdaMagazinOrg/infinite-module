@@ -1,4 +1,4 @@
-langcode: de
+langcode: en
 status: true
 dependencies:
   config:
@@ -222,7 +222,7 @@ display:
           expose:
             label: ''
           granularity: second
-      title: 'Infinite Home Presenter'
+      title: ''
       header: {  }
       footer: {  }
       empty: {  }

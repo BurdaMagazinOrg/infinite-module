@@ -1,4 +1,4 @@
-langcode: de
+langcode: en
 status: true
 dependencies:
   config:
@@ -102,8 +102,8 @@ display:
             value: all
             title_enable: false
             title: All
-          title_enable: true
-          title: '{{ arguments.term_node_tid_depth }}'
+          title_enable: false
+          title: ''
           default_argument_type: fixed
           default_argument_options:
             argument: ''
@@ -504,8 +504,8 @@ display:
             value: all
             title_enable: false
             title: All
-          title_enable: true
-          title: '{{ arguments.term_node_tid_depth }}'
+          title_enable: false
+          title: ''
           default_argument_type: fixed
           default_argument_options:
             argument: ''
@@ -787,8 +787,8 @@ display:
             value: all
             title_enable: false
             title: All
-          title_enable: true
-          title: '{{ arguments.term_node_tid_depth }}'
+          title_enable: false
+          title: ''
           default_argument_type: fixed
           default_argument_options:
             argument: ''
@@ -1057,8 +1057,8 @@ display:
             value: all
             title_enable: false
             title: All
-          title_enable: true
-          title: '{{ arguments.term_node_tid_depth }}'
+          title_enable: false
+          title: ''
           default_argument_type: fixed
           default_argument_options:
             argument: ''
@@ -1321,8 +1321,8 @@ display:
             value: all
             title_enable: false
             title: All
-          title_enable: true
-          title: '{{ arguments.term_node_tid_depth }}'
+          title_enable: false
+          title: ''
           default_argument_type: fixed
           default_argument_options:
             argument: ''
