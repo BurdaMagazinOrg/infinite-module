@@ -8,6 +8,6 @@ dependencies:
   - search
   - views
   - views_load_more
-  - infinite_article
+  - infinite_base
 config_devel:
   - views.view.infinite_search

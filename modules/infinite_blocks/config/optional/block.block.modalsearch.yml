@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - infinite_blocks
+  theme:
+    - infinite
+third_party_settings:
+  infinite_blocks:
+    classes: block-infinite-blocks-modal-search
+    title_tag: div
+id: modalsearch
+theme: infinite
+region: modal
+weight: -9
+provider: null
+plugin: infinite_blocks_modal_search
+settings:
+  id: infinite_blocks_modal_search
+  label: 'Modal Search'
+  provider: infinite_blocks
+  label_display: '0'
+visibility: {  }

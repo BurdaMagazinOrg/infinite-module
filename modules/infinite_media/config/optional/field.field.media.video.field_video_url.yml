@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_video_url
+    - media_entity.bundle.video
+  module:
+    - link
+id: media.video.field_video_url
+field_name: field_video_url
+entity_type: media
+bundle: video
+label: 'Video URL'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 0
+field_type: link

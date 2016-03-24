@@ -1,0 +1,17 @@
+uuid: ce274301-467e-434d-a806-6b76d024043c
+langcode: en
+status: true
+dependencies:
+  module:
+    - thunder_media
+name: inline_s
+label: 'Inline S'
+effects:
+  bf8988b4-49c6-4a0d-a009-9c0064c5ec78:
+    uuid: bf8988b4-49c6-4a0d-a009-9c0064c5ec78
+    id: thunder_media_auto_aspect
+    weight: 1
+    data:
+      landscape: landscape_xs
+      portrait: portrait_xs
+      ratio_adjustment: 1

@@ -1,0 +1,17 @@
+uuid: 48f741fc-3785-4491-9c37-55cd09681140
+langcode: en
+status: true
+dependencies:
+  module:
+    - thunder_media
+name: inline_m
+label: 'Inline M'
+effects:
+  e297644f-f680-407d-b400-e63288b7052d:
+    uuid: e297644f-f680-407d-b400-e63288b7052d
+    id: thunder_media_auto_aspect
+    weight: 1
+    data:
+      landscape: landscape_m
+      portrait: portrait_m
+      ratio_adjustment: 1

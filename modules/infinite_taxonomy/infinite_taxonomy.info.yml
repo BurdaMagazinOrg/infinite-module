@@ -10,5 +10,4 @@ dependencies:
   - path
   - taxonomy
   - text
-  - infinite_base
-  - infinite_media_base
+

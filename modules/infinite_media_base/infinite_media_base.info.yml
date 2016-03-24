@@ -12,7 +12,6 @@ dependencies:
   - inline_entity_form
   - media_entity
   - responsive_image
-  - infinite_base
 config_devel:
   - image.style.gallery_l
   - image.style.gallery_landscape_l

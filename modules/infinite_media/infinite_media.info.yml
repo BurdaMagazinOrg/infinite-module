@@ -14,8 +14,7 @@ dependencies:
   - link
   - media_entity
   - responsive_image
-  - infinite_base
-  - infinite_taxonomy
+  - thunder_media
 config_devel:
   - core.entity_form_display.media.gallery.default
   - core.entity_view_display.media.image.default
