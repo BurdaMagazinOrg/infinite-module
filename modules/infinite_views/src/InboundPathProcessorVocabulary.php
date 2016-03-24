@@ -19,7 +19,7 @@ class InboundPathProcessorVocabulary implements InboundPathProcessorInterface {
       if (strpos($path, $alias . '/') === 0) {
         $path_args = explode("/", ltrim($path, "/"));
 
-        if (!empty($path_args[1])) {
+        if (!empty($path_args[1]) && mb_strlen($path_args[1], 'utf8') === 1) {
           return '/vocabulary/' . $vocabulary . '/' . $path_args[1];
         }
       }

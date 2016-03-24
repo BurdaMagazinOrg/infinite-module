@@ -12,7 +12,7 @@ class OutboundPathProcessorVocabulary implements OutboundPathProcessorInterface 
     if (strpos($path, "/vocabulary/") === 0) {
       $path_args = explode("/", ltrim($path, "/"));
 
-      if (!empty($path_args[2])) {
+      if (!empty($path_args[2]) && mb_strlen($path_args[2], 'utf8') === 1) {
         // Get absolute URL from node alias URL.
         $alias = \Drupal::service('path.alias_manager')
           ->getAliasByPath('/' . $path_args[0] . '/' . $path_args[1]);
