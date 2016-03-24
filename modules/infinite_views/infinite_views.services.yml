@@ -1,0 +1,10 @@
+services:
+  outbound_path_processor_vocabulary:
+    class: Drupal\infinite_views\OutboundPathProcessorVocabulary
+    tags:
+      - {name: path_processor_outbound}
+
+  inbound_path_processor_vocabulary:
+    class: Drupal\infinite_views\InboundPathProcessorVocabulary
+    tags:
+      - {name: path_processor_inbound}

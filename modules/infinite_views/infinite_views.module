@@ -21,7 +21,9 @@ use Drupal\views\ViewExecutable;
 function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
 
   // Switch to other views display in infinite_taxonomy_term view for page displays.
-  if ($view->id() == 'infinite_taxonomy_term' && $view->getDisplay()->getBaseId() == 'page' && $display_id != 'rss') {
+  if ($view->id() == 'infinite_taxonomy_term' && $view->getDisplay()
+      ->getBaseId() == 'page' && $display_id != 'rss'
+  ) {
 
     if (\Drupal::service('path.matcher')->isFrontPage()) {
       $view->setDisplay('front');
@@ -40,7 +42,8 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
 
   // Exclude front / channel presenter nodes from infinite_front / infinite_taxonomy_term streaming view.
   if (($view->id() == 'infinite_front_presenter' && $view->current_display == 'four_teasers') ||
-    ($view->id() == 'infinite_taxonomy_term' && ($view->getDisplay()->display['id'] == 'front' || $view->getDisplay()->display['id'] == 'channel'))) {
+    ($view->id() == 'infinite_taxonomy_term' && ($view->getDisplay()->display['id'] == 'front' || $view->getDisplay()->display['id'] == 'channel'))
+  ) {
 
     $presenter_view = 'infinite_channel_presenter';
     $exclude_displays = array('exclude');
@@ -54,6 +57,34 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
       }
     }
     _infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
+  }
+  else {
+    if ($view->id() == 'infinite_archive' && empty($args)) {  // Get default contextual filter for loading /archive
+      //Lookup 1 recent published article node.
+      $query = \Drupal::entityQuery('node')
+        ->condition('type', 'article')
+        ->condition('status', 1)
+        ->sort('created', 'DESC')
+        ->range(0, 1)
+        ->execute();
+
+      foreach ($query as $row) {
+        $nid = (int) $row;
+      }
+
+      if (!empty($nid)) {
+        $node = \Drupal::entityTypeManager()
+          ->getStorage('node')
+          ->load($nid);
+        $recent_created = $node->getCreatedTime();
+
+        $args[] = \Drupal::service('date.formatter')
+          ->format($recent_created, 'custom', 'Ym');
+      }
+    }
+    else if ($view->id() == 'infinite_vocabulary' && $view->current_display == 'attachment_1') {
+      unset($args[1]);  // Remove second arg on infinite vocabulary attachment
+    }
   }
 }
 

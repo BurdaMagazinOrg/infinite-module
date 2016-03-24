@@ -8,3 +8,11 @@ node.lazyloading:
   requirements:
     _entity_access: 'node.view'
     js: 'nojs|ajax'
+
+infinite_base.filter_external_links:
+  path: '/admin/config/content/filter-external-links'
+  defaults:
+    _form: 'Drupal\infinite_base\Form\FilterExternalLinksForm'
+    _title: 'Configure external links filter'
+  requirements:
+    _permission: 'administer filters'

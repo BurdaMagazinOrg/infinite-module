@@ -1,37 +1,9 @@
-<div class="region-full-content region-newsletter region-newsletter-page hidden" data-view-type="newsletterView" data-newsletter-group-id="{{ groupId }}">
-    <div class="container-content">
+{% set attributes = attributes.addClass('region-newsletter-page') %}
+{% extends 'newsletter.html.twig' %}
 
-        <form class="container-form container-content-item">
-            <div class="text-headline text-headline-size-h3">{{ headline }}</div>
-
-            <p class="text-description">{{ text|raw }}</p>
-
-            <div class="form-group">
-                <input class="input-lg input-email" type="email" name="email" required
-                       placeholder="Deine E-Mail-Adresse">
-                <button type="submit" class="btn btn-lg">Anmelden</button>
-            </div>
-
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" name="agreements[]" value="datenschutzeinwilligung"> Ja, ich
-                        stimme folgender Erhebung und
-                        Verwendung meiner Daten zu. <a href="#" class="privacy-link">Mehr</a>
-                    </label>
-                </div>
-            </div>
-
-            <div class="container-alerts"></div>
-        </form>
-
-        <div class="container-success container-content-item">
-            <div class="text-headline text-headline-size-h3">{{ confirmation_headline }}</div>
-            {{ confirmation_text|raw }}
-
-        </div>
-
-        <div class="container-privacy container-content-item">
+{% block container_privacy %}
+    <div class="container-privacy container-content-item container-content-item--centered">
+        <div class="content-wrapper">
             <span class="icon icon-close"></span>
 
             <div class="container-content-dynamic">
@@ -39,5 +11,4 @@
             </div>
         </div>
     </div>
-
-</div>
+{% endblock %}

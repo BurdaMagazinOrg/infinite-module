@@ -24,13 +24,17 @@ function infinite_media_preprocess_media(&$variables) {
 
   // todo: later possible switch to media URL for sharing media items.
   $current_url = Url::fromRoute('<current>');
-  if ($current_url->toString() != '/') {
-    $absolute_url = Url::fromUri('base:/' . $current_url->toString(), array('absolute' => TRUE))->toString();
-    $variables['absolute_node_url'] = $absolute_url;
+  if ($node = \Drupal::routeMatch()->getParameter('node')) {  // Handling for lazy loading node URLs.
+    $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $node->id());
+    $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
+  }
+  else if ($current_url->toString() != '/') {
+    $absolute_url = Url::fromUri('base:/' . $current_url->toString(), array('absolute' => TRUE));
   }
   else {
-    $variables['absolute_node_url'] = Url::fromRoute('<front>')->toString();
+    $absolute_url = Url::fromRoute('<front>', array('absolute' => TRUE));  // Extra handling for <front>.
   }
+  $variables['absolute_node_url'] = $absolute_url->toString();
 
   /* @var Media $media */
   $media = $variables['elements']['#media'];
@@ -154,7 +158,7 @@ function infinite_media_tokens($type, $tokens, array $data, array $options, Bubb
               $term->field_teaser_media->entity->hasField('field_image') &&
               !$term->field_teaser_media->entity->field_image->isEmpty()) {
 
-              $og_img_path = $term->field_header_media->entity->field_image->entity->getFileUri();
+              $og_img_path = $term->field_teaser_media->entity->field_image->entity->getFileUri();
               $og_img = ImageStyle::load('og_image');
 
               if (is_object($og_img)) {

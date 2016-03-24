@@ -1,0 +1,29 @@
+langcode: de
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_p_view_mode
+field_name: field_p_view_mode
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values_:
+    -
+      value: full
+      label: 'Volle Breite'
+    -
+      value: middle
+      label: 'Mittle'
+    -
+      value: small
+      label: 'Schmal'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

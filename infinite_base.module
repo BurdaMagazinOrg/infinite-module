@@ -217,3 +217,19 @@ function infinite_base_get_all_parents($term) {
   }
   return $parents_tokens;
 }
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function infinite_base_preprocess_node(&$variables) {
+  if ($variables['view_mode'] == 'full' || $variables['view_mode'] == 'lazyloading') {
+    /* @var \Drupal\ad_integration\AdIntegration $advertisingService */
+    $advertisingService = \Drupal::service('ad_integration');
+    if (is_object($advertisingService)) {
+      $variables['adsc_adunit1'] = $advertisingService->getAdUnit1();
+      $variables['adsc_adunit2'] = $advertisingService->getAdUnit2();
+      $variables['adsc_adunit3'] = $advertisingService->getAdUnit3();
+      $variables['adsc_keyword'] = $advertisingService->getKeyword();
+    }
+  }
+}
