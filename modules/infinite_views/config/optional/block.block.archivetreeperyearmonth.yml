@@ -1,0 +1,26 @@
+status: true
+dependencies:
+  module:
+    - infinite_blocks
+    - infinite_views
+  theme:
+    - instyle_infinite
+third_party_settings:
+  infinite_blocks:
+    id: ''
+    classes: block--archive-tree-ym
+    title_tag: div
+    block_tag: div
+id: archivetreeperyearmonth
+theme: instyle_infinite
+region: hidden
+weight: -3
+provider: null
+plugin: infinite_views_archive_tree_year_month
+settings:
+  id: infinite_views_archive_tree_year_month
+  label: 'Archive tree (per Year / Month)'
+  provider: infinite_views
+  label_display: '0'
+  archive_view_path: /archive
+visibility: {  }
