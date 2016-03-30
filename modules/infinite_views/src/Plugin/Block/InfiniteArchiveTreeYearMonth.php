@@ -143,12 +143,13 @@ class InfiniteArchiveTreeYearMonth extends BlockBase implements ContainerFactory
 
       $months = array();
       for ($month = 1; $month <= 12; $month++) {
+        $month_timestamp = mktime(0, 0, 0, $month, 1);
         $month_id = \Drupal::service('date.formatter')
-          ->format(mktime(0, 0, 0, $month), 'custom', 'm');
+          ->format($month_timestamp, 'custom', 'm');
         $month_short_name = \Drupal::service('date.formatter')
-          ->format(mktime(0, 0, 0, $month), 'custom', 'M');
+          ->format($month_timestamp, 'custom', 'M');
         $month_name = \Drupal::service('date.formatter')
-          ->format(mktime(0, 0, 0, $month), 'custom', 'F');
+          ->format($month_timestamp, 'custom', 'F');
 
         $months[$month] = array(
           'id' => $month_id,
