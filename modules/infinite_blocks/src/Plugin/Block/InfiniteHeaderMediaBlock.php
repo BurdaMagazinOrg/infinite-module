@@ -29,7 +29,7 @@ class InfiniteHeaderMediaBlock extends BlockBase {
       $entity = $term;
     }
     else if ($user = \Drupal::request()->attributes->get('user')) {
-      /* @var Term $term */
+      /* @var User $user */
       $entity = $user;
     }
 
@@ -42,7 +42,7 @@ class InfiniteHeaderMediaBlock extends BlockBase {
       if ($entity->hasField('field_header_media') && !$entity->get('field_header_media')->isEmpty()) {
 
         $media = $entity->get('field_header_media')->entity;
-        $header_media = \Drupal::entityManager()
+        $header_media = \Drupal::entityTypeManager()
           ->getViewBuilder('media')
           ->view($media, 'header');
 
