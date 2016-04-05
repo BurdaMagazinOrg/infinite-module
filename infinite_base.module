@@ -233,3 +233,12 @@ function infinite_base_preprocess_node(&$variables) {
     }
   }
 }
+
+function infinite_base_page_attachments(array &$attachments) {
+  /** Attaches the Harbourmaster ClientID, if module hm_newsletter is enabled */
+  if (\Drupal::moduleHandler()->moduleExists('hm_newsletter')) {
+    $configFactory = \Drupal::configFactory()->get('hm_newsletter.settings');
+    $attachments['#attached']['drupalSettings']['hm_newsletter']['clientid'] = $configFactory->get('hm_client_id');
+    $attachments['#attached']['drupalSettings']['hm_newsletter']['env'] = $configFactory->get('hm_environment');
+  }
+}
