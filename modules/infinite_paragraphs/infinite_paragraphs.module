@@ -68,6 +68,9 @@ function infinite_paragraphs_taxonomy_term_view_alter(array &$build, EntityInter
   if (isset($build['field_paragraph'])) {
     _infinite_paragraphs_decorate_group($build['field_paragraph'], _infinite_paragraphs_layout_group($build['field_paragraph'], array('small' ,'middle')), 'group_outer', $build);
   }
+  else if (isset($build['field_paragraphs'])) {
+    _infinite_paragraphs_decorate_group($build['field_paragraphs'], _infinite_paragraphs_layout_group($build['field_paragraphs'], array('small' ,'middle')), 'group_outer', $build);
+  }
 }
 
 /**
