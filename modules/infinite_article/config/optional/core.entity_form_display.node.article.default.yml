@@ -144,8 +144,6 @@ third_party_settings:
         classes: ''
         required_fields: true
         description: ''
-_core:
-  default_config_hash: J7g1tF-Stl0bCx4GTPjZITsnTeizgtaE8QZnQHJPcr0
 id: node.article.default
 targetEntityType: node
 bundle: article
@@ -205,7 +203,7 @@ content:
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: preview
       add_mode: dropdown
       form_display_mode: default
     third_party_settings: {  }
@@ -265,9 +263,14 @@ content:
     third_party_settings: {  }
     type: string_textarea
   field_top_paragraphs:
-    type: options_select
+    type: entity_reference_paragraphs
     weight: 6
-    settings: {  }
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: preview
+      add_mode: dropdown
+      form_display_mode: default
     third_party_settings: {  }
   langcode:
     type: language_select
