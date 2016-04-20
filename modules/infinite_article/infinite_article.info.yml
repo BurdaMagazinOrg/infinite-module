@@ -12,7 +12,6 @@ dependencies:
   - menu_ui
   - options
   - paragraphs
-  - scheduler
   - infinite_base
   - infinite_blocks
   - infinite_media
