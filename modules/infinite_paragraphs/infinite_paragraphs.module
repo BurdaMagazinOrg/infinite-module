@@ -222,7 +222,12 @@ function _infinite_paragraphs_get_parent_base_data($entity, &$variables) {
   if ($entity->getEntityTypeId() == 'node') {
     $node = $entity;
     $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $node->id());
-    $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
+    if ($alias_path != '/') {
+      $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
+    }
+    else {
+      $absolute_url = Url::fromRoute('<front>', array('absolute' => TRUE));  // Extra handling for <front>.
+    }
     $variables['parent']['url'] = $absolute_url->toString();
     $variables['parent']['label'] = $variables['parent']['title'];
     unset($variables['parent']['title']);
@@ -230,7 +235,12 @@ function _infinite_paragraphs_get_parent_base_data($entity, &$variables) {
   elseif ($entity->getEntityTypeId() == 'taxonomy_term') {
     $term = $entity;
     $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/taxonomy/term/' . $term->id());
-    $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
+    if ($alias_path != '/') {
+      $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
+    }
+    else {
+      $absolute_url = Url::fromRoute('<front>', array('absolute' => TRUE));  // Extra handling for <front>.
+    }
     $variables['parent']['url'] = $absolute_url->toString();
     $variables['parent']['label'] = $term->name->value;
   }
