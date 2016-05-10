@@ -44,9 +44,6 @@ settings:
       link:
         weight: 11
         enabled: false
-      pinterest:
-        weight: 13
-        enabled: false
       twitter:
         weight: 16
         enabled: false
