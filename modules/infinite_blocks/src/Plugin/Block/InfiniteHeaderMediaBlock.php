@@ -33,20 +33,21 @@ class InfiniteHeaderMediaBlock extends BlockBase {
       $entity = $user;
     }
 
+    $header_media = $title = NULL;
     $cache = ['contexts' => ['url.path']];
     if (isset($entity)) {
 
-      $header_media = NULL;
       $cache['tags'] = $entity->getCacheTags();
 
       if ($entity->hasField('field_header_media') && !$entity->get('field_header_media')->isEmpty()) {
 
-        $media = $entity->get('field_header_media')->entity;
-        $header_media = \Drupal::entityManager()
-          ->getViewBuilder('media')
-          ->view($media, 'header');
+        if ($media = $entity->get('field_header_media')->entity) {
+          $header_media = \Drupal::entityManager()
+            ->getViewBuilder('media')
+            ->view($media, 'header');
 
-        $title = $entity->label();
+          $title = $entity->label();
+        }
       }
       if ($entity->hasField('field_header_title') && !$entity->get('field_header_title')->isEmpty()) {
         $title = $entity->get('field_header_title')->value;
