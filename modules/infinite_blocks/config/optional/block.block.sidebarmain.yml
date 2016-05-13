@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.sidebar-main
+  module:
+    - infinite_blocks
+    - system
+  theme:
+    - infinite
+third_party_settings:
+  infinite_blocks:
+    id: menu-sidebar-main
+    classes: item-sidebar
+    title_tag: nav
+    block_tag: div
+id: sidebarmain
+theme: infinite
+region: sidebar
+weight: -8
+provider: null
+plugin: 'system_menu_block:sidebar-main'
+settings:
+  id: 'system_menu_block:sidebar-main'
+  label: 'Sidebar Main'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+visibility: {  }

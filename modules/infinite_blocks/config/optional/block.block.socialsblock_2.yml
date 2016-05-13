@@ -8,13 +8,13 @@ dependencies:
 third_party_settings:
   infinite_blocks:
     id: ''
-    classes: ''
+    classes: 'socials socials-bar socials-bar-clean'
     title_tag: div
     block_tag: div
 id: socialsblock_2
 theme: infinite
 region: sidebar
-weight: -8
+weight: -7
 provider: null
 plugin: infinite_blocks_socials
 settings:
