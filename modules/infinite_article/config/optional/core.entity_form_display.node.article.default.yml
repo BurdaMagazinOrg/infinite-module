@@ -19,311 +19,87 @@ dependencies:
     - field.field.node.article.field_top_paragraphs
     - node.type.article
   module:
-    - field_group
-    - inline_entity_form
+    - entity_reference_revisions
     - metatag
-    - paragraphs
-    - path
-third_party_settings:
-  field_group:
-    group_tabs:
-      children:
-        - group_edit
-        - group_advanced
-      parent_name: ''
-      weight: 0
-      label: Tabs
-      format_type: tabs
-      format_settings:
-        label: Tabs
-        id: ''
-        classes: ''
-        direction: horizontal
-    group_edit:
-      children:
-        - field_channel
-        - title
-        - field_seo_title
-        - group_presenter
-        - group_teaser
-        - group_top_paragraphs
-        - group_paragraphs
-        - group_tags
-      parent_name: group_tabs
-      weight: 16
-      label: 'Write article'
-      format_type: tab
-      format_settings:
-        label: 'Write article'
-        id: ''
-        classes: ''
-        formatter: open
-        description: ''
-        required_fields: true
-    group_advanced:
-      children:
-        - field_sidebar_blocks
-        - field_header_blocks
-        - field_footer_blocks
-        - field_meta_tags
-        - field_header_media
-      parent_name: group_tabs
-      weight: 18
-      label: Erweitert
-      format_type: tab
-      format_settings:
-        label: Erweitert
-        id: ''
-        classes: ''
-        formatter: closed
-        description: ''
-        required_fields: true
-    group_teaser:
-      children:
-        - field_teaser_media
-        - field_teaser_display_mode
-        - field_teaser_text
-      parent_name: group_edit
-      weight: 5
-      label: Teaser
-      format_type: fieldset
-      format_settings:
-        description: ''
-        classes: ''
-        id: ''
-        required_fields: true
-    group_tags:
-      parent_name: group_edit
-      weight: 8
-      label: Tags
-      format_type: fieldset
-      format_settings:
-        label: Tags
-        id: ''
-        classes: ''
-        required_fields: true
-      children:
-        - field_tags
-    group_paragraphs:
-      children:
-        - field_paragraphs
-      parent_name: group_edit
-      weight: 7
-      label: Paragraphs
-      format_type: fieldset
-      format_settings:
-        description: ''
-        classes: ''
-        id: ''
-        required_fields: true
-    group_presenter:
-      children:
-        - field_presenter_media
-        - field_hp_display_mode
-      parent_name: group_edit
-      weight: 4
-      label: Presenter
-      format_type: fieldset
-      format_settings:
-        label: Presenter
-        id: ''
-        classes: ''
-        required_fields: true
-        description: ''
-    group_top_paragraphs:
-      children:
-        - field_top_paragraphs
-      parent_name: group_edit
-      weight: 6
-      label: 'Top Paragraphs'
-      format_type: fieldset
-      format_settings:
-        label: 'Top Paragraphs'
-        id: ''
-        classes: ''
-        required_fields: true
-        description: ''
+    - taxonomy
+    - user
 id: node.article.default
 targetEntityType: node
 bundle: article
 mode: default
 content:
-  created:
-    type: datetime_timestamp
-    weight: 4
-    settings: {  }
-    third_party_settings: {  }
   field_channel:
-    type: options_select
+    type: entity_reference_rss_category
     weight: 1
+    label: above
     settings: {  }
     third_party_settings: {  }
   field_footer_blocks:
-    type: entity_reference_autocomplete_tags
-    weight: 15
+    type: entity_reference_entity_view
+    weight: 6
+    label: hidden
     settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
+      view_mode: default
+      link: false
     third_party_settings: {  }
   field_header_blocks:
-    type: entity_reference_autocomplete_tags
-    weight: 14
+    weight: 0
+    label: hidden
     settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
+      view_mode: default
+      link: false
     third_party_settings: {  }
-  field_header_media:
-    weight: 17
-    settings:
-      label_singular: ''
-      label_plural: ''
-      allow_new: true
-      allow_existing: true
-      match_operator: CONTAINS
-      override_labels: false
-      form_mode: default
-    third_party_settings: {  }
-    type: inline_entity_form_complex
-  field_hp_display_mode:
-    type: options_select
-    weight: 3
-    settings: {  }
-    third_party_settings: {  }
+    type: entity_reference_entity_view
   field_meta_tags:
-    weight: 16
+    weight: 7
+    label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: metatag_firehose
+    type: metatag_empty_formatter
   field_paragraphs:
-    type: entity_reference_paragraphs
-    weight: 7
+    type: entity_reference_revisions_entity_view
+    weight: 3
+    label: hidden
     settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      add_mode: dropdown
-      form_display_mode: default
-    third_party_settings: {  }
-  field_presenter_media:
-    type: entity_reference_autocomplete_tags
-    weight: 2
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
+      view_mode: default
+      link: ''
     third_party_settings: {  }
   field_seo_title:
-    type: string_textfield
-    weight: 3
+    type: string
+    weight: 8
+    label: hidden
     settings:
-      size: 65
-      placeholder: ''
+      link_to_entity: false
     third_party_settings: {  }
   field_sidebar_blocks:
-    type: entity_reference_autocomplete_tags
-    weight: 13
+    type: entity_reference_entity_view
+    weight: 5
+    label: hidden
     settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
+      view_mode: default
+      link: false
     third_party_settings: {  }
   field_tags:
-    type: entity_reference_autocomplete_tags
-    weight: 10
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_teaser_display_mode:
-    type: options_select
-    weight: 5
-    settings: {  }
-    third_party_settings: {  }
-  field_teaser_media:
+    type: entity_reference_label
     weight: 4
+    label: hidden
     settings:
-      override_labels: true
-      label_singular: Image
-      label_plural: Images
-      allow_new: true
-      allow_existing: true
-      match_operator: CONTAINS
-      form_mode: default
+      link: true
     third_party_settings: {  }
-    type: inline_entity_form_complex
-  field_teaser_text:
-    weight: 6
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textarea
   field_top_paragraphs:
-    type: entity_reference_paragraphs
-    weight: 6
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: preview
-      add_mode: dropdown
-      form_display_mode: default
-    third_party_settings: {  }
-  langcode:
-    type: language_select
-    weight: 5
-    settings: {  }
-    third_party_settings: {  }
-  path:
-    type: path
-    weight: 8
-    settings: {  }
-    third_party_settings: {  }
-  promote:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 6
-    third_party_settings: {  }
-  promote_channel:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 7
-    third_party_settings: {  }
-  promote_channel_presenter:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 8
-    third_party_settings: {  }
-  promote_front_presenter:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 4
-    third_party_settings: {  }
-  sticky:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 7
-    third_party_settings: {  }
-  title:
-    type: string_textfield
+    type: entity_reference_revisions_entity_view
     weight: 2
+    label: hidden
     settings:
-      size: 60
-      placeholder: ''
+      view_mode: default
+      link: ''
     third_party_settings: {  }
-  uid:
-    type: entity_reference_autocomplete
-    weight: 1
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-hidden: {  }
+hidden:
+  field_header_media: true
+  field_hp_display_mode: true
+  field_presenter_media: true
+  field_teaser_display_mode: true
+  field_teaser_media: true
+  field_teaser_text: true
+  langcode: true
+  links: true
