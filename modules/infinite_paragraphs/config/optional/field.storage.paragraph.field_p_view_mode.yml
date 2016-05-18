@@ -1,4 +1,4 @@
-langcode: de
+langcode: en
 status: true
 dependencies:
   module:
@@ -12,13 +12,13 @@ settings:
   allowed_values_:
     -
       value: full
-      label: 'Volle Breite'
+      label: 'Full Width'
     -
       value: middle
-      label: 'Mittle'
+      label: 'Middle'
     -
       value: small
-      label: 'Schmal'
+      label: 'Small'
   allowed_values_function: ''
 module: options
 locked: false

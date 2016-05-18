@@ -70,10 +70,10 @@ third_party_settings:
         - field_header_media
       parent_name: group_tabs
       weight: 18
-      label: Erweitert
+      label: Advanced
       format_type: tab
       format_settings:
-        label: Erweitert
+        label: Advanced
         id: ''
         classes: ''
         formatter: closed

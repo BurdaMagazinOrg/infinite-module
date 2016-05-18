@@ -1,4 +1,4 @@
-langcode: de
+langcode: en
 status: true
 dependencies:
   config:
@@ -10,7 +10,7 @@ id: node.article.field_hp_display_mode
 field_name: field_hp_display_mode
 entity_type: node
 bundle: article
-label: 'Teaserformat im Presenter'
+label: 'Teaserformat in presenter'
 description: ''
 required: false
 translatable: false

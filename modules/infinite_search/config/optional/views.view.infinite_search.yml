@@ -1,4 +1,4 @@
-langcode: de
+langcode: en
 status: true
 dependencies:
   config:
@@ -42,7 +42,7 @@ display:
       exposed_form:
         type: basic
         options:
-          submit_button: 'Suche starten'
+          submit_button: 'Start search'
           reset_button: false
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
