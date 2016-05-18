@@ -1,7 +1,7 @@
 id: node_reset_header_blocks_action
 label: 'Reset header blocks'
 status: true
-langcode: de
+langcode: en
 type: node
 plugin: node_reset_header_blocks_action
 dependencies:

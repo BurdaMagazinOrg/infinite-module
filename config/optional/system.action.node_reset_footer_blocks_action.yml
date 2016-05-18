@@ -1,7 +1,7 @@
 id: node_reset_footer_blocks_action
 label: 'Reset footer blocks'
 status: true
-langcode: de
+langcode: en
 type: node
 plugin: node_reset_footer_blocks_action
 dependencies:

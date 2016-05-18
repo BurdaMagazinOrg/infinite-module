@@ -1,7 +1,7 @@
 id: node_reset_sidebar_blocks_action
 label: 'Reset sidebar blocks'
 status: true
-langcode: de
+langcode: en
 type: node
 plugin: node_reset_sidebar_blocks_action
 dependencies:

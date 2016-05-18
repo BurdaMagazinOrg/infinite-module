@@ -1,7 +1,7 @@
 id: node_promote_front_presenter_action
 label: 'Promote content to front presenter'
 status: true
-langcode: de
+langcode: en
 type: node
 plugin: node_promote_front_presenter_action
 dependencies:

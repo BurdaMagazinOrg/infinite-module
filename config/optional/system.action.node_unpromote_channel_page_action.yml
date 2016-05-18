@@ -1,7 +1,7 @@
 id: node_unpromote_channel_page_action
 label: 'Remove content from channel page'
 status: true
-langcode: de
+langcode: en
 type: node
 plugin: node_unpromote_channel_page_action
 dependencies:
