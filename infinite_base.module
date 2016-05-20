@@ -14,6 +14,26 @@ use Drupal\Core\Form\FormStateInterface;
 
 
 /**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function infinite_base_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'node' && !empty($fields['uid'])) {
+    $fields['uid']->setDisplayOptions('view', array(
+      'label' => 'hidden',
+      'weight' => 3,
+    ))
+      ->setDisplayConfigurable('view', TRUE);
+  }
+  else if ($entity_type->id() == 'user' && !empty($fields['mail'])) {
+    $fields['mail']->setDisplayOptions('view', array(
+      'label' => 'hidden',
+      'weight' => 3,
+    ))
+      ->setDisplayConfigurable('view', TRUE);
+  }
+}
+
+/**
  * Implements hook_entity_view_mode_alter().
  *
  * @param $view_mode
