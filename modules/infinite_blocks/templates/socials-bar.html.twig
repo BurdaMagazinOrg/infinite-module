@@ -5,14 +5,22 @@
     {% set rel_follow = 'nofollow' %}
     {% if follow %} {% set rel_follow = 'follow' %} {% endif %}
 
-    <a class="item-social icon-facebook" href="https://www.facebook.com/InStyleGermany" target="_blank"
-       data-social-type="facebook" rel="{{ rel_follow }}"></a>
-    <a class="item-social icon-instagram" href="https://instagram.com/InStyleGermany/" target="_blank"
-       data-social-type="instagram" rel="{{ rel_follow }}"></a>
-    <a class="item-social icon-pinterest" href="https://www.pinterest.com/instylegermany/" target="_blank"
-       data-social-type="pinterest" rel="{{ rel_follow }}"></a>
-    <a class="item-social icon-twitter" href="https://twitter.com/InStyleGermany" target="_blank"
-       data-social-type="twitter" rel="{{ rel_follow }}"></a>
+    {% if facebook_url %}
+        <a class="item-social icon-facebook" href="{{ facebook_url }}" target="_blank"
+           data-social-type="facebook" rel="{{ rel_follow }}"></a>
+    {% endif %}
+    {% if instagram_url %}
+        <a class="item-social icon-instagram" href="{{ instagram_url }}" target="_blank"
+           data-social-type="instagram" rel="{{ rel_follow }}"></a>
+    {% endif %}
+    {% if pinterest_url %}
+        <a class="item-social icon-pinterest" href="{{ pinterest_url }}" target="_blank"
+           data-social-type="pinterest" rel="{{ rel_follow }}"></a>
+    {% endif %}
+    {% if twitter_url %}
+        <a class="item-social icon-twitter" href="{{ twitter_url }}" target="_blank"
+           data-social-type="twitter" rel="{{ rel_follow }}"></a>
+    {% endif %}
 
     <a class="item-social icon-email" href="/newsletter" data-social-type="email"></a>
 
