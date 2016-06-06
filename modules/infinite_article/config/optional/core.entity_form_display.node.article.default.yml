@@ -19,11 +19,12 @@ dependencies:
     - field.field.node.article.field_top_paragraphs
     - node.type.article
   module:
+    - entity_browser
     - field_group
-    - inline_entity_form
     - metatag
     - paragraphs
     - path
+    - scheduler
 third_party_settings:
   field_group:
     group_tabs:
@@ -177,15 +178,15 @@ content:
   field_header_media:
     weight: 17
     settings:
-      label_singular: ''
-      label_plural: ''
-      allow_new: true
-      allow_existing: true
-      match_operator: CONTAINS
-      override_labels: false
-      form_mode: default
+      entity_browser: image_browser
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      field_widget_display_settings:
+        view_mode: square_s
     third_party_settings: {  }
-    type: inline_entity_form_complex
+    type: entity_browser_entity_reference
   field_hp_display_mode:
     type: options_select
     weight: 3
@@ -207,12 +208,16 @@ content:
       form_display_mode: default
     third_party_settings: {  }
   field_presenter_media:
-    type: entity_reference_autocomplete_tags
+    type: entity_browser_entity_reference
     weight: 2
     settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
+      entity_browser: image_browser
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      field_widget_display_settings:
+        view_mode: square_s
     third_party_settings: {  }
   field_seo_title:
     type: string_textfield
@@ -245,15 +250,15 @@ content:
   field_teaser_media:
     weight: 4
     settings:
-      override_labels: true
-      label_singular: Image
-      label_plural: Images
-      allow_new: true
-      allow_existing: true
-      match_operator: CONTAINS
-      form_mode: default
+      entity_browser: image_browser
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      field_widget_display_settings:
+        view_mode: square_s
     third_party_settings: {  }
-    type: inline_entity_form_complex
+    type: entity_browser_entity_reference
   field_teaser_text:
     weight: 6
     settings:
@@ -305,6 +310,15 @@ content:
       display_label: true
     weight: 4
     third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    settings: {  }
+    third_party_settings: {  }
+  scheduler_settings:
+    weight: 20
+    settings: {  }
+    third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
@@ -325,5 +339,10 @@ content:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    settings: {  }
     third_party_settings: {  }
 hidden: {  }
