@@ -30,6 +30,10 @@ class InfiniteSocialsBlock extends BlockBase {
     return array(
       '#theme' => 'socials_bar',
       '#follow' => !empty($config['follow']) ? true : false,
+      '#facebook_url' => $config['facebook_url'],
+      '#instagram_url' => $config['instagram_url'],
+      '#pinterest_url' => $config['pinterest_url'],
+      '#twitter_url' => $config['twitter_url'],
       'variables' => [],
     );
   }
@@ -44,6 +48,26 @@ class InfiniteSocialsBlock extends BlockBase {
       '#title' => $this->t('Link Attribute - Follow'),
       '#default_value' => $config['follow'],
     ];
+    $form['facebook_url'] = [
+      '#type' => 'textfield',
+      '#title'=> $this->t('Facebook URL'),
+      '#default_value' => $config['facebook_url']
+    ];
+    $form['instagram_url'] = [
+      '#type' => 'textfield',
+      '#title'=> $this->t('Instagram URL'),
+      '#default_value' => $config['instagram_url']
+    ];
+    $form['pinterest_url'] = [
+      '#type' => 'textfield',
+      '#title'=> $this->t('Pinterest URL'),
+      '#default_value' => $config['pinterest_url']
+    ];
+    $form['twitter_url'] = [
+      '#type' => 'textfield',
+      '#title'=> $this->t('Twitter URL'),
+      '#default_value' => $config['twitter_url']
+    ];
     return $form;
   }
 
@@ -52,6 +76,10 @@ class InfiniteSocialsBlock extends BlockBase {
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['follow'] = $form_state->getValue('follow');
+    $this->configuration['facebook_url'] = $form_state->getValue('facebook_url');
+    $this->configuration['instagram_url'] = $form_state->getValue('instagram_url');
+    $this->configuration['pinterest_url'] = $form_state->getValue('pinterest_url');
+    $this->configuration['twitter_url'] = $form_state->getValue('twitter_url');
   }
 
 }
