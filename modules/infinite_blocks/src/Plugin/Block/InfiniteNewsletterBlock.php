@@ -30,6 +30,7 @@ class InfiniteNewsletterBlock extends BlockBase {
     
     return array(
       '#theme' => $this->theme,
+      '#logo' => theme_get_setting('logo.url'),
       '#groupId' => !empty($config['group_id']) ? $config['group_id'] : '',
       '#headline' => !empty($config['headline']) ? $config['headline'] : '',
       '#text' => !empty($config['text']) ? $config['text']['value'] : '',

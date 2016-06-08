@@ -23,8 +23,19 @@ function infinite_blocks_theme() {
     'modal_search' => array(
       'variables' => array()
     ),
+    'modal_newsletter' => array(
+      'variables' => array(
+        'logo' => NULL,
+        'groupId' => NULL,
+        'headline' => NULL,
+        'text' => NULL,
+        'confirmation_headline' => NULL,
+        'confirmation_text' => NULL,
+      )
+    ),
     'newsletter' => array(
       'variables' => array(
+        'logo' => NULL,
         'groupId' => NULL,
         'headline' => NULL,
         'text' => NULL,
@@ -34,6 +45,7 @@ function infinite_blocks_theme() {
     ),
     'newsletter_large' => array(
       'variables' => array(
+        'logo' => NULL,
         'groupId' => NULL,
         'headline' => NULL,
         'text' => NULL,
@@ -43,6 +55,7 @@ function infinite_blocks_theme() {
     ),
     'newsletter_men_large' => array(
       'variables' => array(
+        'logo' => NULL,
         'groupId' => NULL,
         'headline' => NULL,
         'text' => NULL,

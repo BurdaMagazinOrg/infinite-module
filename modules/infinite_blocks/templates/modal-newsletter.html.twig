@@ -1,0 +1,25 @@
+{% set attributes = attributes.addClass('region-newsletter-modal') %}
+
+<div class="newsletter-modal modal modal-full fade" role="dialog" data-keyboard="false" data-view-type="newsletterModalView">
+    <div class="modal-content newsletter-modal__modal-content">
+        <div class="newsletter-modal__wrapper">
+            <button type="button" class="close" data-dismiss="newsletter-modal" aria-label="Close">
+                <span aria-hidden="true" class="icon icon-close"></span>
+            </button>
+            <div class="newsletter-modal__row">
+                <div class="newsletter-modal__col--left">
+                    <div class="newsletter-modal__bg-container"></div>
+                </div>
+                <div class="newsletter-modal__col--right">
+
+                    {% embed 'newsletter.html.twig' %}
+                        {% block logo_block %}
+                            <img class="logo" src="{{ logo }}"/>
+                        {% endblock %}
+                    {% endembed %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
