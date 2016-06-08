@@ -1,2 +1,22 @@
 <?php
 
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_build_defaults_alter().
+ */
+function infinite_article_node_build_defaults_alter(array &$build, EntityInterface $node, $view_mode) {
+  if ($view_mode == 'lazyloading' &&
+      $node->bundle() == 'article' &&
+      !$node->get('field_header_blocks')->isEmpty()) {
+
+    // Replace 'advertisingslot_banner_any' with 'advertisingslot_banner_any_2' in header blocks on lazyloading.
+    $header_blocks = $node->get('field_header_blocks')->getValue();
+    foreach ($header_blocks as $key => &$header_block) {
+      if ($header_block['target_id'] == 'advertisingslot_banner_any') {
+        $header_block['target_id'] = 'advertisingslot_banner_any_2';
+        $node->set('field_header_blocks', $header_blocks);
+      }
+    }
+  }
+}

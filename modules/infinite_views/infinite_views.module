@@ -101,12 +101,12 @@ function infinite_views_preprocess_views_view(&$variables) {
     case 'infinite_front':
     case 'infinite_taxonomy_term':
       $load_sidebar_ad_blocks = TRUE;
-      $sidebar_ad_block = 'advertisingslot_rectangle_any';
+      $sidebar_ad_block = 'advertisingslot_rectangle_any_channel';
       if ($view->current_display != 'front' &&
           $view->current_display != 'channel' &&
           $view->current_display != 'term') {
 
-        $sidebar_ad_block = 'advertisingslot_rectangle_any_2';
+        $sidebar_ad_block = 'advertisingslot_rectangle_any_channel_2';
       }
       break;
     default:
