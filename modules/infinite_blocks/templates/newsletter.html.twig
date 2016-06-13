@@ -22,6 +22,8 @@
                         <p class="text-description">{{ text|plain_text|trim }}</p>
                     {% endblock %}
 
+                    {% block groups_block %}{% endblock %}
+
                     {% block container_form__form_groups %}
                         <div class="form-group form-group--email">
                             <input class="input-lg input-email" type="email" name="email" required
