@@ -20,6 +20,18 @@ use Drupal\Core\Form\FormStateInterface;
  */
 
 class InfiniteSocialsBlock extends BlockBase {
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return [
+      'follow' => FALSE,
+      'facebook_url' => '',
+      'instagram_url' => '',
+      'pinterest_url' => '',
+      'twitter_url' => ''
+    ];
+  }
 
   /**
    * {@inheritdoc}
