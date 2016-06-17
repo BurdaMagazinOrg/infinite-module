@@ -79,6 +79,14 @@ function infinite_paragraphs_taxonomy_term_view_alter(array &$build, EntityInter
 function infinite_paragraphs_theme_suggestions_container_alter(array &$suggestions, array $variables) {
   if (!empty($variables['element']['#type'])) {
     $suggestions[] = 'container__' . $variables['element']['#type'];
+
+
+    if(isset($variables['element']['#parent']) && isset($variables['element']['#parent']['#node'])) {
+      /** @var \Drupal\node\Entity\Node $node */
+      $node = $variables['element']['#parent']['#node'];
+      $suggestions[] = 'container__' . $node->getType();
+      $suggestions[] = 'container__' . $node->getType() . '__' . $variables['element']['#type'];
+    }
   }
 }
 
