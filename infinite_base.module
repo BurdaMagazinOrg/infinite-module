@@ -253,6 +253,6 @@ function infinite_base_page_attachments(array &$attachments) {
     $configFactory = \Drupal::configFactory()->get('hm_newsletter.settings');
     $attachments['#attached']['drupalSettings']['hm_newsletter']['clientid'] = $configFactory->get('hm_client_id');
     $attachments['#attached']['drupalSettings']['hm_newsletter']['env'] = $configFactory->get('hm_environment');
-    $attachments['#attached']['library'] = array('hm_newsletter/base');
+    $attachments['#attached']['library'][] = 'hm_newsletter/base';
   }
 }
