@@ -42,11 +42,13 @@ class InfiniteHeaderMediaBlock extends BlockBase {
       if ($entity->hasField('field_header_media') && !$entity->get('field_header_media')->isEmpty()) {
 
         $media = $entity->get('field_header_media')->entity;
-        $header_media = \Drupal::entityTypeManager()
-          ->getViewBuilder('media')
-          ->view($media, 'header');
+        if (!empty($media)) {
+          $header_media = \Drupal::entityTypeManager()
+            ->getViewBuilder('media')
+            ->view($media, 'header');
 
-        $title = $entity->label();
+          $title = $entity->label();
+        }
       }
       if ($entity->hasField('field_header_title') && !$entity->get('field_header_title')->isEmpty()) {
         $title = $entity->get('field_header_title')->value;
