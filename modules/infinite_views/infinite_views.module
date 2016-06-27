@@ -92,38 +92,43 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
  * Implements hook_preprocess_views().
  */
 function infinite_views_preprocess_views_view(&$variables) {
-
   // todo: replace with configurable sidebar views UI plugin.
   /* @var Drupal\views\ViewExecutable $view */
   $view = $variables['view'];
+
   switch ($view->id()) {
     case 'infinite_author':
     case 'infinite_front':
     case 'infinite_taxonomy_term':
-      $load_sidebar_ad_blocks = TRUE;
-      $sidebar_ad_block = 'advertisingslot_rectangle_any_channel';
       if ($view->current_display != 'front' &&
           $view->current_display != 'channel' &&
           $view->current_display != 'term') {
 
-        $sidebar_ad_block = 'advertisingslot_rectangle_any_channel_2';
+        $variables['sidebar'] = _infinite_views_sidebar_ad_block('advertisingslot_rectangle_any_channel_2');
+      }
+      else {
+        $variables['sidebar'] = _infinite_views_sidebar_ad_block('advertisingslot_rectangle_any_channel');
       }
       break;
-    default:
-      $load_sidebar_ad_blocks = FALSE;
   }
+}
 
-  if ($load_sidebar_ad_blocks) {
+/**
+ * Returns rendered advertisement block with the given id.
+ *
+ * @param string $id
+ *
+ * @return array
+ *   The block render array
+ */
+function _infinite_views_sidebar_ad_block($id) {
+  /* @var Drupal\block\Entity\Block $block */
+  $block = Block::load($id);
 
-    /* @var Drupal\block\Entity\Block $block */
-    $block = Block::load($sidebar_ad_block);
-
-    if (is_object($block)) {
-      $block_content = \Drupal::entityManager()
-        ->getViewBuilder('block')
-        ->view($block, 'default');
-      $variables['sidebar'] = $block_content;
-    }
+  if (is_object($block)) {
+    return \Drupal::entityManager()
+      ->getViewBuilder('block')
+      ->view($block, 'default');
   }
 }
 
