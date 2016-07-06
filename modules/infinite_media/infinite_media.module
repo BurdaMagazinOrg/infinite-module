@@ -184,6 +184,15 @@ function infinite_media_tokens($type, $tokens, array $data, array $options, Bubb
 }
 
 /**
+ * Implements hook_preprocess_views_view().
+ */
+function infinite_media_preprocess_views_view(&$variables) {
+  if ($variables['view']->id() === 'infinite_browser') {
+    $variables['view_array']['#attached']['library'][] = 'media_entity_browser/view';
+  }
+}
+
+/**
  * Helper function for getting dimension of an image.
  */
 function _infinite_media_image_dimension($height, $width) {
