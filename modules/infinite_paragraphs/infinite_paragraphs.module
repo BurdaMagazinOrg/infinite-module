@@ -74,6 +74,15 @@ function infinite_paragraphs_taxonomy_term_view_alter(array &$build, EntityInter
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+function infinite_paragraphs_user_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if (isset($build['field_paragraphs'])) {
+    _infinite_paragraphs_decorate_group($build['field_paragraphs'], _infinite_paragraphs_layout_group($build['field_paragraphs'], array('small' ,'middle')), 'group_outer', $build);
+  }
+}
+
+/**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
 function infinite_paragraphs_theme_suggestions_container_alter(array &$suggestions, array $variables) {
@@ -108,6 +117,10 @@ function infinite_paragraphs_preprocess_container(&$variables) {
     elseif (isset($variables['element']['#parent']['#taxonomy_term'])) {
       $term = $variables['element']['#parent']['#taxonomy_term'];
       _infinite_paragraphs_get_parent_base_data($term, $variables);
+    }
+    elseif (isset($variables['element']['#parent']['#user'])) {
+      $user = $variables['element']['#parent']['#user'];
+      _infinite_paragraphs_get_parent_base_data($user, $variables);
     }
   }
 }
@@ -254,6 +267,15 @@ function _infinite_paragraphs_get_parent_base_data($entity, &$variables) {
     }
     $variables['parent']['url'] = $absolute_url->toString();
     $variables['parent']['label'] = $term->name->value;
+  }
+  elseif ($entity->getEntityTypeId() == 'user') {
+    $user = $entity;
+    $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/user/' . $user->id());
+    if ($alias_path != '/') {
+      $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
+    }
+    $variables['parent']['url'] = $absolute_url->toString();
+    $variables['parent']['label'] = $user->name->value;
   }
 
   // Get share image URL from teaser media.
