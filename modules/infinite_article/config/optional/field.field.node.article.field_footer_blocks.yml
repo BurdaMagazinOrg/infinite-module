@@ -1,12 +1,10 @@
-langcode: de
+langcode: en
 status: true
 dependencies:
   config:
     - block.block.lazyloadingsimple
     - field.storage.node.field_footer_blocks
     - node.type.article
-_core:
-  default_config_hash: ngyd29fZG2euqTpzs3PVDcr94Aa_KCZTucimpAw0NSo
 id: node.article.field_footer_blocks
 field_name: field_footer_blocks
 entity_type: node
