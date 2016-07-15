@@ -1,0 +1,15 @@
+langcode: de
+status: true
+dependencies:
+  module:
+    - focal_point
+name: square_s
+label: 'Square S'
+effects:
+  3705b756-7508-4847-8012-1847c9c81ca5:
+    uuid: 3705b756-7508-4847-8012-1847c9c81ca5
+    id: focal_point_scale_and_crop
+    weight: 2
+    data:
+      width: '250'
+      height: '250'

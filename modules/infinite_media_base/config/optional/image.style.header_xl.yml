@@ -1,0 +1,16 @@
+uuid: e29ee17b-0804-4711-8000-f38b15e93ebc
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: header_xl
+label: 'Header XL'
+effects:
+  51b0eb77-0648-40f5-9a02-2f8837d953bf:
+    uuid: 51b0eb77-0648-40f5-9a02-2f8837d953bf
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: '1800'
+      height: '200'

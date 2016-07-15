@@ -1,0 +1,22 @@
+
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_header_blocks
+    - node.type.article
+id: node.article.field_header_blocks
+field_name: field_header_blocks
+entity_type: node
+bundle: article
+label: 'Header Blocks'
+description: ''
+required: false
+translatable: false
+default_value: null
+default_value_callback: ''
+settings:
+  handler: 'default:block'
+  handler_settings:
+    target_bundles: null
+field_type: entity_reference

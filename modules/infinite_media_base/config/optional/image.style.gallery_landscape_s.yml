@@ -1,0 +1,16 @@
+uuid: 5c8dd46c-9eee-4a62-bd00-0f8e674c25b8
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: gallery_landscape_s
+label: 'Gallery Landscape S'
+effects:
+  c91b5816-d743-423d-b004-4a644111f87e:
+    uuid: c91b5816-d743-423d-b004-4a644111f87e
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: '200'
+      height: '150'

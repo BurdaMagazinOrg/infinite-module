@@ -1,0 +1,10 @@
+id: node_unpromote_channel_page_action
+label: 'Remove content from channel page'
+status: true
+langcode: de
+type: node
+plugin: node_unpromote_channel_page_action
+dependencies:
+  module:
+    - infinite_base
+    - node

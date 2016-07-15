@@ -1,0 +1,36 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.infinite_front_presenter
+  module:
+    - infinite_blocks
+    - system
+    - views
+  theme:
+    - infinite
+third_party_settings:
+  infinite_blocks:
+    id: ''
+    classes: ''
+    title_tag: div
+    block_tag: div
+id: views_block__infinite_front_presenter_four_teasers
+theme: infinite
+region: content
+weight: -5
+provider: null
+plugin: 'views_block:infinite_front_presenter-four_teasers'
+settings:
+  id: 'views_block:infinite_front_presenter-four_teasers'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

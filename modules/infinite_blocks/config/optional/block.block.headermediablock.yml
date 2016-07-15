@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - infinite_blocks
+  theme:
+    - infinite
+third_party_settings:
+  infinite_blocks:
+    id: ''
+    classes: ''
+    title_tag: div
+    block_tag: div
+id: headermediablock
+theme: infinite
+region: header
+weight: -8
+provider: null
+plugin: infinite_blocks_header_media
+settings:
+  id: infinite_blocks_header_media
+  label: 'Header Media Block'
+  provider: infinite_blocks
+  label_display: '0'
+visibility: {  }

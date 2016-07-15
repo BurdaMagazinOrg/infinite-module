@@ -1,0 +1,41 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.header
+    - field.field.media.image.field_copyright
+    - field.field.media.image.field_description
+    - field.field.media.image.field_expires
+    - field.field.media.image.field_image
+    - field.field.media.image.field_source
+    - field.field.media.image.field_tags
+    - media_entity.bundle.image
+  module:
+    - responsive_image
+id: media.image.header
+targetEntityType: media
+bundle: image
+mode: header
+content:
+  field_image:
+    type: responsive_image
+    weight: 0
+    label: hidden
+    settings:
+      responsive_image_style: header
+      image_link: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_brands: true
+  field_channel: true
+  field_copyright: true
+  field_description: true
+  field_events: true
+  field_expires: true
+  field_people: true
+  field_source: true
+  field_tags: true
+  name: true
+  thumbnail: true
+  uid: true

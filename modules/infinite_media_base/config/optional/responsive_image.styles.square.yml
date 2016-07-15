@@ -1,0 +1,18 @@
+langcode: de
+status: true
+dependencies:
+  config:
+    - image.style.square_m
+    - image.style.square_s
+  theme:
+    - infinite
+id: square
+label: Square
+image_style_mappings:
+  -
+    breakpoint_id: infinite.xxs
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: square_m
+breakpoint_group: infinite
+fallback_image_style: square_s

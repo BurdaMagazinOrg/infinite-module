@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - infinite_blocks
+  theme:
+    - infinite
+third_party_settings:
+  infinite_blocks:
+    id: ''
+    classes: 'socials socials-bar socials-bar-clean'
+    title_tag: div
+    block_tag: div
+id: socialsblock_2
+theme: infinite
+region: sidebar
+weight: -7
+provider: null
+plugin: infinite_blocks_socials
+settings:
+  id: infinite_blocks_socials
+  label: 'Socials Block'
+  provider: infinite_blocks
+  label_display: '0'
+  follow: 0
+visibility: {  }

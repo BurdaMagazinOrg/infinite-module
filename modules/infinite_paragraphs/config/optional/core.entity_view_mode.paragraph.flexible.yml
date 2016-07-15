@@ -1,0 +1,9 @@
+langcode: de
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.flexible
+label: 'Flexibles Layout'
+targetEntityType: paragraph
+cache: true

@@ -1,0 +1,10 @@
+id: node_unpromote_front_presenter_action
+label: 'Remove content from front presenter'
+status: true
+langcode: de
+type: node
+plugin: node_unpromote_front_presenter_action
+dependencies:
+  module:
+    - infinite_base
+    - node

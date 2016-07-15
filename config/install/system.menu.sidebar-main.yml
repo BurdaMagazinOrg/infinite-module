@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: sidebar-main
+label: 'Sidebar Main'
+description: ''
+locked: false

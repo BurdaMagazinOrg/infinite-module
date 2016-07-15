@@ -1,0 +1,31 @@
+uuid: 397ec5e5-9a83-4a12-9f00-c8b8c5bce79e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.brands.field_header_media
+    - field.field.taxonomy_term.brands.field_meta_tags
+    - taxonomy.vocabulary.brands
+  module:
+    - metatag
+    - text
+id: taxonomy_term.brands.default
+targetEntityType: taxonomy_term
+bundle: brands
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+  field_meta_tags:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: metatag_empty_formatter
+hidden:
+  field_header_media: true
+  langcode: true

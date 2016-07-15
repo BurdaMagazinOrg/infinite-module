@@ -1,0 +1,16 @@
+name: Infinite Views
+type: module
+description: Provide basic Views and Views related functions for Infinite.
+package: Infinite
+core: 8.x
+version: 8.x-1.x-dev
+dependencies:
+  - views
+  - views_load_more
+config_devel:
+  - views.view.infinite_author
+  - views.view.infinite_channel_presenter
+  - views.view.infinite_front
+  - views.view.infinite_front_presenter
+  - views.view.infinite_rss
+  - views.view.infinite_taxonomy_term

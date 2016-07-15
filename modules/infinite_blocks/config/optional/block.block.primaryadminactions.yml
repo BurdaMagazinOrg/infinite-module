@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - infinite_blocks
+  theme:
+    - infinite
+third_party_settings:
+  infinite_blocks:
+    id: ''
+    classes: ''
+    title_tag: div
+    block_tag: div
+id: primaryadminactions
+theme: infinite
+region: content
+weight: -7
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
+  label_display: '0'
+visibility: {  }

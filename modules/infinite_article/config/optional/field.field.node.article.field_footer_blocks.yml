@@ -1,0 +1,26 @@
+langcode: de
+status: true
+dependencies:
+  config:
+    - block.block.lazyloadingsimple
+    - field.storage.node.field_footer_blocks
+    - node.type.article
+_core:
+  default_config_hash: ngyd29fZG2euqTpzs3PVDcr94Aa_KCZTucimpAw0NSo
+id: node.article.field_footer_blocks
+field_name: field_footer_blocks
+entity_type: node
+bundle: article
+label: 'Footer Blocks'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    target_uuid: 4863f89c-18be-4a41-b400-f7b2b5b64509
+default_value_callback: ''
+settings:
+  handler: 'default:block'
+  handler_settings:
+    target_bundles: null
+field_type: entity_reference

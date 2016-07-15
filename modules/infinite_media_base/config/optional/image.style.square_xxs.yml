@@ -1,0 +1,15 @@
+langcode: de
+status: true
+dependencies:
+  module:
+    - focal_point
+name: square_xxs
+label: 'Square XXS'
+effects:
+  deb749db-b23c-4f8e-9e05-051468519aa8:
+    uuid: deb749db-b23c-4f8e-9e05-051468519aa8
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: '50'
+      height: '50'

@@ -1,0 +1,10 @@
+id: node_promote_channel_page_action
+label: 'Promote content to channel page'
+status: true
+langcode: de
+type: node
+plugin: node_promote_channel_page_action
+dependencies:
+  module:
+    - infinite_base
+    - node

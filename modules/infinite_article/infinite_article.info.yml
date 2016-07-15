@@ -1,0 +1,22 @@
+name: Infinite Article
+type: module
+description: 'Provide content related configs and code for infinite (later: infinite_content).'
+package: Infinite
+core: 8.x
+version: 8.x-1.x-dev
+dependencies:
+  - node
+  - field
+  - field_group
+  - field_ui
+  - menu_ui
+  - options
+  - paragraphs
+  - infinite_base
+  - infinite_blocks
+  - infinite_media
+  - infinite_media_base
+  - infinite_search
+  - infinite_taxonomy
+  - infinite_views
+  - thunder_article

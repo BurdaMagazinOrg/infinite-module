@@ -1,0 +1,35 @@
+langcode: de
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_teaser_display_mode
+field_name: field_teaser_display_mode
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: teaser_square_m
+      label: Square
+    -
+      value: teaser_landscape_m
+      label: Landscape
+    -
+      value: teaser_landscape_l
+      label: Portrait
+    -
+      value: teaser_portrait_m
+      label: 'Portrait Medium'
+    -
+      value: teaser_portrait_s
+      label: 'Portrait Small'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

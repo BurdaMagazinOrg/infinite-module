@@ -1,0 +1,8 @@
+langcode: de
+status: true
+dependencies: {  }
+name: People
+vid: people
+description: ''
+hierarchy: 0
+weight: 0

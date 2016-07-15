@@ -1,0 +1,75 @@
+{% set classes = [
+'region-full-content',
+'region-newsletter',
+'no-horizontal-padding',
+'hidden',
+] %}
+
+<div {{ attributes.addClass(classes) }} data-view-type="newsletterView" data-newsletter-group-id="{{ groupId }}">
+    <div class="container-content">
+
+        {% block container_form %}
+            <form class="container-form container-content-item container-content-item--centered">
+                <div class="content-wrapper">
+
+                    {% block container_form__headline %}
+                        <div class="text-headline">{{ headline }}</div>
+                    {% endblock %}
+
+                    {% block container_form__description %}
+                        <p class="text-description">{{ text|plain_text|trim }}</p>
+                    {% endblock %}
+
+                    {% block container_form__form_groups %}
+                        <div class="form-group">
+                            <input class="input-lg input-email" type="email" name="email" required
+                                   placeholder="Deine E-Mail-Adresse">
+                            <button type="submit" class="btn btn-lg">Anmelden</button>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="agreements[]" value="datenschutzeinwilligung">
+                                    Ich willige widerruflich ein, dass bestimmte Unternehmen von Hubert Burda Media
+                                    Daten
+                                    über mich und meine Verträge, Gewinnspiele, Newsletter, Internetnutzung sowie von
+                                    mir gemachte Angaben erheben,
+                                    zusammenführen, speichern und für individuelle Informationsangebote und Werbezwecke
+                                    nutzen. Alle Details <a href="#" class="privacy-link">hier</a>.
+                                </label>
+                            </div>
+                        </div>
+                    {% endblock %}
+
+                    {% block container_form__alerts %}
+                        <div class="container-alerts"></div>
+                    {% endblock %}
+                </div>
+            </form>
+        {% endblock %}
+
+        {% block container_success %}
+            <div class="container-success container-content-item container-content-item--centered">
+                <div class="content-wrapper">
+                    {% block container_success__headline %}
+                        <div class="text-headline ">{{ confirmation_headline }}</div>
+                    {% endblock %}
+                    {% block container_success__confirmation_text %}
+                        {{ confirmation_text|raw }}
+                    {% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block container_privacy %}
+            <div class="container-privacy container-content-item">
+                <span class="icon icon-close"></span>
+
+                <div class="container-content-dynamic">
+
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+</div>

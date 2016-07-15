@@ -1,0 +1,17 @@
+uuid: 7b5f42a6-bc72-4cda-bd04-4f4047e4cc30
+langcode: en
+status: true
+dependencies:
+  module:
+    - thunder_media
+name: gallery_s
+label: 'Gallery S'
+effects:
+  2fa6827e-d40c-450b-a105-5ec19079347b:
+    uuid: 2fa6827e-d40c-450b-a105-5ec19079347b
+    id: thunder_media_auto_aspect
+    weight: 1
+    data:
+      landscape: gallery_landscape_s
+      portrait: gallery_portrait_s
+      ratio_adjustment: 1

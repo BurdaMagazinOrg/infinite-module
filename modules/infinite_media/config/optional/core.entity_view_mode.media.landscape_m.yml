@@ -1,0 +1,9 @@
+langcode: de
+status: true
+dependencies:
+  module:
+    - media_entity
+id: media.landscape_m
+label: 'Landscape M'
+targetEntityType: media
+cache: true

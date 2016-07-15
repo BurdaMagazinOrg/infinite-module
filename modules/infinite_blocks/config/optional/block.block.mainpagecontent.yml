@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - infinite_blocks
+    - system
+  theme:
+    - infinite
+third_party_settings:
+  infinite_blocks:
+    id: ''
+    classes: ''
+    title_tag: div
+    block_tag: div
+id: mainpagecontent
+theme: infinite
+region: content
+weight: -3
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  provider: system
+  label_display: '0'
+visibility: {  }

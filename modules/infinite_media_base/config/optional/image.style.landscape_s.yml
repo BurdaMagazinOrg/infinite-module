@@ -1,0 +1,16 @@
+uuid: 88e25a2a-1bb5-47dc-941b-27597ab25c67
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: landscape_s
+label: 'Landscape S'
+effects:
+  c8fd3e7c-00fa-4dfa-9d00-f48bbb88b2c8:
+    uuid: c8fd3e7c-00fa-4dfa-9d00-f48bbb88b2c8
+    id: focal_point_scale_and_crop
+    weight: 2
+    data:
+      width: '480'
+      height: '294'

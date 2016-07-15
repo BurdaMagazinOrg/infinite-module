@@ -1,0 +1,27 @@
+uuid: 4863f89c-18be-4a41-b400-f7b2b5b64509
+langcode: en
+status: true
+dependencies:
+  module:
+    - infinite_base
+    - infinite_blocks
+  theme:
+    - infinite
+third_party_settings:
+  infinite_blocks:
+    id: ''
+    classes: ''
+    title_tag: div
+    block_tag: div
+id: lazyloadingsimple
+theme: infinite
+region: hidden
+weight: -8
+provider: null
+plugin: infinite_base_lazy_loading_simple
+settings:
+  id: infinite_base_lazy_loading_simple
+  label: 'Lazy Loading Simple'
+  provider: infinite_base
+  label_display: '0'
+visibility: {  }

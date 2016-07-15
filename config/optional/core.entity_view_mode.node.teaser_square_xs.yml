@@ -1,0 +1,8 @@
+status: true
+dependencies:
+  module:
+    - node
+id: node.teaser_square_xs
+label: 'Teaser Square XS'
+targetEntityType: node
+cache: true

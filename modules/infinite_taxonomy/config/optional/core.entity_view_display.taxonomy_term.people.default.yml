@@ -1,0 +1,31 @@
+uuid: 04cdad92-b77e-4ed9-9305-5e4af97028af
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.people.field_header_media
+    - field.field.taxonomy_term.people.field_meta_tags
+    - taxonomy.vocabulary.people
+  module:
+    - metatag
+    - text
+id: taxonomy_term.people.default
+targetEntityType: taxonomy_term
+bundle: people
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+  field_meta_tags:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: metatag_empty_formatter
+hidden:
+  field_header_media: true
+  langcode: true

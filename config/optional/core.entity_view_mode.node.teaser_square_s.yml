@@ -1,0 +1,10 @@
+uuid: 819bec66-6a38-42ca-9800-a287f3ffdc84
+langcode: de
+status: true
+dependencies:
+  module:
+    - node
+id: node.teaser_square_s
+label: 'Teaser Square S'
+targetEntityType: node
+cache: true

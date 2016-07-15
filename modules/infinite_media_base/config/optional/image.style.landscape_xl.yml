@@ -1,0 +1,16 @@
+uuid: bbc80d6a-8104-4f0e-9722-340b9a8fd397
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: landscape_xl
+label: 'Landscape XL'
+effects:
+  5203b80b-5d01-4af8-8500-b26e9f289ab1:
+    uuid: 5203b80b-5d01-4af8-8500-b26e9f289ab1
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: '1400'
+      height: '858'

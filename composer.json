@@ -1,0 +1,13 @@
+{
+    "name": "burdamagazinorg/infinite-module",
+    "description": "The modules for the infinite distribution",
+    "type": "drupal-module",
+    "authors": [
+        {
+            "name": "ITCru",
+            "email": "steffen.schlaer@it-cru.de"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

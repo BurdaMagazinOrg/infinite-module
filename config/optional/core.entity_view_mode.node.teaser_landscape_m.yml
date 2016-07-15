@@ -1,0 +1,10 @@
+uuid: 18938502-fd12-4e3e-8600-d47d932b19ae
+langcode: de
+status: true
+dependencies:
+  module:
+    - node
+id: node.teaser_landscape_m
+label: 'Teaser Landscape M'
+targetEntityType: node
+cache: true

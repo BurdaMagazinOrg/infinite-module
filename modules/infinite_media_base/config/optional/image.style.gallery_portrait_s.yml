@@ -1,0 +1,16 @@
+uuid: 7c4f62b1-130c-4486-b600-0db2bc321e42
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: gallery_portrait_s
+label: 'Gallery Portrait S'
+effects:
+  8022f85b-ff49-4db8-bc00-c448ad825181:
+    uuid: 8022f85b-ff49-4db8-bc00-c448ad825181
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: '100'
+      height: '150'

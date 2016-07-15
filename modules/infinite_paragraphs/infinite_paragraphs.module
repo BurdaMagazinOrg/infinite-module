@@ -1,0 +1,261 @@
+<?php
+/**
+ * @file
+ * Module that allows editors to select a view mode for paragraphs.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
+use Drupal\image\Entity\ImageStyle;
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function infinite_paragraphs_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (!isset($form['field_paragraph'])) {
+    return;
+  }
+
+  foreach (Element::children($form['field_paragraph']['widget']) as $index) {
+    if (isset($form['field_paragraph']['widget'][$index]['subform']['field_p_view_mode'])) {
+      _infinite_paragraphs_view_mode_widget_alter($form['field_paragraph']['widget'][$index]['subform']['field_p_view_mode']['widget'], $index);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function infinite_paragraphs_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (!isset($form['field_paragraphs'])) {
+    return;
+  }
+
+  foreach (Element::children($form['field_paragraphs']['widget']) as $index) {
+    if (isset($form['field_paragraphs']['widget'][$index]['subform']['field_p_view_mode'])) {
+      _infinite_paragraphs_view_mode_widget_alter($form['field_paragraphs']['widget'][$index]['subform']['field_p_view_mode']['widget'], $index);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_view_mode_alter().
+ */
+function infinite_paragraphs_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
+  if ($view_mode == 'flexible' && $entity->getEntityTypeId() == 'paragraph' && $entity->hasField('field_p_view_mode')) {
+    $view_mode = $entity->field_p_view_mode->value ?: 'small';
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+function infinite_paragraphs_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if (isset($build['field_paragraphs'])) {
+    _infinite_paragraphs_decorate_group($build['field_paragraphs'], _infinite_paragraphs_layout_group($build['field_paragraphs'], array('small' ,'middle')), 'group_outer', $build);
+  }
+}
+
+/**
+ * Implemens hook_ENTITY_TYPE_view_alter().
+ */
+function infinite_paragraphs_taxonomy_term_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if (isset($build['field_paragraph'])) {
+    _infinite_paragraphs_decorate_group($build['field_paragraph'], _infinite_paragraphs_layout_group($build['field_paragraph'], array('small' ,'middle')), 'group_outer', $build);
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function infinite_paragraphs_theme_suggestions_container_alter(array &$suggestions, array $variables) {
+  if (!empty($variables['element']['#type'])) {
+    $suggestions[] = 'container__' . $variables['element']['#type'];
+  }
+}
+
+/**
+ * Implements hook_preprocess_container().
+ */
+function infinite_paragraphs_preprocess_container(&$variables) {
+  if (isset($variables['element']['#parent'])) {
+    $variables['parent'] = $variables['element']['#parent'];
+
+    if (isset($variables['element']['#parent']['#node'])) {
+      $node = $variables['element']['#parent']['#node'];
+      _infinite_paragraphs_get_parent_base_data($node, $variables);
+    }
+    elseif (isset($variables['element']['#parent']['#taxonomy_term'])) {
+      $term = $variables['element']['#parent']['#taxonomy_term'];
+      _infinite_paragraphs_get_parent_base_data($term, $variables);
+    }
+  }
+}
+
+/**
+ * Returns first group of paragraphs suitable for the content group.
+ *
+ * @param array $paragraphs
+ *
+ * @param array $view_modes
+ *
+ * @return array
+ */
+function _infinite_paragraphs_layout_group(&$paragraphs, $view_modes) {
+  $group = [];
+  foreach (Element::children($paragraphs, TRUE) as $index) {
+    if (in_array($paragraphs[$index]['#view_mode'], $view_modes)) {
+      $group[] = $index;
+    }
+    elseif (!empty($group) && !in_array($paragraphs[$index]['#view_mode'], $view_modes)) {
+      break;
+    }
+  }
+  unset($paragraphs['#sorted']);
+  return $group;
+}
+
+/**
+ * Wraps the given group of paragraphs in a group container.
+ *
+ * @param array $paragraphs
+ *   A list of paragraphs.
+ *
+ * @param array $group
+ *   The indices of a group of paragraphs.
+ *
+ * @param $type
+ *   An identifier used for the template suggestion.
+ */
+function _infinite_paragraphs_decorate_group(&$paragraphs, $group, $type, $build = array()) {
+  if (!empty($group)) {
+    $children = [];
+
+    foreach ($group as $index) {
+      $children[] = $paragraphs[$index];
+      unset($paragraphs[$index]);
+    }
+
+    $paragraphs[$group[0]] = array(
+      '#theme' => 'container',
+      '#type' => $type,
+      '#weight' => $children[0]['#weight'],
+      '#children' => $children,
+      '#parent' => $build,
+    );
+
+    ksort($paragraphs);
+
+    foreach (Element::children($paragraphs) as $key => $value) {
+      $paragraphs[$key] = $paragraphs[$value];
+      if ($value > $key) {
+        unset($paragraphs[$value]);
+      }
+    }
+
+    if ($type == 'group_outer') {
+      $small_group = _infinite_paragraphs_layout_group($children, array('small'));
+      _infinite_paragraphs_decorate_group($paragraphs[$group[0]]['#children'], $small_group, 'group_inner', $build);
+    }
+  }
+}
+
+/**
+ * Returns allowed values for the paragraph view mode field.
+ *
+ * @param FieldStorageDefinitionInterface $definition
+ * @param FieldableEntityInterface $entity
+ *
+ * @return array
+ */
+function _infinite_paragraphs_allowed_view_modes(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL, &$cacheable = TRUE) {
+  $cacheable = FALSE;
+
+  if (in_array($entity->bundle(), array('content_teaser', 'gallery', 'instagram', 'pinterest', 'recent_content', 'term_teaser', 'text', 'tracdelight', 'twitter'))) {
+    $allowed_view_modes = [
+      'small' => 'Schmal',
+    ];
+  }
+  else {
+    $allowed_view_modes = [
+      'full' => 'Volle Breite',
+      'middle' => 'Mittel',
+      'small' => 'Schmal',
+    ];
+  }
+
+  return $allowed_view_modes;
+}
+
+/**
+ * Modifies widget for paragraph view mode.
+ *
+ * - Disables widget if there is only one choice.
+ * - Disables widget if the user is not allowed to use the current selection.
+ *
+ * @param array $form_element
+ */
+function _infinite_paragraphs_view_mode_widget_alter(array &$element, $index) {
+  if (empty($element['#default_value'])) {
+    if ($index == 0 && array_key_exists('middle', $element['#options'])) {
+      $element['#default_value'] = array('middle');
+    }
+    elseif (array_key_exists('small', $element['#options'])) {
+      $element['#default_value'] = array('small');
+    }
+  }
+
+  if (count(array_diff(array_keys($element['#options']), array('_none'))) == 1) {
+    $element['#disabled'] = TRUE;
+  }
+}
+
+function _infinite_paragraphs_get_parent_base_data($entity, &$variables) {
+  if ($entity->getEntityTypeId() == 'node') {
+    $node = $entity;
+    $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $node->id());
+    $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
+    $variables['parent']['url'] = $absolute_url->toString();
+    $variables['parent']['label'] = $variables['parent']['title'];
+    unset($variables['parent']['title']);
+  }
+  elseif ($entity->getEntityTypeId() == 'taxonomy_term') {
+    $term = $entity;
+    $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/taxonomy/term/' . $term->id());
+    $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
+    $variables['parent']['url'] = $absolute_url->toString();
+    $variables['parent']['label'] = $term->name->value;
+  }
+
+  // Get share image URL from teaser media.
+  if ($entity->hasField('field_teaser_media') && !$entity->field_teaser_media->isEmpty()) {
+
+    if (!empty($entity->field_teaser_media->entity) &&  // todo: check wyh some media entity reference seems to be empty here after isEmpty() check? example: node 6001
+      $entity->field_teaser_media->entity->hasField('field_image') &&
+      !$entity->field_teaser_media->entity->field_image->isEmpty()
+    ) {
+
+      $share_img_path = $entity->field_teaser_media->entity->field_image->entity->getFileUri();
+      $share_img = ImageStyle::load('inline_l');
+      if (is_object($share_img)) {
+        $url = $share_img->buildUrl($share_img_path);
+        $variables['share_img_url'] = $url;
+      }
+    }
+  }
+
+  $variables['parent']['facebook_share_button'] = theme_get_setting('facebook_share_button');
+  $variables['parent']['whatsapp_share_button'] = theme_get_setting('whatsapp_share_button');
+  $variables['parent']['pinterest_share_button'] = theme_get_setting('pinterest_share_button');
+  $variables['parent']['twitter_share_button'] = theme_get_setting('twitter_share_button');
+  $variables['parent']['twitter_share_via'] = theme_get_setting('twitter_share_via');
+  $variables['parent']['email_share_button'] = theme_get_setting('email_share_button');
+  $variables['parent']['whatsapp_share_text'] = theme_get_setting('whatsapp_share_text');
+  $variables['parent']['email_share_text'] = theme_get_setting('email_share_text');
+  $variables['parent']['email_subject'] = theme_get_setting('email_subject');
+}

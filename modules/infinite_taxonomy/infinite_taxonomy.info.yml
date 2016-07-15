@@ -1,0 +1,13 @@
+name: Infinite Taxonomy
+type: module
+description: Provide taxonomy functions for Infinite.
+package: Infinite
+core: 8.x
+version: 8.x-1.x-dev
+dependencies:
+  - inline_entity_form
+  - metatag
+  - path
+  - taxonomy
+  - text
+

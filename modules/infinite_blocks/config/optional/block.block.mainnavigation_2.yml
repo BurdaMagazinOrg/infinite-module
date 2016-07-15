@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - infinite_blocks
+    - system
+  theme:
+    - infinite
+third_party_settings:
+  infinite_blocks:
+    id: ''
+    classes: ''
+    title_tag: div
+    block_tag: div
+id: mainnavigation_2
+theme: infinite
+region: secondary_menu
+weight: -8
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Sub Main navigation'
+  provider: system
+  label_display: '0'
+  level: 2
+  depth: 1
+visibility: {  }

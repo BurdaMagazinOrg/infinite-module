@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - infinite_blocks
+    - system
+  theme:
+    - infinite
+third_party_settings:
+  infinite_blocks:
+    id: ''
+    classes: ''
+    title_tag: div
+    block_tag: div
+id: breadcrumbs
+theme: infinite
+region: breadcrumb
+weight: -8
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  provider: system
+  label_display: '0'
+visibility: {  }

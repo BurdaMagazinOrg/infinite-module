@@ -1,0 +1,23 @@
+langcode: de
+status: true
+dependencies:
+  config:
+    - image.style.landscape_l
+    - image.style.landscape_m
+  theme:
+    - infinite
+id: landscape
+label: Landscape
+image_style_mappings:
+  -
+    breakpoint_id: infinite.xl
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: ''
+  -
+    breakpoint_id: infinite.md
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: landscape_l
+breakpoint_group: infinite
+fallback_image_style: landscape_m

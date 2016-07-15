@@ -1,0 +1,239 @@
+<?php
+
+use Drupal\block\Entity\Block;
+use Drupal\node\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * @file
+ * Module for adding custom Infinity base functions.
+ */
+
+
+/**
+ * Implements hook_entity_view_mode_alter().
+ *
+ * @param $view_mode
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param $context
+ */
+function infinite_base_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
+  if ($view_mode == 'presenter_home_selectable' &&
+    $entity->getEntityTypeId() === 'node'
+  ) {
+
+    /* @var Node $entity */
+    $view_mode = 'presenter_half';
+    if ($entity->hasField('field_hp_display_mode') &&
+      !$entity->get('field_hp_display_mode')->isEmpty()
+    ) {
+
+      $selected_view_mode = $entity->get('field_hp_display_mode')->value;
+      $view_mode = $selected_view_mode;
+    }
+  }
+  else {
+    if ($view_mode == 'teaser_selectable' &&
+      $entity->getEntityTypeId() === 'node'
+    ) {
+
+      /* @var Node $entity */
+      $view_mode = 'teaser_square_m';
+      if ($entity->hasField('field_teaser_display_mode') &&
+        !$entity->get('field_teaser_display_mode')->isEmpty()
+      ) {
+
+        $selected_view_mode = $entity->get('field_teaser_display_mode')->value;
+        $view_mode = $selected_view_mode;
+      }
+    }
+  }
+}
+
+function infinite_base_theme() {
+  return array(
+    'author_teaser' => array(
+      'template' => 'author-teaser',
+      'variables' => array(
+        'elements' => NULL,
+        'name' => NULL,
+        'author_id' => NULL,
+        'author_url' => NULL,
+        'author_picture' => NULL,
+        'timestamp' => NULL,
+        'datetime' => NULL,
+      ),
+    ),
+
+    'data_internal_url' => array(
+      'variables' => array(
+        'label' => NULL,
+        'url' => NULL,
+      ),
+    ),
+
+    'lazy_loading' => array(
+      'variables' => array('lazy_loading_url' => NULL)
+    ),
+  );
+}
+
+function infinite_base_token_info() {
+
+  // Node tokens.
+  $info['tokens']['node']['root-channel'] = array(
+    'name' => t('Root channel'),
+    'description' => t("The root channel."),
+  );
+  $info['tokens']['term']['parents-all-join'] = array(
+    'name' => t('Parents all join path'),
+    'description' => t("Parents all join path"),
+  );
+
+
+  $nodeType = array(
+    'name' => t('Nodes'),
+    'description' => t('Tokens related to individual nodes.'),
+    'needs-data' => 'node',
+  );
+
+  // Core tokens for nodes.
+  $node['root-channel'] = array(
+    'name' => t('Root channel'),
+    'description' => t("The root channel."),
+  );
+
+
+  $termType = array(
+    'name' => t('Terms'),
+    'description' => t('Tokens related to individual terms.'),
+    'needs-data' => 'term',
+  );
+
+  // Core tokens for nodes.
+  $term['term-parents-all'] = array(
+    'name' => t('Parents all'),
+    'description' => t("Parents all."),
+    'type' => 'array',
+  );
+
+  return array(
+    'types' => array('node' => $nodeType, 'term' => $termType),
+    'tokens' => array('node' => $node, 'term' => $term),
+  );
+
+  return $info;
+}
+
+function infinite_base_tokens($type, $tokens, array $data = array(), array $options = array(), \Drupal\Core\Render\BubbleableMetadata $bubbleableMetadata) {
+
+  $replacements = array();
+
+  if ($type == 'node' && !empty($data['node'])) {
+    /** @var \Drupal\node\NodeInterface $node */
+    $node = $data['node'];
+
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        // Simple key values on the node.
+        case 'root-channel':
+
+          if ($node->field_channel->entity) {
+            $parents = \Drupal::entityTypeManager()
+              ->getStorage('taxonomy_term')
+              ->loadAllParents($node->field_channel->entity->id());
+
+            $parents = array_values($parents);
+            $countParents = count($parents);
+            if (!empty($parents[$countParents - 2])) {
+              $replacements[$original] = $parents[$countParents - 2]->getName();
+            }
+            else {
+              $replacements[$original] = $node->field_channel->entity->getName();
+            }
+          }
+          else {
+            $replacements[$original] = '';
+          }
+          break;
+      }
+    }
+  }
+
+
+  if ($type == 'term' && !empty($data['term'])) {
+    /** @var \Drupal\node\NodeInterface $node */
+    $term = $data['term'];
+
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'term-parents-all':
+
+          $replacements[$original] = infinite_base_get_all_parents($term);
+          break;
+      }
+    }
+
+    if ($parents_tokens = \Drupal::token()->findWithPrefix($tokens, 'term-parents-all')) {
+
+      if ($parents = infinite_base_get_all_parents($term)) {
+
+        $replacements += \Drupal::token()
+          ->generate('array', $parents_tokens, array('array' => $parents), $options, $bubbleableMetadata);
+      }
+    }
+  }
+
+
+  return $replacements;
+}
+
+function infinite_base_get_all_parents($term) {
+
+  $parents_tokens = [];
+
+  if ($term) {
+    $parents = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadAllParents($term->id());
+
+    $parents = array_reverse(array_values($parents));
+
+    if (count($parents) == 1) {
+      $parents_tokens = [];
+    } elseif (count($parents) > 1) {
+      array_shift($parents);
+
+      foreach($parents as $parent) {
+        $parents_tokens[] = $parent->getName();
+      }
+
+    }
+
+
+  }
+  return $parents_tokens;
+}
+
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function infinite_base_preprocess_node(&$variables) {
+
+  if (\Drupal::moduleHandler()->moduleExists('ad_integration')) {
+    if ($variables['view_mode'] == 'full' || $variables['view_mode'] == 'lazyloading') {
+      /* @var \Drupal\ad_integration\AdIntegration $advertisingService */
+      $advertisingService = \Drupal::service('ad_integration');
+      if (is_object($advertisingService)) {
+        $variables['adsc_adunit1'] = $advertisingService->getAdUnit1();
+        $variables['adsc_adunit2'] = $advertisingService->getAdUnit2();
+        $variables['adsc_adunit3'] = $advertisingService->getAdUnit3();
+        $variables['adsc_keyword'] = $advertisingService->getKeyword();
+      }
+    }
+  }
+}

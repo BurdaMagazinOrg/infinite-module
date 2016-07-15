@@ -1,0 +1,53 @@
+uuid: ac2195aa-6c1f-40e2-9300-e3cb4a546be9
+langcode: de
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.presenter_home_selectable
+    - field.field.node.article.field_channel
+    - field.field.node.article.field_footer_blocks
+    - field.field.node.article.field_header_blocks
+    - field.field.node.article.field_header_media
+    - field.field.node.article.field_hp_display_mode
+    - field.field.node.article.field_meta_tags
+    - field.field.node.article.field_paragraphs
+    - field.field.node.article.field_presenter_media
+    - field.field.node.article.field_seo_title
+    - field.field.node.article.field_sidebar_blocks
+    - field.field.node.article.field_tags
+    - field.field.node.article.field_teaser_display_mode
+    - field.field.node.article.field_teaser_media
+    - field.field.node.article.field_teaser_text
+    - field.field.node.article.field_top_paragraphs
+    - node.type.article
+  module:
+    - options
+    - user
+id: node.article.presenter_home_selectable
+targetEntityType: node
+bundle: article
+mode: presenter_home_selectable
+content:
+  field_hp_display_mode:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: list_key
+hidden:
+  field_channel: true
+  field_footer_blocks: true
+  field_header_blocks: true
+  field_header_media: true
+  field_meta_tags: true
+  field_paragraphs: true
+  field_presenter_media: true
+  field_seo_title: true
+  field_sidebar_blocks: true
+  field_tags: true
+  field_teaser_display_mode: true
+  field_teaser_media: true
+  field_teaser_text: true
+  field_top_paragraphs: true
+  langcode: true
+  links: true
