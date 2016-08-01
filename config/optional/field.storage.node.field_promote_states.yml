@@ -1,0 +1,43 @@
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_promote_states
+field_name: field_promote_states
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: front_page
+      label: 'Promoted to front page'
+    -
+      value: channel_page
+      label: 'Promoted to channel page'
+    -
+      value: top_pesenter
+      label: 'Promoted to top presenter'
+    -
+      value: front_presenter
+      label: 'Promoted to front page presenter'
+    -
+      value: channel_presenter
+      label: 'Promoted to channel presenter'
+    -
+      value: fb_instant_articles
+      label: 'Promoted to FB instant article'
+    -
+      value: flipboard
+      label: 'Promoted to Flipboard'
+    -
+      value: msn
+      label: 'Promted to MSN'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
