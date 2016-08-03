@@ -58,6 +58,11 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
     }
     _infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
   }
+  elseif ($view->id() == 'infinite_front_presenter' && $view->current_display == 'exclude') {
+    $presenter_view = 'infinite_front_presenter';
+    $exclude_displays = ['exclude_top'];
+    _infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
+  }
   else {
     if ($view->id() == 'infinite_archive' && empty($args)) {  // Get default contextual filter for loading /archive
       //Lookup 1 recent published article node.
