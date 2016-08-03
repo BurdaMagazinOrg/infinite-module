@@ -16,7 +16,7 @@ settings:
       value: channel_page
       label: 'Promoted to channel page'
     -
-      value: top_pesenter
+      value: top_presenter
       label: 'Promoted to top presenter'
     -
       value: front_presenter
