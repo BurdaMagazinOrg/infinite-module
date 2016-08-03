@@ -32,7 +32,7 @@ settings:
       label: 'Promoted to Flipboard'
     -
       value: msn
-      label: 'Promted to MSN'
+      label: 'Promoted to MSN'
   allowed_values_function: ''
 module: options
 locked: false
