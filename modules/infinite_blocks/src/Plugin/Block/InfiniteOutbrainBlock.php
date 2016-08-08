@@ -142,16 +142,12 @@ class InfiniteOutbrainBlock extends BlockBase implements ContainerFactoryPluginI
       $url = Url::fromUri('base:/' . $path_alias, array('absolute' => TRUE))->toString();
     }
 
-    $widgets = '<div class="outbrain_div_container">';
-    foreach($widget_ids as $widget_id) {
-      // todo: create a TWIG template for this.
-      $widgets = $widgets . '<div class="' . $class .'" data-ob-template="' . $template . '" data-src="'. $url .'" data-widget-id="' .$widget_id . '"> </div>';
-    }
-    $widgets = $widgets . '</div>';
-
     return array(
-      '#markup' => $widgets,
-      '#attached' => ['library' => ['infinite_blocks/outbrain_js']],
+      '#theme' => 'outbrain',
+      '#class' => $class,
+      '#template' => $template,
+      '#url' => $url,
+      '#widget_ids' => $widget_ids,
       '#cache' => [
         'tags' => ['node:' . $nid],
         'contexts' => ['url.path'],
