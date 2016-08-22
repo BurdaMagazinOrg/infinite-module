@@ -1,6 +1,6 @@
 {
-    "name": "burdamagazinorg/infinite-module",
-    "description": "The modules for the infinite distribution",
+    "name": "burdamagazinorg/infinite_base",
+    "description": "The modules for the infinite theme.",
     "type": "drupal-module",
     "authors": [
         {
