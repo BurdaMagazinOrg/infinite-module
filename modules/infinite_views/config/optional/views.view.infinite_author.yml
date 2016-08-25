@@ -12,7 +12,7 @@ dependencies:
     - user
     - views_load_more
 id: infinite_author
-label: 'Instyle Autor'
+label: 'Autor'
 module: views
 description: ''
 tag: ''
@@ -167,7 +167,7 @@ display:
           entity_type: node
           entity_field: created
           plugin_id: date
-      title: 'Instyle Autor'
+      title: 'Autor'
       empty:
         http_status_code:
           id: http_status_code
