@@ -5,7 +5,15 @@
 'hidden',
 ] %}
 
-<div {{ attributes.addClass(classes) }} data-view-type="newsletterView" data-newsletter-group-id="{{ groupId }}">
+{% set use_ajax_permissions = use_ajax_permissions | default('true') %}
+{% set external_permission_url = external_permission_url | default('/newsletter-datenschutzeinwilligung') %}
+
+<div {{ attributes.addClass(classes) }}
+        data-view-type="newsletterView"
+        data-newsletter-group-id="{{ groupId }}"
+        data-use-ajax-permissions="{{ use_ajax_permissions }}"
+        >
+
     <div class="container-content">
 
         {% block container_form %}
@@ -40,7 +48,13 @@
                                     über mich und meine Verträge, Gewinnspiele, Newsletter, Internetnutzung sowie von
                                     mir gemachte Angaben erheben,
                                     zusammenführen, speichern und für individuelle Informationsangebote und Werbezwecke
-                                    nutzen. Alle Details <a href="#" class="privacy-link">hier</a>.
+                                    nutzen. Alle Details
+
+                                    {% if use_ajax_permissions == 'true' %}
+                                        <a href="#" class="privacy-link">hier</a>.
+                                    {% else %}
+                                        <a href="{{ external_permission_url }}" target="_blank" rel="nofollow" class="privacy-link">hier</a>.
+                                    {% endif %}
                                 </label>
                             </div>
                         </div>
