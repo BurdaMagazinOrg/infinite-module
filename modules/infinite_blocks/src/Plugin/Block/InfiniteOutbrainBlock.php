@@ -146,6 +146,7 @@ class InfiniteOutbrainBlock extends BlockBase implements ContainerFactoryPluginI
       '#theme' => 'outbrain',
       '#class' => $class,
       '#template' => $template,
+      '#attached' => ['library' => ['infinite_blocks/outbrain_js']],
       '#url' => $url,
       '#widget_ids' => $widget_ids,
       '#cache' => [
