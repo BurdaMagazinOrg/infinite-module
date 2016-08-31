@@ -1,11 +1,12 @@
-{% if front_page %}
-<h1>
+{% set link_url = link_url | default("") %}
+
+{% if link_url != "" %}
+<a class="logo" href="{{ link_url }}" title="{{ 'Home'|t }}">
 {% endif %}
 
-    <a class="logo" href="{{ front_page }}" title="{{ 'Home'|t }}">
-        <img src="{{ logo }}" alt="{{ 'Home'|t }}"/>
-    </a>
+    <img src="{{ logo }}" alt="{{ 'Home'|t }}"/>
 
-    {% if front_page %}
-</h1>
+{% if use_link != "false" %}
+</a>
 {% endif %}
+

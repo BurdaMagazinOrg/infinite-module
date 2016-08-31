@@ -20,6 +20,9 @@ function infinite_blocks_theme() {
     'outbrain' => array(
       'variables' => array('class' => NULL, 'template' => NULL, 'url' => NULL, 'widget_ids' => NULL),
     ),
+    'logo_header' => array(
+      'variables' => array('logo' => NULL, 'front_page' => NULL)
+    ),
     'logo' => array(
       'variables' => array('logo' => NULL, 'front_page' => NULL)
     ),
