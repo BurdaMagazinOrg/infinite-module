@@ -256,3 +256,55 @@ function infinite_base_page_attachments(array &$attachments) {
     $attachments['#attached']['library'][] = 'hm_newsletter/base';
   }
 }
+
+/**
+ * Replaces meta tag in html head with given content.
+ *
+ * @param type $name
+ *
+ * @param type $content
+ *
+ * @param array $attachments
+ */
+function infinite_base_replace_tag($name, $content, array &$attachments) {
+  if (empty($attachments['#attached'])) {
+    $attachments['#attached'] = [];
+  }
+
+  if (empty($attachments['#attached']['html_head'])) {
+    $attachments['#attached']['html_head'] = [];
+  }
+
+  $index = infinite_base_find_tag($name, $attachments);
+
+  if ($index > -1) {
+    $attachments['#attached']['html_head'][$index][0]['#attributes']['content'] = $content;
+  }
+  else {
+    $attachments['#attached']['html_head'][] = [
+      0 => [
+        '#attributes' => ['name' => $name, 'content' => $content],
+        '#tag' => 'meta',
+      ],
+      1 => 'description',
+    ];
+  }
+}
+
+/**
+ * Finds the index of a meta tag in the html head.
+ *
+ * @param type $name
+ *
+ * @param array $attachments
+ *
+ * @return int
+ */
+function infinite_base_find_tag($name, array &$attachments) {
+  foreach ($attachments['#attached']['html_head'] as $index => $attachment) {
+    if ($attachment[1] == $name) {
+      return $index;
+    }
+  }
+  return -1;
+}
