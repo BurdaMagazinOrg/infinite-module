@@ -6,22 +6,22 @@ use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Promotes a node to channel page.
+ * Unpromotes a node to MSN.
  *
  * @Action(
- *   id = "node_promote_channel_page_action",
- *   label = @Translation("Promote selected content to channel page"),
+ *   id = "node_unpromote_msn_action",
+ *   label = @Translation("Unpromote selected content to MSN"),
  *   type = "node"
  * )
  */
-class PromoteChannelPageNode extends ActionBase {
+class UnpromoteMsnNode extends ActionBase {
 
   /**
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
     if ($currentPromoteStates = _infinite_base_flat_promote_states($entity)) {
-      $entity->field_promote_states->setValue(array_merge($currentPromoteStates, ['channel_page']));
+      $entity->field_promote_states->setValue(array_diff($currentPromoteStates, ['msn']));
       $entity->save();
     }
   }
@@ -32,7 +32,7 @@ class PromoteChannelPageNode extends ActionBase {
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\node\NodeInterface $object */
     $access = $object->access('update', $account, TRUE)
-      ->andif($object->field_promote_states->access('edit', $account, TRUE));
+      ->andif($object->promote->access('edit', $account, TRUE));
     return $return_as_object ? $access : $access->isAllowed();
   }
 

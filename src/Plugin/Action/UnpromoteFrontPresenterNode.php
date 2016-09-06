@@ -25,8 +25,8 @@ class UnpromoteFrontPresenterNode extends ActionBase {
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
-    if ($entity->hasField('promote_front_presenter')) {
-      $entity->set('promote_front_presenter', 0);
+    if ($currentPromoteStates = _infinite_base_flat_promote_states($entity)) {
+      $entity->field_promote_states->setValue(array_diff($currentPromoteStates, ['front_presenter']));
       $entity->save();
     }
   }

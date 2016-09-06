@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\infinite_article\Plugin\Action\PromoteHomePresenterNode.
- */
-
 namespace Drupal\infinite_base\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
@@ -25,8 +20,8 @@ class PromoteFrontPresenterNode extends ActionBase {
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
-    if ($entity->hasField('promote_front_presenter')) {
-      $entity->set('promote_front_presenter', 1);
+    if ($currentPromoteStates = _infinite_base_flat_promote_states($entity)) {
+      $entity->field_promote_states->setValue(array_merge($currentPromoteStates, ['front_presenter']));
       $entity->save();
     }
   }

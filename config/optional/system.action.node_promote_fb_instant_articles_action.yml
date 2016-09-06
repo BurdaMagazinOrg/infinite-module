@@ -1,0 +1,10 @@
+id: node_promote_fb_instant_articles_action
+label: 'Promote content to FB instant articles'
+status: true
+langcode: de
+type: node
+plugin: node_promote_fb_instant_articles_action
+dependencies:
+  module:
+    - infinite_base
+    - node

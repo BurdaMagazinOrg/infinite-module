@@ -1,0 +1,10 @@
+id: node_promote_top_presenter_action
+label: 'Promote content to top presenter'
+status: true
+langcode: de
+type: node
+plugin: node_promote_top_presenter_action
+dependencies:
+  module:
+    - infinite_base
+    - node
