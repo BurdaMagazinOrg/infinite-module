@@ -1,0 +1,10 @@
+id: node_unpromote_front_page_action
+label: 'Unpromote content to front page'
+status: true
+langcode: de
+type: node
+plugin: node_unpromote_front_page_action
+dependencies:
+  module:
+    - infinite_base
+    - node

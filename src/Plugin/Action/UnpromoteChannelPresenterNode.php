@@ -25,8 +25,8 @@ class UnpromoteChannelPresenterNode extends ActionBase {
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
-    if ($entity->hasField('promote_channel_presenter')) {
-      $entity->set('promote_channel_presenter', 0);
+    if ($currentPromoteStates = _infinite_base_flat_promote_states($entity)) {
+      $entity->field_promote_states->setValue(array_diff($currentPromoteStates, ['channel_presenter']));
       $entity->save();
     }
   }

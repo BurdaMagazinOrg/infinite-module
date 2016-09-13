@@ -308,3 +308,19 @@ function infinite_base_find_tag($name, array &$attachments) {
   }
   return -1;
 }
+
+/**
+ * Helper function to get promote states as a flat array.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @return array
+ */
+function _infinite_base_flat_promote_states(EntityInterface $entity) {
+  if ($entity->hasField('field_promote_states')) {
+    $promote_states = array_map(function($el) {
+      return $el['value'];
+    }, $entity->field_promote_states->getValue());
+    return $promote_states;
+  }
+  return FALSE;
+}

@@ -1,0 +1,10 @@
+id: node_unpromote_msn_action
+label: 'Unpromote content to MSN'
+status: true
+langcode: de
+type: node
+plugin: node_unpromote_msn_action
+dependencies:
+  module:
+    - infinite_base
+    - node

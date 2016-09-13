@@ -6,22 +6,22 @@ use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Promotes a node to channel page.
+ * Promotes a node to front page.
  *
  * @Action(
- *   id = "node_promote_channel_page_action",
- *   label = @Translation("Promote selected content to channel page"),
+ *   id = "node_promote_front_page_action",
+ *   label = @Translation("Promote selected content to front page"),
  *   type = "node"
  * )
  */
-class PromoteChannelPageNode extends ActionBase {
+class PromoteFrontPageNode extends ActionBase {
 
   /**
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
     if ($currentPromoteStates = _infinite_base_flat_promote_states($entity)) {
-      $entity->field_promote_states->setValue(array_merge($currentPromoteStates, ['channel_page']));
+      $entity->field_promote_states->setValue(array_merge($currentPromoteStates, ['front_page']));
       $entity->save();
     }
   }

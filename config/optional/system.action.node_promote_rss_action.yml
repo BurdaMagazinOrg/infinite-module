@@ -1,0 +1,10 @@
+id: node_promote_rss_action
+label: 'Promote content to RSS'
+status: true
+langcode: de
+type: node
+plugin: node_promote_rss_action
+dependencies:
+  module:
+    - infinite_base
+    - node
