@@ -5,6 +5,7 @@ package: Infinite
 core: 8.x
 version: 8.x-1.x-dev
 dependencies:
+  - breakpoint_js_settings
   - node
   - field
   - field_group
