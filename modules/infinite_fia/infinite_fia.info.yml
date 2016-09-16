@@ -1,0 +1,7 @@
+name: Infinite FIA
+type: module
+description: Currently only adds a pseudo field that renders a GA tracking code usable in Facebook Instant Articles.
+core: 8.x
+package: Infinite
+dependencies:
+  - fb_instant_articles

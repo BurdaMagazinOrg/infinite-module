@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ * Contains infinite_fia.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\Entity\NodeType;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Cache\Cache;
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function infinite_fia_entity_extra_field_info() {
+
+  $extra = array();
+
+  $bundles = NodeType::loadMultiple();
+
+  foreach ($bundles as $bundle) {
+    /** @var \Drupal\Core\Entity\EntityTypeInterface $bundle */
+    $extra['node'][$bundle->id()]['display']['infinite_fia_google_analytics'] = array(
+      'label' => t('Google Analytics'),
+      'description' => t('Google Analytics for FIA'),
+      'weight' => 100,
+      'visible' => FALSE,
+    );
+  }
+
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function infinite_fia_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($display->getComponent('infinite_fia_google_analytics')) {
+    $fiaConfig = \Drupal::config('infinite_fia.settings');
+    if (!preg_match('/^(UA|GTM)-/', $fiaConfig->get('account'), $matches)) {
+      // TODO log to watchdog?
+      return;
+    }
+
+    // implicitly select integration variant by account id format
+    $variant = strtolower($matches[1]);
+
+    $build['infinite_fia_google_analytics'] = [
+      '#theme' => 'infinite_fia_google_analytics_' . $variant,
+      '#account' => $fiaConfig->get('account'),
+      '#campaign' => [
+        'source' => $fiaConfig->get('campaign.source'),
+        'name' => $fiaConfig->get('campaign.name'),
+        'medium' => $fiaConfig->get('campaign.medium'),
+      ],
+      '#title' => (string)$entity->title->value,
+      // TODO is there a scenario where the entity cache tags are useful here?
+      '#cache' => [
+        'tags' => Cache::mergeTags($entity->getCacheTags(), $fiaConfig->getCacheTags()),
+      ],
+    ];
+  }
+}
+
+function infinite_fia_theme() {
+
+  $theme['infinite_fia_google_analytics_gtm'] = [
+    'variables' => [
+      'account' => NULL,
+      'campaign' => [],
+      'title' => NULL,
+    ],
+    'template' => 'infinite_fia_google_analytics',
+  ];
+
+  $theme['infinite_fia_google_analytics_ua'] = ['template' => 'infinite_fia_google_analytics_ua'] + $theme['infinite_fia_google_analytics_gtm'];
+
+  return $theme;
+
+}

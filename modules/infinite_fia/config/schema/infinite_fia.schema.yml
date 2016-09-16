@@ -1,0 +1,20 @@
+infinite_fia.settings:
+  type: config_object
+  label: Infinite FIA settings
+  mapping:
+    campaign:
+      type: mapping
+      label: 'Campaign'
+      mapping:
+        source:
+          type: string
+          label: Campaign source
+        name:
+          type: string
+          label: Campaign name
+        medium:
+          type: string
+          label: Campaign medium
+    account:
+      type: string
+      label: Account ID (UA or GTM)
