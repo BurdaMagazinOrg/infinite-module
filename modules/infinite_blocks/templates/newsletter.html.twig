@@ -34,9 +34,13 @@
 
                     {% block container_form__form_groups %}
                         <div class="form-group form-group--email">
-                            <input class="input-lg input-email" type="email" name="email" required
-                                   placeholder="Deine E-Mail-Adresse">
+                            {% block container_form__input_email %}
+                                <input class="input-lg input-email" type="email" name="email" required
+                                       placeholder="Deine E-Mail-Adresse">
+                            {% endblock %}
+                            {% block container_form__submit_email %}
                             <button type="submit" class="btn--large">Anmelden</button>
+                            {% endblock %}
                         </div>
 
                         <div class="form-group form-group--agreements">
@@ -53,7 +57,8 @@
                                     {% if use_ajax_permissions == 'true' %}
                                         <a href="#" class="privacy-link">hier</a>.
                                     {% else %}
-                                        <a href="{{ external_permission_url }}" target="_blank" rel="nofollow" class="privacy-link">hier</a>.
+                                        <a href="{{ external_permission_url }}" target="_blank" rel="nofollow"
+                                           class="privacy-link">hier</a>.
                                     {% endif %}
                                 </label>
                             </div>
