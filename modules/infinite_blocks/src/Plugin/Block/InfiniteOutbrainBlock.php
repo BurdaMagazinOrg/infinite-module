@@ -142,17 +142,20 @@ class InfiniteOutbrainBlock extends BlockBase implements ContainerFactoryPluginI
       $url = Url::fromUri('base:/' . $path_alias, array('absolute' => TRUE))->toString();
     }
 
-    return array(
+    $build['outbrain'] = array(
       '#theme' => 'outbrain',
       '#class' => $class,
       '#template' => $template,
       '#attached' => ['library' => ['infinite_blocks/outbrain_js']],
       '#url' => $url,
       '#widget_ids' => $widget_ids,
-      '#cache' => [
-        'tags' => ['node:' . $nid],
-        'contexts' => ['url.path'],
-      ],
     );
+
+    $build['#cache'] = [
+      'tags' => ['node:' . $nid],
+      'contexts' => ['url.path'],
+    ];
+
+    return $build;
   }
 }
