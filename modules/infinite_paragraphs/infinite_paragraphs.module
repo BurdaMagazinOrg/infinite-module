@@ -229,10 +229,7 @@ function _infinite_paragraphs_allowed_view_modes(FieldStorageDefinitionInterface
  */
 function _infinite_paragraphs_view_mode_widget_alter(array &$element, $index) {
   if (empty($element['#default_value'])) {
-    if ($index == 0 && array_key_exists('middle', $element['#options'])) {
-      $element['#default_value'] = array('middle');
-    }
-    elseif (array_key_exists('small', $element['#options'])) {
+    if (array_key_exists('small', $element['#options'])) {
       $element['#default_value'] = array('small');
     }
   }
