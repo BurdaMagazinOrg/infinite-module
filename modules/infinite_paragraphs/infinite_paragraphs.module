@@ -50,6 +50,13 @@ function infinite_paragraphs_entity_view_mode_alter(&$view_mode, EntityInterface
   if ($view_mode == 'flexible' && $entity->getEntityTypeId() == 'paragraph' && $entity->hasField('field_p_view_mode')) {
     $view_mode = $entity->field_p_view_mode->value ?: 'small';
   }
+  if ($entity->getEntityTypeId() == 'user' && $view_mode == 'default') {
+    $ref = $entity->_referringItem;
+    // fetch view mode from parent item
+    if ($ref && ($parent = $ref->getEntity()) && $parent->hasField('field_user_view_mode')) {
+      $view_mode = $parent->field_user_view_mode->value;
+    }
+  }
 }
 
 /**
@@ -191,6 +198,21 @@ function _infinite_paragraphs_decorate_group(&$paragraphs, $group, $type, $build
       _infinite_paragraphs_decorate_group($paragraphs[$group[0]]['#children'], $small_group, 'group_inner', $build);
     }
   }
+}
+
+/**
+ * Returns available view modes for user entities.
+ *
+ * @param FieldStorageDefinitionInterface $definition
+ * @param FieldableEntityInterface $entity
+ *
+ * @return array
+ */
+function _infinite_paragraphs_available_user_view_modes(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL, &$cacheable = TRUE) {
+  /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entityDisplayRepository */
+  $entityDisplayRepository = \Drupal::service('entity_display.repository');
+  // TODO maybe intersect these with allowed view modes
+  return $entityDisplayRepository->getViewModeOptions('user');
 }
 
 /**
