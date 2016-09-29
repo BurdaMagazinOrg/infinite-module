@@ -5,6 +5,7 @@ package: Infinite
 core: 8.x
 version: 8.x-1.x-dev
 dependencies:
+  - infinite_blocks
   - views
   - views_load_more
 config_devel:

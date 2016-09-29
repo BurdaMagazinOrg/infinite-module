@@ -119,6 +119,39 @@ function infinite_views_preprocess_views_view(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_views().
+ */
+function infinite_views_preprocess_views_view_unformatted(&$variables) {
+  /* @var Drupal\views\ViewExecutable $view */
+  $view = $variables['view'];
+
+  // Place dynamic blocks in taxonomy term stream from 'Dynamic blocks for taxonomy terms' region.
+  if ($view->id() == 'infinite_taxonomy_term' && $dyn_blocks = _infinite_blocks_get_dyn_region_blocks(['dyn_blocks_taxonomy_term'])) {
+
+    // Check for first 5 teasers from attachment.
+    if ($view->pager->current_page === NULL) {
+      $render_dyn_block_key = 0;
+    }
+    else {
+      $render_dyn_block_key = $view->pager->current_page + 1;
+    }
+
+    // Add block when one exists from block ordering of region.
+    if (isset($dyn_blocks[$render_dyn_block_key])) {
+
+      // Get render array of dynamic block.
+      $block_content = \Drupal::entityTypeManager()
+        ->getViewBuilder('block')
+        ->view($dyn_blocks[$render_dyn_block_key]);
+
+      // Place dynamic block after 3rd teaser.
+      $dyn_block_row[] = ['content' => $block_content];
+      array_splice($variables['rows'], 3, 0, $dyn_block_row);
+    }
+  }
+}
+
+/**
  * Returns rendered advertisement block with the given id.
  *
  * @param string $id
@@ -131,10 +164,11 @@ function _infinite_views_sidebar_ad_block($id) {
   $block = Block::load($id);
 
   if (is_object($block)) {
-    return \Drupal::entityManager()
+    return \Drupal::entityTypeManager()
       ->getViewBuilder('block')
       ->view($block, 'default');
   }
+  return FALSE;
 }
 
 function _infinite_views_get_exclude_nids_helper($views_id, $exclude_displays, array &$args) {

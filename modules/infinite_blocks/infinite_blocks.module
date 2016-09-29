@@ -208,3 +208,38 @@ function infinite_blocks_preprocess_user(&$variables) {
     }
   }
 }
+
+/**
+ * Helper function to get blocks from dynamic region.
+ */
+function _infinite_blocks_get_dyn_region_blocks($allowed_regions) {
+  // Retrieve active theme.
+  $theme = \Drupal::theme()->getActiveTheme()->getName();
+
+  // Retrieve theme regions.
+  $available_regions = system_region_list($theme, 'REGIONS_ALL');
+
+  // Validate allowed regions with available regions.
+  $regions = array_intersect(array_keys($available_regions), $allowed_regions);
+
+  foreach ($regions as $key => $region) {
+    // Load region blocks.
+    $blocks = \Drupal::entityTypeManager()
+      ->getStorage('block')
+      ->loadByProperties(array('theme' => $theme, 'region' => $region));
+    uasort($blocks, 'Drupal\block\Entity\Block::sort');
+
+    // Capture viewable blocks for dynBlocks.
+    foreach ($blocks as $key => $block) {
+      if ($block->access('view')) {
+        $dynBlocks[] = $block;
+      }
+    }
+  }
+
+  // Return dynamic blocks or FALSE.
+  if (!empty($dynBlocks)) {
+    return $dynBlocks;
+  }
+  return FALSE;
+}
