@@ -212,7 +212,8 @@ function _infinite_paragraphs_available_user_view_modes(FieldStorageDefinitionIn
   /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entityDisplayRepository */
   $entityDisplayRepository = \Drupal::service('entity_display.repository');
   // TODO maybe intersect these with allowed view modes
-  return array_intersect($entityDisplayRepository->getViewModeOptions('user'), ['author_large', 'author_small', 'author_small_teaser']);
+  $userViewModes = array_intersect_key($entityDisplayRepository->getViewModeOptions('user'), ['author_large' => '', 'author_small' => '', 'author_small_teaser' => '']);
+  return $userViewModes;
 }
 
 /**
