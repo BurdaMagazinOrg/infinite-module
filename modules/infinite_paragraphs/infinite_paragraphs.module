@@ -315,7 +315,7 @@ function _infinite_paragraphs_get_parent_base_data($entity, &$variables) {
  */
 function infinite_paragraphs_text_paragraph_post_render($children, $elements) {
   $dom = new DOMDocument();
-  $dom->loadHTML($children);
+  $dom->loadHTML(mb_convert_encoding($children, 'HTML-ENTITIES', 'UTF-8'));
   $pTags = $dom->getElementsByTagName('p');
 
   if ($pTags->length > 1 && $dynBlocks = _infinite_blocks_get_dyn_region_blocks(['dyn_blocks_node'])) {
