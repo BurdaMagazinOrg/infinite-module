@@ -328,9 +328,9 @@ function infinite_paragraphs_text_paragraph_post_render($children, $elements) {
     $fragment = $dom->createDocumentFragment();
     $fragment->appendXML(\Drupal::service('renderer')->render($block_content));
     $pTags->item(0)->appendChild($fragment);
+    $children = $dom->saveHTML();
   }
 
-  $children = $dom->saveHTML();
   return $children;
 }
 
