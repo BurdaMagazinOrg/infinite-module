@@ -325,10 +325,15 @@ function infinite_paragraphs_text_paragraph_post_render($children, $elements) {
       ->getViewBuilder('block')
       ->view($dynBlocks[0]);  //TODO: prepare to render more then block number 1 in an article.
 
+    // Add well formed XML placeholder element.
     $fragment = $dom->createDocumentFragment();
-    $fragment->appendXML(\Drupal::service('renderer')->render($block_content));
+    $fragment->appendXML("<dynblock></dynblock>");
     $pTags->item(0)->appendChild($fragment);
     $children = $dom->saveHTML();
+
+    // Replace XML placeholder element with rendered block.
+    $dynBlockContent = \Drupal::service('renderer')->render($block_content);
+    $children = str_replace('<dynblock></dynblock>', $dynBlockContent, $children);
   }
 
   return $children;
