@@ -54,6 +54,10 @@ function infinite_blocks_theme() {
       'variables' => array(
         'use_parent_container' => NULL,
         'follow' => NULL,
+        'facebook_page_url' => NULL,
+        'instagram_page_url' => NULL,
+        'pinterest_page_url' => NULL,
+        'twitter_page_url' => NULL,
       )
     ),
   ];
