@@ -54,7 +54,7 @@ class FilterExternalLinksForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     $config = $this->config('infinite_base.filter_external_links');
-    $config->set('internal_domains', explode("\r\n", $form_state->getValue('internal_domains')));
+    $config->set('internal_domains', array_values(array_filter(array_map('trim', explode("\r\n", $form_state->getValue('internal_domains'))))));
     $config->save();
   }
 
