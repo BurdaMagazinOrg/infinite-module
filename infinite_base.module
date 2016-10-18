@@ -74,6 +74,8 @@ function infinite_base_theme() {
         'elements' => NULL,
         'name' => NULL,
         'author_id' => NULL,
+        'author_forename' => NULL,
+        'author_surname' => NULL,
         'author_url' => NULL,
         'author_picture' => NULL,
         'timestamp' => NULL,
