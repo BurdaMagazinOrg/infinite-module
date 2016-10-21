@@ -185,8 +185,10 @@ function infinite_blocks_preprocess_taxonomy_term(&$variables) {
     // Used for H1 and H2 tag handling on term pages with header block.
     if (($term->hasField('field_header_media') && !$term->field_header_media->isEmpty()) ||
       ($term->hasField('field_header_title') && !$term->field_header_title->isEmpty())) {
-
       $variables['has_header_block'] = TRUE;
+      if ($term->hasField('field_hide_title') && ($term->field_hide_title->value !== '0')) {
+        $variables['term_title_hidden'] = TRUE;
+      }
     }
   }
 }
