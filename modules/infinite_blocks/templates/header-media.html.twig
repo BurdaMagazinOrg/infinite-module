@@ -1,9 +1,17 @@
-<div class="item-media--header">
-    <div class="item-media--header-image">
-        <div class="img-container-wrapper">
-            {{ header_media }}
-        </div>
-        <div class="caption">
+{% set classes = ['item-media--header', 'item-media--header-plain'] %}
+
+{% if header_media %}
+    {% set classes = ['item-media--header', 'item-media--header-image'] %}
+{% endif %}
+
+<div {{ attributes.addClass(classes) }}>
+    <div class="item-media__ratio-wrapper">
+        {% if header_media %}
+            <div class="item-media__header-image">
+                {{ header_media }}
+            </div>
+        {% endif %}
+        <div class="caption item-media__caption">
             <h1 class="text-title text-headline">{{ header_title }}</h1>
         </div>
     </div>
