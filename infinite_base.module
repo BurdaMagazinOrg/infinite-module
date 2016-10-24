@@ -80,6 +80,7 @@ function infinite_base_theme() {
         'author_picture' => NULL,
         'timestamp' => NULL,
         'datetime' => NULL,
+        'formatted_interval' => NULL,
       ),
     ),
 
