@@ -61,7 +61,7 @@ function infinite_media_preprocess_media(&$variables) {
         $variables['calculated_dimension'] = _infinite_media_image_dimension($image->getHeight(), $image->getWidth());
 
         /* @var ImageStyle $share_img */
-        $share_img = ImageStyle::load('inline_l');
+        $share_img = ImageStyle::load(theme_get_setting('share_image_style'));
         if(is_object($share_img)) {
           $variables['share_img_url'] = $share_img->buildUrl($image_url);
         }

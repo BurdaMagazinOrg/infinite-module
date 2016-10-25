@@ -314,7 +314,7 @@ function _infinite_paragraphs_get_parent_base_data($entity, &$variables) {
     ) {
 
       $share_img_path = $entity->field_teaser_media->entity->field_image->entity->getFileUri();
-      $share_img = ImageStyle::load('inline_l');
+      $share_img = ImageStyle::load(theme_get_setting('share_image_style'));
       if (is_object($share_img)) {
         $url = $share_img->buildUrl($share_img_path);
         $variables['share_img_url'] = $url;
