@@ -12,7 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class FilterExternalLinksFormTest extends BrowserTestBase {
 
-  protected static $modules = ['infinite_base'];
+  static $modules = ['infinite_base'];
 
   protected function setUp() {
     parent::setUp();
