@@ -1,0 +1,5 @@
+name: Infinite Data Layer
+type: module
+description: Provides information for the data layer used by Google Tag Manager
+core: 8.x
+package: Infinite

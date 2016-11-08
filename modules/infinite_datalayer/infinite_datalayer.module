@@ -1,0 +1,126 @@
+<?php
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * @file
+ * Enriches data layer with information about nodes and terms.
+ */
+
+/**
+ * Implements hook_node_view().
+ */
+function infinite_datalayer_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+  if (!in_array($view_mode, ['full', 'lazyloading']) || $node->bundle() != 'article') {
+    return;
+  }
+
+  $datalayer_variables = _infinite_datalayer_initialize_variables();
+  $datalayer_variables['page'] = [
+    'name' => $node->title->value,
+    'contentType' => $node->bundle(),
+    'articlePublishDate' => date(DATE_ISO8601, $node->created->value),
+    'authorName' => $node->uid->entity->getDisplayName(),
+  ];
+
+  $parents = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadAllParents($node->field_channel->target_id);
+
+  switch (count($parents)) {
+    case 1:
+      // The category should be Home or the second level of the channel
+      // hierarchy. If the term is in the third level of the hierarchy or
+      // deeper the second level of the hierarchy should be the category and
+      // the term itself the sub category.
+      //
+      // Note: The array returned by TermStorage::loadAllParents also contains
+      // the term itself and is ordered by term weight, hence the first level
+      // term is in the last position.
+    case 2:
+      $datalayer_variables['page']['category'] = $node->field_channel->entity->name->value;
+      break;
+    default:
+      $parent = array_values($parents)[count($parents) - 2];
+      $datalayer_variables['page']['category'] = $parent->name->value;
+      $datalayer_variables['page']['subCategory'] = $node->field_channel->entity->name->value;
+      break;
+  }
+
+  $content_sub_types = [
+    'tracdelight' => FALSE,
+    'advertising_products_paragraph' => FALSE,
+    'video' => FALSE,
+    'gallery' => FALSE,
+    'riddle' => FALSE,
+    'pinterest' => FALSE,
+    'twitter' => FALSE,
+    'instagram' => FALSE,
+  ];
+
+  foreach ($node->field_paragraphs->referencedEntities() as $paragraph) {
+    if (array_key_exists($paragraph->bundle(), $content_sub_types)) {
+      $content_sub_types[$paragraph->bundle()] = TRUE;
+    }
+  }
+
+  $datalayer_variables['page']['contentSubType'] = array_keys(array_filter($content_sub_types));
+
+  \Drupal::service('infinite_datalayer.store')->set($node->uuid(), $datalayer_variables);
+}
+
+/**
+ * Implements hook_taxonomy_term_view().
+ */
+function infinite_datalayer_taxonomy_term_view(array &$build, EntityInterface $term, EntityViewDisplayInterface $display, $view_mode) {
+  if (!taxonomy_term_is_page($term)) {
+    return;
+  }
+
+  $datalayer_variables = _infinite_datalayer_initialize_variables();
+  $datalayer_variables['page'] = [
+    'title' => $term->name->value,
+    'contentType' => $term->bundle(),
+  ];
+
+  \Drupal::service('infinite_datalayer.store')->set($term->uuid(), $datalayer_variables);
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function infinite_datalayer_page_attachments(&$attachments) {
+  $stored_objects = \Drupal::service('infinite_datalayer.store')->getAll();
+  $datalayer_object = empty($stored_objects) ? '' : json_encode(reset($stored_objects));
+
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#type' => 'html_tag',
+      '#tag' => 'script',
+      '#attributes' => ['type' => 'text/javascript'],
+      '#value' => "dataLayer = [$datalayer_object];",
+    ],
+    'datalayer',
+  ];
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function infinite_datalayer_preprocess_node(&$variables) {
+  $variables['uuid'] = $variables['node']->uuid();
+}
+
+/**
+ * Returns data layer object initialized with common data.
+ *
+ * @return array
+ */
+function _infinite_datalayer_initialize_variables() {
+  return [
+    'environment' => [
+      'systemType' => isset($_ENV['AH_SITE_ENVIRONMENT']) ? $_ENV['AH_SITE_ENVIRONMENT'] : 'local',
+      'isLoggedIn' => \Drupal::currentUser()->isAuthenticated(),
+    ],
+    'page' => [],
+  ];
+}
