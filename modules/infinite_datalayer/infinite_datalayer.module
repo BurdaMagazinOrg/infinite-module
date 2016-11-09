@@ -2,6 +2,7 @@
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\paragraphs\Entity\Paragraph;
 
 /**
  * @file
@@ -46,24 +47,30 @@ function infinite_datalayer_node_view(array &$build, EntityInterface $node, Enti
       break;
   }
 
-  $content_sub_types = [
-    'tracdelight' => FALSE,
-    'advertising_products_paragraph' => FALSE,
-    'video' => FALSE,
-    'gallery' => FALSE,
-    'riddle' => FALSE,
-    'pinterest' => FALSE,
-    'twitter' => FALSE,
-    'instagram' => FALSE,
-  ];
+  $content_sub_types = [];
 
   foreach ($node->field_paragraphs->referencedEntities() as $paragraph) {
-    if (array_key_exists($paragraph->bundle(), $content_sub_types)) {
-      $content_sub_types[$paragraph->bundle()] = TRUE;
+    if (in_array($paragraph->bundle(), ['gallery', 'instagram', 'pinterest', 'riddle', 'twitter', 'video'])) {
+      $content_sub_types[] = Drupal\Component\Utility\Unicode::ucfirst($paragraph->bundle());
+    }
+    elseif ($paragraph->bundle() == 'tracdelight') {
+      $content_sub_types[] = 'Affiliate-Tracdelight';
+    }
+    elseif ($paragraph->bundle() == 'advertising_products_paragraph') {
+      foreach ($paragraph->field_advertising_products->referencedEntities() as $product) {
+        if ($product->bundle() == 'advertising_product_amazon') {
+          $content_sub_types[] = 'Affiliate-Amazon';
+        }
+        elseif ($product->bundle() == 'advertising_product_tracdelight') {
+          $content_sub_types[] = 'Affiliate-Tracdelight';
+        }
+      }
     }
   }
 
-  $datalayer_variables['page']['contentSubType'] = array_keys(array_filter($content_sub_types));
+  sort($content_sub_types);
+
+  $datalayer_variables['page']['contentSubType'] = array_unique($content_sub_types);
 
   \Drupal::service('infinite_datalayer.store')->set($node->uuid(), $datalayer_variables);
 }
