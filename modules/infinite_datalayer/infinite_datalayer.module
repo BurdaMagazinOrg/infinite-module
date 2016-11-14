@@ -56,6 +56,10 @@ function infinite_datalayer_user_view(array &$build, EntityInterface $user, Enti
     return;
   }
 
+  if (Drupal::routeMatch()->getParameter('user')->id() != $user->id()) {
+    return;
+  }
+
   $datalayer_variables = _infinite_datalayer_initialize_variables();
   $datalayer_variables['page'] = [
     'title' => $user->getDisplayName(),
