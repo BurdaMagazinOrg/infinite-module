@@ -1,15 +1,11 @@
 <?php
 
-use Drupal\Core\Image\Image;
-use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\media_entity\Entity\Media;
 
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
-
 function infinite_media_theme_suggestions_media_alter(array &$suggestions, array $variables, $hook) {
   $entity = $variables['elements']['#media'];
   if (isset($entity) && isset($entity->_referringItem) && ($ref = $entity->_referringItem) && ($parent = $ref->getEntity())) {
