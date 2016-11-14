@@ -1,8 +1,10 @@
 <?php
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * @file
@@ -21,33 +23,10 @@ function infinite_datalayer_node_view(array &$build, EntityInterface $node, Enti
   $datalayer_variables['page'] = [
     'name' => $node->title->value,
     'contentType' => $node->bundle(),
+    'contentSubType' => _infinite_datalayer_content_sub_types($node->field_paragraphs->referencedEntities()),
     'articlePublishDate' => date(DATE_ISO8601, $node->created->value),
     'authorName' => $node->uid->entity->getDisplayName(),
-  ];
-
-  $parents = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadAllParents($node->field_channel->target_id);
-
-  switch (count($parents)) {
-    case 1:
-      // The category should be Home or the second level of the channel
-      // hierarchy. If the term is in the third level of the hierarchy or
-      // deeper the second level of the hierarchy should be the category and
-      // the term itself the sub category.
-      //
-      // Note: The array returned by TermStorage::loadAllParents also contains
-      // the term itself and is ordered by term weight, hence the first level
-      // term is in the last position.
-    case 2:
-      $datalayer_variables['page']['category'] = $node->field_channel->entity->name->value;
-      break;
-    default:
-      $parent = array_values($parents)[count($parents) - 2];
-      $datalayer_variables['page']['category'] = $parent->name->value;
-      $datalayer_variables['page']['subCategory'] = $node->field_channel->entity->name->value;
-      break;
-  }
-
-  $datalayer_variables['page']['contentSubType'] = _infinite_datalayer_content_sub_types($node->field_paragraphs->referencedEntities());
+  ] + _infinite_datalayer_category($node->field_channel->entity);
 
   \Drupal::service('infinite_datalayer.store')->set($node->uuid(), $datalayer_variables);
 }
@@ -140,7 +119,7 @@ function _infinite_datalayer_content_sub_types(array $paragraphs) {
 
   foreach ($paragraphs as $paragraph) {
     if (in_array($paragraph->bundle(), ['gallery', 'instagram', 'pinterest', 'riddle', 'twitter', 'video'])) {
-      $content_sub_types[] = Drupal\Component\Utility\Unicode::ucfirst($paragraph->bundle());
+      $content_sub_types[] = Unicode::ucfirst($paragraph->bundle());
     }
     elseif ($paragraph->bundle() == 'tracdelight') {
       $content_sub_types[] = 'Affiliate-Tracdelight';
@@ -160,4 +139,40 @@ function _infinite_datalayer_content_sub_types(array $paragraphs) {
   sort($content_sub_types);
 
   return array_unique($content_sub_types);
+}
+
+/**
+ * Returns category and sub category derived from the given term.
+ *
+ * @param Term $term
+ *   A channel term
+ *
+ * @return array
+ *   An associative array with category and optional subCategory
+ */
+function _infinite_datalayer_category(Term $term) {
+  $category = [];
+  $parents = Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadAllParents($term->id());
+
+  switch (count($parents)) {
+    case 1:
+      // The category should be Home or the second level of the channel
+      // hierarchy. If the term is in the third level of the hierarchy or
+      // deeper the second level of the hierarchy should be the category and
+      // the term itself the sub category.
+      //
+      // Note: The array returned by TermStorage::loadAllParents also contains
+      // the term itself and is ordered by term weight, hence the first level
+      // term is in the last position.
+    case 2:
+      $category['category'] = $term->name->value;
+      break;
+    default:
+      $parent = array_values($parents)[count($parents) - 2];
+      $category['category'] = $parent->name->value;
+      $category['subCategory'] = $term->name->value;
+      break;
+  }
+
+  return $category;
 }
