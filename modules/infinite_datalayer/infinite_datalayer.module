@@ -86,7 +86,12 @@ function infinite_datalayer_page_attachments(&$attachments) {
     'datalayer',
   ];
 
-  $attachments['#attached']['drupalSettings']['datalayer']['page'] = $datalayer_object;
+  if (empty($stored_objects)) {
+    $attachments['#attached']['drupalSettings']['datalayer'] = new StdClass;
+  }
+  else {
+    $attachments['#attached']['drupalSettings']['datalayer']['page'] = reset($stored_objects);
+  }
 }
 
 /**
