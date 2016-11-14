@@ -85,6 +85,8 @@ function infinite_datalayer_page_attachments(&$attachments) {
     ],
     'datalayer',
   ];
+
+  $attachments['#attached']['drupalSettings']['datalayer']['page'] = $datalayer_object;
 }
 
 /**
