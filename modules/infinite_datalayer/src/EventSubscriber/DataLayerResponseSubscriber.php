@@ -40,7 +40,7 @@ class DataLayerResponseSubscriber implements EventSubscriberInterface {
     if ($event->getResponse() instanceof AjaxResponse && !empty($this->dataLayerStore->getAll())) {
       $attachments = [
         'library' => ['core/drupalSettings'],
-        'drupalSettings' => ['dataLayer' => $this->dataLayerStore->getAll()],
+        'drupalSettings' => ['datalayer' => $this->dataLayerStore->getAll()],
       ];
       $event->getResponse()->addAttachments($attachments);
     }
