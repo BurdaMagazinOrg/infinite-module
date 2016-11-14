@@ -43,7 +43,7 @@ function infinite_datalayer_taxonomy_term_view(array &$build, EntityInterface $t
   $datalayer_variables['page'] = [
     'title' => $term->name->value,
     'contentType' => $term->bundle(),
-  ];
+  ] + _infinite_datalayer_category($term);
 
   \Drupal::service('infinite_datalayer.store')->set($term->uuid(), $datalayer_variables);
 }
