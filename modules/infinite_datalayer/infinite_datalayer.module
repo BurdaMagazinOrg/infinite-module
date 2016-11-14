@@ -70,6 +70,23 @@ function infinite_datalayer_taxonomy_term_view(array &$build, EntityInterface $t
 }
 
 /**
+ * Implements hook_user_view().
+ */
+function infinite_datalayer_user_view(array &$build, EntityInterface $user, EntityViewDisplayInterface $display, $view_mode) {
+  if (Drupal::routeMatch()->getRouteName() != 'entity.user.canonical') {
+    return;
+  }
+
+  $datalayer_variables = _infinite_datalayer_initialize_variables();
+  $datalayer_variables['page'] = [
+    'title' => $user->getDisplayName(),
+    'contentType' => $user->bundle(),
+  ];
+
+  \Drupal::service('infinite_datalayer.store')->set($user->uuid(), $datalayer_variables);
+}
+
+/**
  * Implements hook_page_attachments().
  */
 function infinite_datalayer_page_attachments(&$attachments) {
