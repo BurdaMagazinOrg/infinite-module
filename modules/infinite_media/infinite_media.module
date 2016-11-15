@@ -3,18 +3,6 @@
 use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
 
-/**
- * Implements hook_theme_suggestions_HOOK_alter().
- */
-function infinite_media_theme_suggestions_media_alter(array &$suggestions, array $variables, $hook) {
-  $entity = $variables['elements']['#media'];
-  $view_mode = $variables['elements']['#view_mode'];
-  if (isset($entity->_referringItem) && $view_mode != 'facebook_instant_articles_rss') {
-    $parent = $entity->_referringItem->getEntity();
-    $suggestions[] = $hook . '__' . $parent->bundle() . '__' . $entity->bundle();
-  }
-}
-
 function infinite_media_theme_suggestions_image_alter(array &$suggestions, array $variables) {
   $style_name = $variables['style_name'];
   if ($style_name === NULL) {
