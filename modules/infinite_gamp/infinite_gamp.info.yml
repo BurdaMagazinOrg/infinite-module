@@ -1,0 +1,7 @@
+name: Infinite AMP
+type: module
+description: Google AMP related customizations
+core: 8.x
+package: Infinite
+dependencies:
+  - amp

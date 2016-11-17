@@ -1,0 +1,136 @@
+<?php
+
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\media_entity\Entity\Media;
+
+/**
+ * Implements hook_page_attachments().
+ */
+function infinite_gamp_page_attachments_alter(array &$attachments) {
+  // Check if it's a views page of a term.
+  if (\Drupal::routeMatch()->getParameter('view_id') && \Drupal::routeMatch()->getParameter('taxonomy_term')) {
+    $taxonomyTerm = \Drupal::routeMatch()->getParameter('taxonomy_term');
+    // If we only got back the entity ID, load the entity.
+    if (!is_object($taxonomyTerm) && is_numeric($taxonomyTerm)) {
+      $taxonomyTerm = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($taxonomyTerm);
+    }
+    // Check if the term has AMP enabled.
+    if (is_object($taxonomyTerm) && \Drupal::service('amp.entity_type')->isAmpEnabledType($taxonomyTerm->getEntityTypeId(), $taxonomyTerm->bundle())) {
+      $attachments['#cache']['contexts'][] = 'url.query_args:amp';
+      $absolute_canonical = $taxonomyTerm->toUrl('canonical', ['absolute' => TRUE])->toString();
+      if (!empty($attachments['#attached']['html_head_link'])) {
+        foreach ($attachments['#attached']['html_head_link'] as $key => $config) {
+          if (\Drupal::service('router.amp_context')->isAmpRoute()) {
+            if ($config[0]['rel'] != 'canonical' && $config[0]['rel'] != 'shortlink') {
+              unset($attachments['#attached']['html_head_link'][$key]);
+            }
+            elseif ($config[0]['rel'] == 'canonical') {
+              // Replace the canonical link with an absolute version, this is
+              // required for AMP pages and recommended for others.
+              // @todo Remove this when https://www.drupal.org/node/2738373 is
+              //   fixed.
+              $attachments['#attached']['html_head_link'][$key][0]['href'] = $absolute_canonical;
+              $attachments['#cache']['contexts'][] = 'url.site';
+            }
+          }
+          else {
+            if ($config[0]['rel'] == 'canonical' && !empty($config[0]['href'])) {
+              // Check if the canonical link is absolute and external. Do not
+              // expose AMP for those.
+              $current_canonical = $config[0]['href'];
+              if (UrlHelper::isExternal($current_canonical) && !UrlHelper::externalIsLocal($current_canonical, \Drupal::service('router.request_context')->getCompleteBaseUrl())) {
+                continue;
+              }
+
+              $amp_href = \Drupal::service('amp.query_parameters')->add($absolute_canonical);
+
+              $attachments['#attached']['html_head_link'][] = [
+                [
+                  'rel' => 'amphtml',
+                  'href' => $amp_href,
+                ],
+                TRUE,
+              ];
+              $attachments['#cache']['contexts'][] = 'url.site';
+            }
+          }
+        }
+
+        if (\Drupal::service('router.amp_context')->isAmpRoute() && !empty($absolute_canonical)) {
+          if (!empty($amp_merged_metadata = \Drupal::service('amp.merge_metadata')->getMergedMetadata($taxonomyTerm->bundle()))) {
+            if (!empty($amp_json_metadata = \Drupal::service('amp.prepare_metadata_json')->getJson($amp_merged_metadata, $absolute_canonical, $taxonomyTerm))) {
+              $attachments['#attached']['html_head']['amp_metadata_json'] = [
+                // The metadata script element.
+                [
+                  '#type' => 'html_tag',
+                  '#tag' => 'script',
+                  '#attributes' => [
+                    'type' => 'application/ld+json'
+                  ],
+                  '#value' => $amp_json_metadata
+                ],
+                // The render array key.
+                'amp_metadata'
+              ];
+              $attachments['#cache']['tags'][] = 'amp_metadata';
+              $attachments['#cache']['tags'][] = 'amp_available_metadata';
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function infinite_gamp_module_implements_alter(&$implementations, $hook) {
+  // Ensure that this module is called in the end.
+  if ($hook == 'page_attachments_alter') {
+    $group = $implementations['infinite_gamp'];
+    unset($implementations['infinite_gamp']);
+    $implementations['infinite_gamp'] = $group;
+  }
+}
+
+/**
+ * Implements hook_entity_view_mode_alter().
+ */
+function infinite_gamp_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
+  // Check if it's a views page of a term.
+  if (\Drupal::routeMatch()->getParameter('view_id') && \Drupal::routeMatch()->getParameter('taxonomy_term')) {
+    $taxonomyTerm = \Drupal::routeMatch()->getParameter('taxonomy_term');
+    // If we only got back the entity ID, load the entity.
+    if (!is_object($taxonomyTerm) && is_numeric($taxonomyTerm)) {
+      $taxonomyTerm = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($taxonomyTerm);
+    }
+    // Check if the term has AMP enabled & this is amp route &
+    // the viewable entity is not media & the viewable entity has amp enabled.
+    if (is_object($taxonomyTerm) &&
+        \Drupal::service('amp.entity_type')->isAmpEnabledType($taxonomyTerm->getEntityTypeId(), $taxonomyTerm->bundle()) &&
+        \Drupal::service('router.amp_context')->isAmpRoute() &&
+        !$entity instanceof Media &&
+        \Drupal::service('amp.entity_type')->isAmpEnabledType($entity->getEntityTypeId(), $entity->bundle())
+    ) {
+      switch ($view_mode) {
+        case 'full':
+        case 'default':
+          // "Full" and "Default" view modes are switched out by "AMP" view mode.
+          $view_mode = 'amp';
+          break;
+
+        default:
+          // All other view modes are switched to corresponding
+          // amp view mode if such exists.
+          $entity_view_modes = \Drupal::service('entity_display.repository')->getViewModeOptionsByBundle($entity->getEntityTypeId(), $entity->bundle());
+          if (isset($entity_view_modes['amp_' . $view_mode])) {
+            $view_mode = 'amp_' . $view_mode;
+          }
+          break;
+      }
+    }
+  }
+
+}
