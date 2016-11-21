@@ -114,6 +114,11 @@ function infinite_paragraphs_theme_suggestions_container_alter(array &$suggestio
       $suggestions[] = 'container__term__' . $term->bundle();
       $suggestions[] = 'container__term__' . $term->bundle() . '__' . $variables['element']['#type'];
     }
+    else if (isset($variables['element']['#parent']) && isset($variables['element']['#parent']['#user'])) {
+      $term = $variables['element']['#parent']['#user'];
+      $suggestions[] = 'container__' . $term->bundle();
+      $suggestions[] = 'container__' . $term->bundle() . '__' . $variables['element']['#type'];
+    }
   }
 }
 
