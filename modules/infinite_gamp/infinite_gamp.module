@@ -9,7 +9,7 @@ use Drupal\media_entity\Entity\Media;
  */
 function infinite_gamp_page_attachments_alter(array &$attachments) {
   // Check if it's a views page of a term.
-  if (\Drupal::routeMatch()->getParameter('view_id') && \Drupal::routeMatch()->getParameter('taxonomy_term')) {
+  if (\Drupal::routeMatch()->getParameter('view_id') && \Drupal::routeMatch()->getParameter('taxonomy_term') && !\Drupal::service('path.matcher')->isFrontPage()) {
     $taxonomyTerm = \Drupal::routeMatch()->getParameter('taxonomy_term');
     // If we only got back the entity ID, load the entity.
     if (!is_object($taxonomyTerm) && is_numeric($taxonomyTerm)) {
