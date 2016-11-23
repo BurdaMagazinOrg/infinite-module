@@ -103,22 +103,22 @@ function infinite_paragraphs_theme_suggestions_container_alter(array &$suggestio
   if (!empty($variables['element']['#type'])) {
     $suggestions[] = 'container__' . $variables['element']['#type'];
 
-    if (isset($variables['element']['#parent']) && isset($variables['element']['#parent']['#node'])) {
-      /** @var \Drupal\node\Entity\Node $node */
-      $node = $variables['element']['#parent']['#node'];
-      $suggestions[] = 'container__' . $node->getType();
-      $suggestions[] = 'container__' . $node->getType() . '__' . $variables['element']['#type'];
+    if (isset($variables['element']['#parent'])) {
+      if (isset($variables['element']['#parent']['#node'])) {
+        /** @var \Drupal\node\Entity\Node $node */
+        $node = $variables['element']['#parent']['#node'];
+        $suggestions[] = 'container__' . $node->getType();
+        $suggestions[] = 'container__' . $node->getType() . '__' . $variables['element']['#type'];
+      } else if (isset($variables['element']['#parent']['#taxonomy_term'])) {
+        $term = $variables['element']['#parent']['#taxonomy_term'];
+        $suggestions[] = 'container__term__' . $term->bundle();
+        $suggestions[] = 'container__term__' . $term->bundle() . '__' . $variables['element']['#type'];
+      } else if (isset($variables['element']['#parent']['#user'])) {
+        $suggestions[] = 'container__user';
+        $suggestions[] = 'container__user__' . $variables['element']['#type'];
+      }
     }
-    else if (isset($variables['element']['#parent']) && isset($variables['element']['#parent']['#taxonomy_term'])) {
-      $term = $variables['element']['#parent']['#taxonomy_term'];
-      $suggestions[] = 'container__term__' . $term->bundle();
-      $suggestions[] = 'container__term__' . $term->bundle() . '__' . $variables['element']['#type'];
-    }
-    else if (isset($variables['element']['#parent']) && isset($variables['element']['#parent']['#user'])) {
-      $term = $variables['element']['#parent']['#user'];
-      $suggestions[] = 'container__' . $term->bundle();
-      $suggestions[] = 'container__' . $term->bundle() . '__' . $variables['element']['#type'];
-    }
+
   }
 }
 
