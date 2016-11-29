@@ -26,7 +26,11 @@ function infinite_datalayer_node_view(array &$build, EntityInterface $node, Enti
     'contentSubType' => _infinite_datalayer_content_sub_types($node->field_paragraphs->referencedEntities()),
     'articlePublishDate' => date(DATE_ISO8601, $node->created->value),
     'authorName' => $node->uid->entity->getDisplayName(),
-  ] + _infinite_datalayer_category($node->field_channel->entity);
+  ];
+
+  if (isset($node->field_channel->entity)) {
+    $datalayer_variables['page'] += _infinite_datalayer_category($node->field_channel->entity);
+  }
 
   \Drupal::service('infinite_datalayer.store')->set($node->uuid(), $datalayer_variables);
 }
