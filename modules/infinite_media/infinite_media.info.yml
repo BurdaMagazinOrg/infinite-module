@@ -15,6 +15,7 @@ dependencies:
   - media_entity
   - responsive_image
   - thunder_media
+  - blazy
 config_devel:
   - core.entity_form_display.media.gallery.default
   - core.entity_view_display.media.image.default
