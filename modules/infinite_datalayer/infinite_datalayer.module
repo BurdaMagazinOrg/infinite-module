@@ -5,6 +5,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\views\ViewExecutable;
 
 /**
  * @file
@@ -36,12 +37,18 @@ function infinite_datalayer_node_view(array &$build, EntityInterface $node, Enti
 }
 
 /**
- * Implements hook_taxonomy_term_view().
+ * Implements hook_views_pre_render().
  */
-function infinite_datalayer_taxonomy_term_view(array &$build, EntityInterface $term, EntityViewDisplayInterface $display, $view_mode) {
-  if (!taxonomy_term_is_page($term)) {
+function infinite_datalayer_views_pre_render(ViewExecutable $view) {
+  if ($view->id() != 'infinite_taxonomy_term') {
     return;
   }
+
+  if (\Drupal::routeMatch()->getRouteName() != 'entity.taxonomy_term.canonical') {
+    return;
+  }
+
+  $term = Term::load(\Drupal::routeMatch()->getParameter('taxonomy_term')->id());
 
   $datalayer_variables = _infinite_datalayer_initialize_variables();
   $datalayer_variables['page'] = [
@@ -60,11 +67,11 @@ function infinite_datalayer_taxonomy_term_view(array &$build, EntityInterface $t
  * Implements hook_user_view().
  */
 function infinite_datalayer_user_view(array &$build, EntityInterface $user, EntityViewDisplayInterface $display, $view_mode) {
-  if (Drupal::routeMatch()->getRouteName() != 'entity.user.canonical') {
+  if (\Drupal::routeMatch()->getRouteName() != 'entity.user.canonical') {
     return;
   }
 
-  if (Drupal::routeMatch()->getParameter('user')->id() != $user->id()) {
+  if (\Drupal::routeMatch()->getParameter('user')->id() != $user->id()) {
     return;
   }
 
