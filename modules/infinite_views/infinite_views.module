@@ -65,27 +65,7 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
   }
   else {
     if ($view->id() == 'infinite_archive' && empty($args)) {  // Get default contextual filter for loading /archive
-      //Lookup 1 recent published article node.
-      $query = \Drupal::entityQuery('node')
-        ->condition('type', 'article')
-        ->condition('status', 1)
-        ->sort('created', 'DESC')
-        ->range(0, 1)
-        ->execute();
-
-      foreach ($query as $row) {
-        $nid = (int) $row;
-      }
-
-      if (!empty($nid)) {
-        $node = \Drupal::entityTypeManager()
-          ->getStorage('node')
-          ->load($nid);
-        $recent_created = $node->getCreatedTime();
-
-        $args[] = \Drupal::service('date.formatter')
-          ->format($recent_created, 'custom', 'Ym');
-      }
+      $args[] = infinite_views_archive_default_argument();
     }
     else if ($view->id() == 'infinite_vocabulary' && $view->current_display == 'attachment_1') {
       unset($args[1]);  // Remove second arg on infinite vocabulary attachment
@@ -148,6 +128,33 @@ function infinite_views_preprocess_views_view_unformatted(&$variables) {
       $dyn_block_row[] = ['content' => $block_content];
       array_splice($variables['rows'], 3, 0, $dyn_block_row);
     }
+  }
+}
+
+/**
+ *
+ * @param ViewExecutable $view
+ * @param string $display_id
+ * @param array $args
+ *
+ * @return string
+ *   The date argument
+ */
+function infinite_views_archive_default_argument() {
+  // Find latest published article node.
+  $result = \Drupal::entityQuery('node')
+    ->condition('type', 'article')
+    ->condition('status', NODE_PUBLISHED)
+    ->sort('created', 'DESC')
+    ->range(0, 1)
+    ->execute();
+
+  if (!empty($result)) {
+    $node = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->load(reset($result));
+
+    return \Drupal::service('date.formatter')->format($node->getCreatedTime(), 'custom', 'Ym');
   }
 }
 
