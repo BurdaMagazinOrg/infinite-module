@@ -81,6 +81,7 @@ function infinite_base_theme() {
         'timestamp' => NULL,
         'datetime' => NULL,
         'formatted_interval' => NULL,
+        'use_absolute_date' => FALSE,
       ),
     ),
 
