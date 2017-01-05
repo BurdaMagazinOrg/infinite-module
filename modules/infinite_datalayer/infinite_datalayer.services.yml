@@ -4,6 +4,6 @@ services:
     arguments: ['datalayer']
   infinite_datalayer.response_subscriber:
     class: 'Drupal\infinite_datalayer\EventSubscriber\DataLayerResponseSubscriber'
-    arguments: [@infinite_datalayer.store]
+    arguments: ['@infinite_datalayer.store']
     tags:
       - { name: event_subscriber }
