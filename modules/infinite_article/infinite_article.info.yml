@@ -1,6 +1,6 @@
 name: Infinite Article
 type: module
-description: Provide content related configs and code for infinite (later: infinite_content).
+description: 'Provide content related configs and code for infinite (later: infinite_content).'
 package: Infinite
 core: 8.x
 version: 8.x-1.x-dev
