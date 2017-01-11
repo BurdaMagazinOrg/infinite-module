@@ -1,23 +1,20 @@
 <?php
 
-use Drupal\block\Entity\Block;
-use Drupal\node\Entity\Node;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-
 /**
  * @file
  * Module for adding custom Infinity base functions.
  */
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_entity_base_field_info_alter().
  */
-function infinite_base_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type) {
+function infinite_base_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
   if ($entity_type->id() == 'node' && !empty($fields['uid'])) {
     $fields['created']->setDisplayConfigurable('view', TRUE);
     $fields['uid']->setDisplayConfigurable('view', TRUE);
@@ -27,6 +24,24 @@ function infinite_base_entity_base_field_info_alter(&$fields, \Drupal\Core\Entit
   }
 }
 
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function infinite_base_entity_extra_field_info() {
+  $extra = [];
+
+  $extra['user']['user']['display']['field_full_name'] = [
+    'label' => t('Full name'),
+    'description' => t('The full name of the user derived from relevant fields'),
+    'visible' => TRUE,
+  ];
+
+  return $extra;
+}
+
+/**
+ * Implements hook_node_view().
+ */
 function infinite_base_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   if (isset($build['created'])) {
     $build['field_created'] = $build['created'];
@@ -37,40 +52,46 @@ function infinite_base_node_view(array &$build, EntityInterface $entity, EntityV
   }
 }
 
+/**
+ * Implements hook_user_view().
+ */
+function infinite_base_user_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($display->getComponent('field_full_name')) {
+    if (isset($entity->field_forename->value)) {
+      $field_full_name = $entity->field_forename->value;
+    }
+    else if (isset($entity->field_first_name->value)) {
+      $field_full_name = $entity->field_first_name->value;
+    }
+    if (isset($entity->field_surname->value)) {
+      $field_full_name .= ' ' . $entity->field_surname->value;
+    }
+    else if (isset($entity->field_last_name->value)) {
+      $field_full_name .= ' ' . $entity->field_last_name->value;
+    }
+
+    $build['field_full_name'] = [
+      '#type' => 'markup',
+      '#markup' => trim($field_full_name),
+    ];
+  }
+}
 
 /**
  * Implements hook_entity_view_mode_alter().
- *
- * @param $view_mode
- * @param \Drupal\Core\Entity\EntityInterface $entity
- * @param $context
  */
 function infinite_base_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
-  if ($view_mode == 'presenter_home_selectable' &&
-    $entity->getEntityTypeId() === 'node'
-  ) {
-
-    /* @var Node $entity */
+  if ($view_mode == 'presenter_home_selectable' && $entity->getEntityTypeId() === 'node') {
     $view_mode = 'presenter_half';
-    if ($entity->hasField('field_hp_display_mode') &&
-      !$entity->get('field_hp_display_mode')->isEmpty()
-    ) {
-
+    if ($entity->hasField('field_hp_display_mode') && !$entity->get('field_hp_display_mode')->isEmpty()) {
       $selected_view_mode = $entity->get('field_hp_display_mode')->value;
       $view_mode = $selected_view_mode;
     }
   }
   else {
-    if ($view_mode == 'teaser_selectable' &&
-      $entity->getEntityTypeId() === 'node'
-    ) {
-
-      /* @var Node $entity */
+    if ($view_mode == 'teaser_selectable' && $entity->getEntityTypeId() === 'node') {
       $view_mode = 'teaser_square_m';
-      if ($entity->hasField('field_teaser_display_mode') &&
-        !$entity->get('field_teaser_display_mode')->isEmpty()
-      ) {
-
+      if ($entity->hasField('field_teaser_display_mode') && !$entity->get('field_teaser_display_mode')->isEmpty()) {
         $selected_view_mode = $entity->get('field_teaser_display_mode')->value;
         $view_mode = $selected_view_mode;
       }
@@ -157,12 +178,12 @@ function infinite_base_token_info() {
   return $info;
 }
 
-function infinite_base_tokens($type, $tokens, array $data = array(), array $options = array(), \Drupal\Core\Render\BubbleableMetadata $bubbleableMetadata) {
+function infinite_base_tokens($type, $tokens, array $data = array(), array $options = array(), BubbleableMetadata $bubbleableMetadata) {
 
   $replacements = array();
 
   if ($type == 'node' && !empty($data['node'])) {
-    /** @var \Drupal\node\NodeInterface $node */
+    /** @var NodeInterface $node */
     $node = $data['node'];
 
     foreach ($tokens as $name => $original) {
@@ -194,7 +215,7 @@ function infinite_base_tokens($type, $tokens, array $data = array(), array $opti
 
 
   if ($type == 'term' && !empty($data['term'])) {
-    /** @var \Drupal\node\NodeInterface $node */
+    /** @var NodeInterface $node */
     $term = $data['term'];
 
     foreach ($tokens as $name => $original) {
@@ -328,7 +349,7 @@ function infinite_base_find_tag($name, array &$attachments) {
 /**
  * Helper function to get promote states as a flat array.
  *
- * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param EntityInterface $entity
  * @return array
  */
 function _infinite_base_flat_promote_states(EntityInterface $entity) {
