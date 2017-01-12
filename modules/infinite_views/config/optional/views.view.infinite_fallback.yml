@@ -8,8 +8,8 @@ dependencies:
     - node
     - user
     - views_load_more
-id: infinite_front
-label: 'Infinite Front'
+id: infinite_fallback
+label: 'Infinite Fallback'
 module: views
 description: ''
 tag: ''
@@ -183,7 +183,7 @@ display:
           expose:
             label: ''
           granularity: second
-      title: 'Infinite Front'
+      title: 'Infinite Fallback'
       header: {  }
       footer: {  }
       empty: {  }
@@ -207,7 +207,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: infinite-front
+      path: infinite-fallback
     cache_metadata:
       max-age: -1
       contexts:

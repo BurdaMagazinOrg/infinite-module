@@ -15,7 +15,7 @@ function infinite_views_update_8101() {
     /** @var ConfigRevertInterface $configReverter */
     $configReverter = \Drupal::service('config_update.config_update');
 
-    $configReverter->import('view', 'infinite_front');
+    $configReverter->import('view', 'infinite_fallback');
   }
   catch (\Exception $e) {
     return $e->getMessage();
