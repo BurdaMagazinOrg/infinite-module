@@ -1,0 +1,23 @@
+<?php
+
+use Drupal\config_update\ConfigRevertInterface;
+
+/**
+ * Add Infinite Front view, for lazyloading after oldest article is reached
+ */
+function infinite_views_update_8101() {
+
+  \Drupal::service('module_installer')->install([
+    'config_update',
+  ]);
+
+  try {
+    /** @var ConfigRevertInterface $configReverter */
+    $configReverter = \Drupal::service('config_update.config_update');
+
+    $configReverter->import('view', 'infinite_front');
+  }
+  catch (\Exception $e) {
+    return $e->getMessage();
+  }
+}
