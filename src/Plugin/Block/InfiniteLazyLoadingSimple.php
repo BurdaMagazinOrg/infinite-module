@@ -50,30 +50,35 @@ class InfiniteLazyLoadingSimple extends BlockBase {
 
         $next_nid = array_shift($next_nid);
         $lazy_loading_url = '/lazyloading/node/' . $next_nid . '/nojs?page=' . $page;
+
+        return array(
+          '#theme' => 'lazy_loading',
+          '#lazy_loading_url' => $lazy_loading_url,
+          '#attached' => array(
+            'library' => array(
+              'core/drupal.ajax',
+            ),
+          ),
+          '#cache' => [
+            'tags' => [
+              'node:' . $node->id(),
+              'node:' . $next_nid,
+            ],
+            'contexts' => ['url.path'],
+          ],
+        );
       } else {
-        $lazy_loading_url = '/home?page=0';
+        return array(
+          '#cache' => [
+            'tags' => [
+              'node:' . $node->id(),
+            ],
+            'contexts' => ['url.path'],
+          ],
+        );
       }
 
-      $render_array = array(
-        '#theme' => 'lazy_loading',
-        '#lazy_loading_url' => $lazy_loading_url,
-        '#attached' => array(
-          'library' => array(
-            'core/drupal.ajax',
-          ),
-        ),
-        '#cache' => [
-          'tags' => [
-            'node:' . $node->id(),
-          ],
-          'contexts' => ['url.path'],
-        ],
-      );
 
-      if (!empty($next_nid))
-        $render_array['#cache']['tags'][] = 'node:' . $next_nid;
-
-      return $render_array;
     }
     return;
   }
