@@ -51,7 +51,7 @@ class InfiniteLazyLoadingSimple extends BlockBase {
         $next_nid = array_shift($next_nid);
         $lazy_loading_url = '/lazyloading/node/' . $next_nid . '/nojs?page=' . $page;
       } else {
-        $lazy_loading_url = '/home?page=0';
+        $lazy_loading_url = '/infinite-fallback?page=0';
       }
 
       $render_array = array(
