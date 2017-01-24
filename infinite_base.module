@@ -57,17 +57,19 @@ function infinite_base_node_view(array &$build, EntityInterface $entity, EntityV
  */
 function infinite_base_user_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   if ($display->getComponent('field_full_name')) {
+    $field_full_name = '';
+
     if (isset($entity->field_forename->value)) {
       $field_full_name = $entity->field_forename->value;
     }
-    else if (isset($entity->field_first_name->value)) {
-      $field_full_name = $entity->field_first_name->value;
+    else if (isset($entity->first_name->value)) {
+      $field_full_name = $entity->first_name->value;
     }
     if (isset($entity->field_surname->value)) {
       $field_full_name .= ' ' . $entity->field_surname->value;
     }
-    else if (isset($entity->field_last_name->value)) {
-      $field_full_name .= ' ' . $entity->field_last_name->value;
+    else if (isset($entity->last_name->value)) {
+      $field_full_name .= ' ' . $entity->last_name->value;
     }
 
     $build['field_full_name'] = [
