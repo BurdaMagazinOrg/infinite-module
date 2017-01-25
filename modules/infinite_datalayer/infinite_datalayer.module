@@ -160,7 +160,7 @@ function _infinite_datalayer_content_sub_types(array $paragraphs) {
 
   sort($content_sub_types);
 
-  return array_unique($content_sub_types);
+  return array_values(array_unique($content_sub_types));
 }
 
 /**
