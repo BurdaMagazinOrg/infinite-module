@@ -45,5 +45,7 @@ function infinite_article_form_node_article_form_alter(&$form, FormStateInterfac
 function _infinite_article_form_alter_helper(&$form, FormStateInterface $form_state) {
   // Move field_promote_states to options group.
   $form['field_promote_states']['#group'] = 'options';
-  $form['field_hide_created']['#group'] = 'author';
+  if (isset($form['field_hide_created'])) {
+    $form['field_hide_created']['#group'] = 'author';
+  }
 }
