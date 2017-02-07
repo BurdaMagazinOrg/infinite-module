@@ -110,7 +110,7 @@ function infinite_datalayer_add(&$build, $key, $variables) {
     ],
     'datalayer',
   ];
-  $build['#attached']['library'][] = ['core/drupalSettings'];
+  $build['#attached']['library'][] = 'core/drupalSettings';
   $build['#attached']['drupalSettings']['datalayer'][$key] = $variables;
 }
 
