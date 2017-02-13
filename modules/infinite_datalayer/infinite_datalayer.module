@@ -46,7 +46,7 @@ function infinite_datalayer_node_view(array &$build, EntityInterface $node, Enti
  * Implements hook_taxonomy_term_view().
  */
 function infinite_datalayer_taxonomy_term_view(array &$build, EntityInterface $term, EntityViewDisplayInterface $display, $view_mode) {
-  if (!taxonomy_term_is_page($term)) {
+  if ($view_mode == 'amp' || !taxonomy_term_is_page($term)) {
     return;
   }
 
@@ -67,6 +67,10 @@ function infinite_datalayer_taxonomy_term_view(array &$build, EntityInterface $t
  * Implements hook_user_view().
  */
 function infinite_datalayer_user_view(array &$build, EntityInterface $user, EntityViewDisplayInterface $display, $view_mode) {
+  if ($view_mode == 'amp') {
+    return;
+  }
+
   if (\Drupal::routeMatch()->getRouteName() != 'entity.user.canonical') {
     return;
   }
