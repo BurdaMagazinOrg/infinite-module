@@ -114,8 +114,6 @@ function infinite_base_theme() {
         'author_url' => NULL,
         'author_picture' => NULL,
         'timestamp' => NULL,
-        'datetime' => NULL,
-        'formatted_interval' => NULL,
         'use_absolute_date' => FALSE,
       ),
     ),
