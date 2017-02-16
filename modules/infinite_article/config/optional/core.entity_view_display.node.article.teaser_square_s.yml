@@ -27,6 +27,7 @@ content:
       view_mode: square_s
       link: false
     third_party_settings: {  }
+    region: content
 hidden:
   field_channel: true
   field_footer_blocks: true
