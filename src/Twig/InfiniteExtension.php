@@ -6,7 +6,7 @@ use Drupal\Core\Template\TwigExtension;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\Renderer_Interface;
 
-class FilterExtension extends \Twig_Extension {
+class InfiniteExtension extends \Twig_Extension {
 
   public function getFilters() {
     return array(
@@ -15,7 +15,7 @@ class FilterExtension extends \Twig_Extension {
   }
 
   public function getName() {
-    return 'filter_extension';
+    return 'infinite_base.twig_extension';
   }
 
   public static function plainText($value) {

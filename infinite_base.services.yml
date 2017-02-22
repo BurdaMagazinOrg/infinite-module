@@ -1,6 +1,6 @@
 services:
-  infinite_base.twig.filter_extension:
-    class: Drupal\infinite_base\Twig\FilterExtension
+  infinite_base.twig_extension:
+    class: Drupal\infinite_base\Twig\InfiniteExtension
     tags:
       - { name: twig.extension }
 
