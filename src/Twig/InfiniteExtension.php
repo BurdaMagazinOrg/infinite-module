@@ -21,7 +21,7 @@ class InfiniteExtension extends Twig_Extension {
    */
   public function getFilters() {
     return array(
-      new Twig_SimpleFilter('plain_text', array($this, 'plainText')),
+      new Twig_SimpleFilter('plain_text', [$this, 'plainText']),
     );
   }
 
@@ -40,9 +40,6 @@ class InfiniteExtension extends Twig_Extension {
    * @return string
    */
   public static function plainText($value) {
-    $element = render($value);
-    $element = strip_tags($element);
-    $element = html_entity_decode($element, ENT_QUOTES);
-    return $element;
+    return html_entity_decode(strip_tags(render($value)), ENT_QUOTES);
   }
 }
