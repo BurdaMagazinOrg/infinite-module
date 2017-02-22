@@ -2,15 +2,15 @@
 
 namespace Drupal\infinite_base\Twig;
 
-use Drupal\Core\Template\TwigExtension;
-use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Render\Renderer_Interface;
+use Twig_Extension;
+use Twig_SimpleFilter;
+use function render;
 
-class InfiniteExtension extends \Twig_Extension {
+class InfiniteExtension extends Twig_Extension {
 
   public function getFilters() {
     return array(
-      new \Twig_SimpleFilter('plain_text', array($this, 'plainText')),
+      new Twig_SimpleFilter('plain_text', array($this, 'plainText')),
     );
   }
 
