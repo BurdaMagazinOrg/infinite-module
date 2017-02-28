@@ -25,7 +25,8 @@ function infinite_media_preprocess_media(&$variables) {
   // todo: later possible switch to media URL for sharing media items.
   $current_url = Url::fromRoute('<current>');
   if ($node = \Drupal::routeMatch()->getParameter('node')) {  // Handling for lazy loading node URLs.
-    $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $node->id());
+    $nid = is_object($node) ? $node->id() : $node;
+    $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $nid);
     $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
   }
   else if ($current_url->toString() != '/') {

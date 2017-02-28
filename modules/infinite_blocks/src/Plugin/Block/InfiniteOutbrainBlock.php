@@ -137,8 +137,8 @@ class InfiniteOutbrainBlock extends BlockBase implements ContainerFactoryPluginI
     $nid = 0;  // todo: work-around to fix fatal PHP error on drush cron.
     $url = NULL;  // todo: check with outbrain how to handle data-src = NULL?
     if ($node = \Drupal::request()->attributes->get('node')) {
-      $nid = $node->id();
-      $path_alias = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $node->id());
+      $nid = is_object($node) ? $node->id() : $node;
+      $path_alias = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $nid);
       $url = Url::fromUri('base:/' . $path_alias, array('absolute' => TRUE))->toString();
     }
 

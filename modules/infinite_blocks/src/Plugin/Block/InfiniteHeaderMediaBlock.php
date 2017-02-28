@@ -20,9 +20,10 @@ class InfiniteHeaderMediaBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
+    $entity = NULL;
     if ($node = \Drupal::request()->attributes->get('node')) {
       /* @var Node $node */
-      $entity = $node;
+      $entity = is_object($node) ? $node : Node::load($node);
     }
     else if ($term = \Drupal::request()->attributes->get('taxonomy_term')) {
       /* @var Term $term */
