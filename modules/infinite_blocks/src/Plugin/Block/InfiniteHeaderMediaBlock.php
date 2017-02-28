@@ -3,7 +3,6 @@
 namespace Drupal\infinite_blocks\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
 
@@ -20,9 +19,14 @@ class InfiniteHeaderMediaBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
+    $entity = NULL;
     if ($node = \Drupal::request()->attributes->get('node')) {
-      /* @var Node $node */
-      $entity = $node;
+      $revision = NULL;
+      if ($revision = \Drupal::request()->attributes->get('node_revision')) {
+        $storage = \Drupal::entityTypeManager()->getStorage('node');
+        $revision = $storage->loadRevision($revision);
+      }
+      $entity = $revision ? $revision : $node;
     }
     else if ($term = \Drupal::request()->attributes->get('taxonomy_term')) {
       /* @var Term $term */

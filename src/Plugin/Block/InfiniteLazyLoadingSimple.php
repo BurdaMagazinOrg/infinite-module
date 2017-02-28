@@ -19,6 +19,7 @@ class InfiniteLazyLoadingSimple extends BlockBase {
    */
   public function build() {
     if ($node = \Drupal::request()->attributes->get('node')) {
+      $node = is_object($node) ? $node : Node::load($node);
       /* @var Node $node */
       $query = \Drupal::entityQuery('node')
         ->condition('created', $node->getCreatedTime(), '<')
