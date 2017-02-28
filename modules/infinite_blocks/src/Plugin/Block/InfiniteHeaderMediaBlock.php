@@ -22,8 +22,12 @@ class InfiniteHeaderMediaBlock extends BlockBase {
   public function build() {
     $entity = NULL;
     if ($node = \Drupal::request()->attributes->get('node')) {
-      /* @var Node $node */
-      $entity = is_object($node) ? $node : Node::load($node);
+      $revision = NULL;
+      if ($revision = \Drupal::request()->attributes->get('node_revision')) {
+        $storage = \Drupal::entityTypeManager()->getStorage('node');
+        $revision = $storage->loadRevision($revision);
+      }
+      $entity = $revision ? $revision : $node;
     }
     else if ($term = \Drupal::request()->attributes->get('taxonomy_term')) {
       /* @var Term $term */
