@@ -18,6 +18,9 @@ class InfiniteLazyLoadingSimple extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
+
+    $cache = ['contexts' => ['url.path']];
+
     if ($node = \Drupal::request()->attributes->get('node')) {
       /* @var Node $node */
       $query = \Drupal::entityQuery('node')
@@ -71,6 +74,7 @@ class InfiniteLazyLoadingSimple extends BlockBase {
         ],
       );
     }
-    return;
+
+    return ['#cache' => $cache]; // needed to avoid global caching of block.
   }
 }
