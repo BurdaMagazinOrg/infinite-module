@@ -18,13 +18,13 @@ use Drupal\Component\Utility\Html;
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function infinite_paragraphs_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if (!isset($form['field_paragraph'])) {
+  if (!isset($form['field_paragraphs'])) {
     return;
   }
 
-  foreach (Element::children($form['field_paragraph']['widget']) as $index) {
-    if (isset($form['field_paragraph']['widget'][$index]['subform']['field_p_view_mode'])) {
-      _infinite_paragraphs_view_mode_widget_alter($form['field_paragraph']['widget'][$index]['subform']['field_p_view_mode']['widget'], $index);
+  foreach (Element::children($form['field_paragraphs']['widget']) as $index) {
+    if (isset($form['field_paragraphs']['widget'][$index]['subform']['field_p_view_mode'])) {
+      _infinite_paragraphs_view_mode_widget_alter($form['field_paragraphs']['widget'][$index]['subform']['field_p_view_mode']['widget'], $index);
     }
   }
 }
@@ -79,10 +79,7 @@ function infinite_paragraphs_node_view_alter(array &$build, EntityInterface $ent
  * Implemens hook_ENTITY_TYPE_view_alter().
  */
 function infinite_paragraphs_taxonomy_term_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-  if (isset($build['field_paragraph'])) {
-    _infinite_paragraphs_decorate_group($build['field_paragraph'], _infinite_paragraphs_layout_group($build['field_paragraph'], array('small' ,'middle')), 'group_outer', $build);
-  }
-  else if (isset($build['field_paragraphs'])) {
+  if (isset($build['field_paragraphs'])) {
     _infinite_paragraphs_decorate_group($build['field_paragraphs'], _infinite_paragraphs_layout_group($build['field_paragraphs'], array('small' ,'middle')), 'group_outer', $build);
   }
 }
