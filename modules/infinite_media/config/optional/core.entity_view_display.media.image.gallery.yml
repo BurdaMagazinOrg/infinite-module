@@ -48,11 +48,8 @@ content:
     type: string
 hidden:
   created: true
-  field_brands: true
   field_channel: true
-  field_events: true
   field_expires: true
-  field_people: true
   field_tags: true
   name: true
   thumbnail: true
