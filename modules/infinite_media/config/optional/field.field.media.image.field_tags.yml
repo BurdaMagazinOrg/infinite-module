@@ -20,9 +20,6 @@ settings:
   handler_settings:
     target_bundles:
       tags: tags
-      brands: brands
-      events: events
-      people: people
     sort:
       field: _none
     auto_create: false
