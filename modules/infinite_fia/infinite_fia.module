@@ -55,7 +55,7 @@ function infinite_fia_node_view(array &$build, EntityInterface $entity, EntityVi
         'name' => $fiaConfig->get('campaign.name'),
         'medium' => $fiaConfig->get('campaign.medium'),
       ],
-      '#title' => (string)$entity->title->value,
+      '#title' => (string) $entity->field_seo_title->value,
       // TODO is there a scenario where the entity cache tags are useful here?
       '#cache' => [
         'tags' => Cache::mergeTags($entity->getCacheTags(), $fiaConfig->getCacheTags()),
