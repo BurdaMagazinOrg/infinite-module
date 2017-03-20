@@ -144,8 +144,11 @@ function _infinite_datalayer_content_sub_types(array $paragraphs) {
   $content_sub_types = [];
 
   foreach ($paragraphs as $paragraph) {
-    if (in_array($paragraph->bundle(), ['gallery', 'instagram', 'pinterest', 'riddle', 'twitter', 'video'])) {
+    if (in_array($paragraph->bundle(), ['gallery', 'instagram', 'pinterest', 'riddle', 'twitter'])) {
       $content_sub_types[] = Unicode::ucfirst($paragraph->bundle());
+    }
+    elseif ($paragraph->bundle() == 'media' && isset($paragraph->field_media->entity)) {
+      $content_sub_types[] = Unicode::ucfirst($paragraph->field_media->entity->bundle());
     }
     elseif ($paragraph->bundle() == 'tracdelight') {
       $content_sub_types[] = 'Affiliate-Tracdelight';
