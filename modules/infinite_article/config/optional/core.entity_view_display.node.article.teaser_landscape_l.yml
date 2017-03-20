@@ -27,6 +27,7 @@ content:
       link: false
     third_party_settings: {  }
     type: entity_reference_entity_view
+    region: content
 hidden:
   field_channel: true
   field_footer_blocks: true

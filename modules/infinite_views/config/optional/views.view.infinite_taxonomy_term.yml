@@ -55,15 +55,15 @@ display:
         options:
           items_per_page: 5
           offset: 5
-          id: '0'
-          total_pages: ''
+          id: 0
+          total_pages: null
           expose:
-            items_per_page: 0
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: 0
+            items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
-            offset: 0
+            offset: false
             offset_label: Offset
           more_button_text: 'next ›'
           end_text: ''
@@ -140,7 +140,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: true
+          value: '1'
           group: 1
           exposed: false
           expose:
@@ -176,7 +176,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: true
+          value: '1'
           group: 1
           exposed: false
           expose:
@@ -338,7 +338,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: true
+          value: '1'
           group: 1
           exposed: false
           expose:
@@ -374,7 +374,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: true
+          value: '1'
           group: 1
           exposed: false
           expose:
@@ -582,7 +582,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: true
+          value: '1'
           group: 1
           exposed: false
           expose:
@@ -618,7 +618,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: true
+          value: '1'
           group: 1
           exposed: false
           expose:
@@ -656,7 +656,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: true
+          value: '1'
           group: 1
           exposed: false
           expose:
@@ -853,7 +853,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: true
+          value: '1'
           group: 1
           exposed: false
           expose:
@@ -889,7 +889,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: true
+          value: '1'
           group: 1
           exposed: false
           expose:
@@ -1078,7 +1078,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: true
+          value: '1'
           group: 1
           exposed: false
           expose:
@@ -1114,7 +1114,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: true
+          value: '1'
           group: 1
           exposed: false
           expose:
@@ -1152,7 +1152,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: true
+          value: '1'
           group: 1
           exposed: false
           expose:

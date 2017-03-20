@@ -1,0 +1,24 @@
+block.block.*.third_party.infinite_blocks:
+  type: mapping
+  label: 'Infinite blocks'
+  mapping:
+    id:
+      type: string
+      label: 'Block ID'
+    classes:
+      type: string
+      label: 'CSS classes'
+    title_tag:
+      type: string
+      label: 'Title tag'
+    block_tag:
+      type: string
+      label: 'Block yag'
+
+block.settings.infinite_blocks_socials:
+  type: block_settings
+  label: 'Infinite socials block settings'
+  mapping:
+    follow:
+      type: integer
+      label: 'Follow'

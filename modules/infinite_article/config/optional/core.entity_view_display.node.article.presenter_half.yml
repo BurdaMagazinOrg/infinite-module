@@ -34,6 +34,7 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: data_internal_url
+    region: content
   field_presenter_media:
     type: entity_reference_entity_view
     weight: 0
@@ -42,6 +43,7 @@ content:
       view_mode: landscape_m
       link: false
     third_party_settings: {  }
+    region: content
   field_teaser_media:
     type: entity_reference_entity_view
     weight: 1
@@ -50,6 +52,7 @@ content:
       view_mode: landscape_m
       link: false
     third_party_settings: {  }
+    region: content
 hidden:
   field_footer_blocks: true
   field_header_blocks: true

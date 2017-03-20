@@ -36,6 +36,7 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    region: content
   field_footer_blocks:
     weight: 9
     label: hidden
@@ -44,6 +45,7 @@ content:
       link: false
     third_party_settings: {  }
     type: entity_reference_entity_view
+    region: content
   field_header_blocks:
     weight: 0
     label: hidden
@@ -52,12 +54,14 @@ content:
       link: false
     third_party_settings: {  }
     type: entity_reference_entity_view
+    region: content
   field_meta_tags:
     weight: 10
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: metatag_empty_formatter
+    region: content
   field_paragraphs:
     type: entity_reference_revisions_entity_view
     weight: 3
@@ -66,6 +70,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    region: content
   field_seo_title:
     type: string
     weight: 13
@@ -73,6 +78,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    region: content
   field_sidebar_blocks:
     type: entity_reference_entity_view
     weight: 8
@@ -81,6 +87,7 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
+    region: content
   field_tags:
     type: entity_reference_label
     weight: 7
@@ -88,12 +95,14 @@ content:
     settings:
       link: true
     third_party_settings: {  }
+    region: content
   field_teaser_text:
     type: basic_string
     weight: 14
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    region: content
   field_top_paragraphs:
     type: entity_reference_revisions_entity_view
     weight: 2
@@ -102,6 +111,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    region: content
 hidden:
   field_header_media: true
   field_hp_display_mode: true

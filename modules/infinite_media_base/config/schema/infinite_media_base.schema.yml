@@ -1,0 +1,13 @@
+image.effect.thunder_media_auto_aspect:
+  type: mapping
+  label: 'Effect settings'
+  mapping:
+    landscape:
+      type: string
+      label: 'Landscape'
+    portrait:
+      type: string
+      label: 'Portrait'
+    ratio_adjustment:
+      type: float
+      label: 'Ratio adjustment'

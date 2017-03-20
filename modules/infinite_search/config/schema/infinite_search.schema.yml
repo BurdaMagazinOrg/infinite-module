@@ -1,0 +1,30 @@
+views.pager.load_more:
+  type: views_pager_sql
+  label: 'Load more pager options'
+  mapping:
+    more_button_text:
+      type: string
+      label: 'More button text'
+    end_text:
+      type: string
+      label: 'End text'
+    advanced:
+      type: mapping
+      label: 'Advanced options'
+      mapping:
+        content_selector:
+          type: string
+          label: 'Content selector'
+        pager_selector:
+          type: string
+          label: 'Pager selector'
+    effects:
+      type: mapping
+      label: 'Effects'
+      mapping:
+        type:
+          type: string
+          label: 'Type'
+        speed:
+          type: string
+          label: 'Speed'
