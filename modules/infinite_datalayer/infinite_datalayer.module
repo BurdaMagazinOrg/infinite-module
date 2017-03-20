@@ -52,7 +52,7 @@ function infinite_datalayer_taxonomy_term_view(array &$build, EntityInterface $t
 
   $datalayer_variables = _infinite_datalayer_initialize_variables();
   $datalayer_variables['page'] = [
-    'title' => $term->name->value,
+    'name' => $term->name->value,
     'contentType' => $term->bundle(),
   ];
 
@@ -81,7 +81,7 @@ function infinite_datalayer_user_view(array &$build, EntityInterface $user, Enti
 
   $datalayer_variables = _infinite_datalayer_initialize_variables();
   $datalayer_variables['page'] = [
-    'title' => $user->getDisplayName(),
+    'name' => $user->getDisplayName(),
     'contentType' => $user->bundle(),
   ];
 
