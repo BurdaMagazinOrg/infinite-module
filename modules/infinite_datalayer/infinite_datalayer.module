@@ -3,7 +3,7 @@
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -23,7 +23,7 @@ function infinite_datalayer_node_view(array &$build, EntityInterface $node, Enti
   $datalayer_variables['page'] = [
     'name' => $node->title->value,
     'contentType' => $node->bundle(),
-    'contentSubType' => _infinite_datalayer_content_sub_types($node->field_paragraphs->referencedEntities()),
+    'contentSubType' => _infinite_datalayer_content_sub_types($node),
     'articlePublishDate' => date(DATE_ISO8601, $node->created->value),
     'authorName' => $node->uid->entity->getDisplayName(),
   ];
@@ -136,14 +136,18 @@ function _infinite_datalayer_initialize_variables() {
 /**
  * Returns an ordered set of labels for eligible paragraphs.
  *
- * @param Paragraph[] $paragraphs
+ * @param Node $node
  *
  * @return array
  */
-function _infinite_datalayer_content_sub_types(array $paragraphs) {
+function _infinite_datalayer_content_sub_types(Node $node) {
   $content_sub_types = [];
 
-  foreach ($paragraphs as $paragraph) {
+  if ($node->field_sponsor_type->value == 'native' && isset($node->field_campaign->entity)) {
+    $content_sub_types[] = 'NativeArticle';
+  }
+
+  foreach ($node->field_paragraphs->referencedEntities() as $paragraph) {
     if (in_array($paragraph->bundle(), ['gallery', 'instagram', 'pinterest', 'riddle', 'twitter'])) {
       $content_sub_types[] = Unicode::ucfirst($paragraph->bundle());
     }
