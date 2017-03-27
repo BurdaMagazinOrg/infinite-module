@@ -148,7 +148,7 @@ function _infinite_datalayer_content_sub_types(Node $node) {
   }
 
   foreach ($node->field_paragraphs->referencedEntities() as $paragraph) {
-    if (in_array($paragraph->bundle(), ['gallery', 'instagram', 'pinterest', 'riddle', 'twitter'])) {
+    if (in_array($paragraph->bundle(), ['gallery', 'instagram', 'nexx_video', 'pinterest', 'riddle', 'twitter'])) {
       $content_sub_types[] = Unicode::ucfirst($paragraph->bundle());
     }
     elseif ($paragraph->bundle() == 'media' && isset($paragraph->field_media->entity)) {
