@@ -24,6 +24,12 @@ function infinite_base_entity_base_field_info_alter(&$fields, EntityTypeInterfac
   }
 }
 
+function infinite_base_entity_presave(EntityInterface $entity){
+  if($entity->getEntityTypeId() == 'taxonomy_term' && $entity->getVocabularyId() == 'unmanaged'){
+    $entity->set('status', FALSE);
+  }
+}
+
 /**
  * Implements hook_entity_extra_field_info().
  */
