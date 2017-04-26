@@ -96,13 +96,13 @@ class InfiniteOutbrainBlock extends BlockBase implements ContainerFactoryPluginI
     ];
 
     for($i = 0; $i < $config['ob_widget_quantity']; $i++) {
-      $form['ob_widget_ids'][$i] = array(
+      $form['ob_widget_ids'][$i] = [
         '#type' => 'textfield',
         '#title' => t('Outbrain Widget ID'),
         '#description' => t('Enter required Outbrain data for widget ID. For example: AR_1'),
         '#default_value' => $config['ob_widget_ids'][$i],
         '#required' => TRUE,
-      );
+      ];
     }
 
     $form['ob_template'] = [
@@ -128,34 +128,37 @@ class InfiniteOutbrainBlock extends BlockBase implements ContainerFactoryPluginI
   }
 
   public function build() {
+    $cache = ['contexts' => ['url.path']];
+    $node_url = NULL;  // todo: check with outbrain how to handle data-src = NULL?
     $config = $this->getConfiguration();
 
-    $class = $config['ob_class'];
-    $widget_ids = $config['ob_widget_ids'];
-    $template = $config['ob_template'];
-
-    $nid = 0;  // todo: work-around to fix fatal PHP error on drush cron.
-    $url = NULL;  // todo: check with outbrain how to handle data-src = NULL?
     if ($node = \Drupal::request()->attributes->get('node')) {
-      $nid = $node->id();
+
       $path_alias = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $node->id());
-      $url = Url::fromUri('base:/' . $path_alias, array('absolute' => TRUE))->toString();
+      $node_url = Url::fromUri('base:/' . $path_alias, array('absolute' => TRUE))->toString();
+
+      return [
+        '#theme' => 'outbrain',
+        '#outbrain' => [
+          'class' => $config['ob_class'],
+          'template' => $config['ob_template'],
+          'node_url' => $node_url,
+          'widget_ids' => $config['ob_widget_ids'],
+        ],
+        '#attached' => [
+          'library' => [
+            'infinite_blocks/outbrain_js',
+          ],
+        ],
+        '#cache' => [
+          'tags' => [
+            'node:' . $node->id(),
+          ],
+          'contexts' => ['url.path'],
+        ],
+      ];
     }
 
-    $build['outbrain'] = array(
-      '#theme' => 'outbrain',
-      '#class' => $class,
-      '#template' => $template,
-      '#attached' => ['library' => ['infinite_blocks/outbrain_js']],
-      '#url' => $url,
-      '#widget_ids' => $widget_ids,
-    );
-
-    $build['#cache'] = [
-      'tags' => ['node:' . $nid],
-      'contexts' => ['url.path'],
-    ];
-
-    return $build;
+    return ['#cache' => $cache]; // needed to avoid global caching of block.
   }
 }

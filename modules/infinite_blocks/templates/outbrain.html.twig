@@ -1,7 +1,7 @@
-{% if widget_ids %}
+{% if outbrain.widget_ids %}
     <div class="outbrain_div_container">
-        {% for widget_id in widget_ids %}
-            <div class="{{ class }}" data-ob-template="{{ template }}" data-src="{{ url }}" data-widget-id="{{ widget_id }}"></div>
+        {% for widget_id in outbrain.widget_ids %}
+            <div class="{{ outbrain.class }}" data-ob-template="{{ outbrain.template }}" data-src="{{ outbrain.node_url }}" data-widget-id="{{ widget_id }}"></div>
         {% endfor %}
     </div>
 {% endif %}

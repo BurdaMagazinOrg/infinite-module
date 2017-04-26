@@ -18,7 +18,7 @@ function infinite_blocks_theme() {
       'variables' => array('header_media' => NULL, 'header_title' => NULL),
     ),
     'outbrain' => array(
-      'variables' => array('class' => NULL, 'template' => NULL, 'url' => NULL, 'widget_ids' => NULL),
+      'variables' => array('outbrain' => NULL),
     ),
     'logo_header' => array(
       'variables' => array('logo' => NULL, 'front_page' => NULL)
