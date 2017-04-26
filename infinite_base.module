@@ -155,6 +155,10 @@ function infinite_base_token_info() {
     'name' => t('Root channel'),
     'description' => t("The root channel."),
   );
+  $node['infinite-news-keywords'] = array(
+    'name' => t('Infinite news keywords'),
+    'description' => t("Keywords to be used for google news."),
+  );
 
 
   $termType = array(
@@ -188,6 +192,19 @@ function infinite_base_tokens($type, $tokens, array $data = array(), array $opti
 
     foreach ($tokens as $name => $original) {
       switch ($name) {
+        // Google news keywords
+        case 'infinite-news-keywords':
+          $field_tags_items = $node->get('field_tags');
+
+          $term_labels = [];
+          if($field_tags_items instanceof \Drupal\Core\Field\EntityReferenceFieldItemList) {
+            foreach ($field_tags_items->referencedEntities() as $term) {
+              $term_labels[] = $term->label();
+            }
+          }
+          $replacements[$original] = implode(',', $term_labels);
+
+          break;
         // Simple key values on the node.
         case 'root-channel':
 
