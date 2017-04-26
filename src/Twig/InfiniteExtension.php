@@ -68,6 +68,10 @@ class InfiniteExtension extends Twig_Extension {
   public function imageStyle(FieldItemListInterface $field, $style_name, array $attributes = []) {
     $build = [];
 
+    if (is_null($field)) {
+      return NULL;
+    }
+
     $field_type = $field->getFieldDefinition()->getType();
     $field_name = $field->getFieldDefinition()->getName();
 
