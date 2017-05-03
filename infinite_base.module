@@ -202,7 +202,7 @@ function infinite_base_tokens($type, $tokens, array $data = array(), array $opti
               $term_labels[] = $term->label();
             }
           }
-          $replacements[$original] = implode(',', $term_labels);
+          $replacements[$original] = implode(', ', $term_labels);
 
           break;
         // Simple key values on the node.
