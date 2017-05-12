@@ -40,7 +40,7 @@ function infinite_media_preprocess_media(&$variables) {
     // Get image dimension.
     // todo: is this really the right way?
     /* @var Image $image */
-    if (!$media->field_image->isEmpty()) {
+    if (!$media->field_image->isEmpty() && $media->field_image->entity) {
       $image_url = $media->field_image->entity->getFileUri();
       $image = \Drupal::service('image.factory')->get($image_url);
       if ($image->isValid()) {
