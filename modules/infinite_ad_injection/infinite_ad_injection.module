@@ -1,0 +1,88 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Render\Markup;
+use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\DomCrawler\Crawler;
+
+function infinite_ad_injection_entity_display_build_alter(&$build, $context) {
+  return;
+}
+
+function infinite_ad_injection_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if($entity->bundle() == 'article' && $build['#view_mode'] == 'full'){
+    $build['#post_render'][] = 'infinite_ad_injection_article_inject_content';
+  }
+}
+
+function infinite_ad_injection_article_inject_content($children, $elements){
+//  return $children;
+  $contents = infinite_ad_injection_get_content();
+//  $contents = infinite_ad_injection_get_content__dummy();
+  $contents_count = count($contents);
+
+  if($contents_count > 0) {
+    $selectors = [];
+    $selectors[] = CssSelector::toXPath('article div.item-paragraph:not(.item-paragraph--text)');
+    $selectors[] = CssSelector::toXPath('article div.item-paragraph--text p');
+    $slelector = implode('|', $selectors);
+
+    $crawler = new Crawler();
+
+    // loading the html here instead of passing it into the constructor
+    // prevents problems with the charset
+    $crawler->addHtmlContent($children . '');
+    $fragments = $crawler->filterXPath($slelector);
+
+    // Rules: first ad is injected after the 2nd element, than after each 6th element
+    $i = 0;
+    $first = 1;
+    $each = 6;
+    foreach ($fragments as $f) {
+      if($i == $first || $i % $each == $first){
+        $class = trim($f->getAttribute('class') . ' pread pread-' . $i);
+        $f->setAttribute('class', $class);
+      }
+      $i++;
+    }
+
+    $qp = html5qp($crawler);
+    $qp->find('article .pread')->each(function($i, $e) use ($contents, $contents_count){
+      if($content = $contents[$i % $contents_count]){
+        $content =  qp($content)->find('body')->innerHTML();
+        qp($e)->removeClass('pread')->after($content);
+      }
+    });
+
+    $html = $qp->find('body')->innerHtml5();
+    $markup = Markup::create($html);
+    return $markup;
+  }
+
+  return $children;
+}
+
+function infinite_ad_injection_get_content__dummy(){
+  $contents = [];
+  $contents[] = '<div style="background-color: #f00">Mautz 1</div>';
+  $contents[] = '<div style="background-color: #0f0">Mautz 2</div>';
+  $contents[] = '<div style="background-color: #00f">Mautz 3</div>';
+  return $contents;
+}
+
+function infinite_ad_injection_get_content(){
+  $contents = [];
+
+  $blocks = _infinite_blocks_get_dyn_region_blocks(['dyn_blocks_node']);
+  foreach ($blocks as $id => $block) {
+    $block_view = \Drupal::entityTypeManager()
+      ->getViewBuilder('block')
+      ->view($block);
+
+    $block_render = \Drupal::service('renderer')->render($block_view);
+    $contents[] = (string)$block_render;
+  }
+
+  return $contents;
+}

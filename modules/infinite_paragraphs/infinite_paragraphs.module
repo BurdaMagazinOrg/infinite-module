@@ -65,12 +65,6 @@ function infinite_paragraphs_entity_view_mode_alter(&$view_mode, EntityInterface
  */
 function infinite_paragraphs_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   if (isset($build['field_paragraphs'])) {
-
-    // Add dynamic blocks in 'Full' view mode.
-    if ($build['#view_mode'] == 'full') {
-      _infinite_paragraphs_add_dyn_blocks($build);
-    }
-
     _infinite_paragraphs_decorate_group($build['field_paragraphs'], _infinite_paragraphs_layout_group($build['field_paragraphs'], array('small' ,'middle')), 'group_outer', $build);
   }
 }
@@ -341,62 +335,4 @@ function _infinite_paragraphs_get_parent_base_data($entity, &$variables) {
   $variables['parent']['whatsapp_share_text'] = theme_get_setting('whatsapp_share_text');
   $variables['parent']['email_share_text'] = theme_get_setting('email_share_text');
   $variables['parent']['email_subject'] = theme_get_setting('email_subject');
-}
-
-/**
- * Post render callback for adding dynamic blocks.
- */
-function infinite_paragraphs_text_paragraph_post_render($children, $elements) {
-  $dom = new DOMDocument();
-  $dom->loadHTML(mb_convert_encoding($children, 'HTML-ENTITIES', 'UTF-8'));
-  $pTags = $dom->getElementsByTagName('p');
-
-  if ($pTags->length > 1 && $dynBlocks = _infinite_blocks_get_dyn_region_blocks(['dyn_blocks_node'])) {
-
-    // Get render array of dynamic block.
-    $block_content = \Drupal::entityTypeManager()
-      ->getViewBuilder('block')
-      ->view($dynBlocks[0]);  //TODO: prepare to render more then block number 1 in an article.
-
-    // Add well formed XML placeholder element.
-    $fragment = $dom->createDocumentFragment();
-    $fragment->appendXML("<dynblock></dynblock>");
-    $pTags->item(0)->appendChild($fragment);
-    $children = $dom->saveHTML();
-
-    // Replace XML placeholder element with rendered block.
-    $dynBlockContent = \Drupal::service('renderer')->render($block_content);
-    $children = str_replace('<dynblock></dynblock>', $dynBlockContent, $children);
-  }
-
-  return $children;
-}
-
-/**
- * Helper function to add x post render callbacks to given paragraphs.
- *
- * @param $build
- * @param string $paragraphType
- * @param array $paragraphViewModes
- */
-function _infinite_paragraphs_add_dyn_blocks(&$build, $paragraphType = 'text', $paragraphViewModes = ['small']) {
-  if ($dynBlocks = _infinite_blocks_get_dyn_region_blocks(['dyn_blocks_node'])) {
-    $count = 0;
-    foreach (Element::children($build['field_paragraphs'], TRUE) as $index) {
-      if ($build['field_paragraphs'][$index]['#paragraph']->bundle() == $paragraphType &&
-        in_array($build['field_paragraphs'][$index]['#view_mode'], $paragraphViewModes)) {
-
-        $paragraphText = Html::load($build['field_paragraphs'][$index]['#paragraph']->field_text->value);
-        $pTags = $paragraphText->getElementsByTagName('p');
-        if ($pTags->length > 1 && function_exists('infinite_paragraphs_' . $paragraphType . '_paragraph_post_render')) {
-          $build['field_paragraphs'][$index]['#post_render'][] = 'infinite_paragraphs_' . $paragraphType . '_paragraph_post_render';
-          $count++;
-        }
-
-        if (count($dynBlocks) == $count) {
-          break;
-        }
-      }
-    }
-  }
 }
