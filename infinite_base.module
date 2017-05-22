@@ -5,10 +5,12 @@
  * Module for adding custom Infinity base functions.
  */
 
+use Drupal\Component\Transliteration\PhpTransliteration;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 
 /**
@@ -383,4 +385,41 @@ function _infinite_base_flat_promote_states(EntityInterface $entity) {
     return $promote_states;
   }
   return FALSE;
+}
+
+function infinite_base_image_file_transliteration($fid){
+//  $trans = new PhpTransliteration();
+//  $input = 'Artikel_H&M_Cöoachella_campaign_06.jpg';
+//  kint($trans->transliterate($input));
+//  kint(\Drupal::service('pathauto.alias_cleaner')->cleanString($input));
+
+  $file = file_load($fid);
+
+  $values = array(
+    'uid' => $file->get('uid'),
+    'status' => $file->get('status'),
+    'filename' => $file->getFilename(),
+    'uri' => $file->getFileUri(),
+    'filesize' => $file->getSize(),
+    'filemime' => $file->getMimeType()
+  );
+  $file_new = File::create($values);
+
+  $basename = basename($file->getFileUri());
+
+  $uri_new = str_replace($basename, $file_new->getFilename(), $file->getFileUri());
+
+  $update = Drupal::database()->update('file_managed');
+  $update->fields([
+    'uri' => $uri_new,
+    'filename' => $file_new->getFilename()
+  ]);
+  $update->condition('fid', $file->id());
+  $update->execute();
+
+  kint($uri_new);
+  file_unmanaged_move($file->getFileUri(), $uri_new);
+
+  return;
+
 }
