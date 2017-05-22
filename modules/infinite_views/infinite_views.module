@@ -85,14 +85,19 @@ function infinite_views_preprocess_views_view(&$variables) {
     case 'infinite_author':
     case 'infinite_front':
     case 'infinite_taxonomy_term':
+      $variables['sidebar'] = _infinite_views_sidebar_ad_block('advertisingslot_rectangle_any_channel');
+      if (\Drupal::moduleHandler()->moduleExists('ad_entity')){
+        $variables['sidebar'] = _infinite_views_sidebar_ad_block('advertisingblock_skyscraper_stream');
+      }
+
       if ($view->current_display != 'front' &&
           $view->current_display != 'channel' &&
           $view->current_display != 'term') {
 
         $variables['sidebar'] = _infinite_views_sidebar_ad_block('advertisingslot_rectangle_any_channel_2');
-      }
-      else {
-        $variables['sidebar'] = _infinite_views_sidebar_ad_block('advertisingslot_rectangle_any_channel');
+        if (\Drupal::moduleHandler()->moduleExists('ad_entity')) {
+          $variables['sidebar'] = _infinite_views_sidebar_ad_block('advertisingblock_skyscraper_stream_2');
+        }
       }
       break;
   }
