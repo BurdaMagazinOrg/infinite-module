@@ -5,10 +5,12 @@
  * Module for adding custom Infinity base functions.
  */
 
+use Drupal\Component\Transliteration\PhpTransliteration;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 
 /**
