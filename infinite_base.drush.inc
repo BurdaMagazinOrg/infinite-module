@@ -37,20 +37,21 @@ function drush_infinite_base_image_files_transliteration($fid = FALSE){
   foreach ($fids as $fid) {
 
     $file = file_load($fid);
+    $uri_old = $file->getFileUri();
 
     $values = array(
       'uid' => $file->get('uid'),
       'status' => $file->get('status'),
       'filename' => $file->getFilename(),
-      'uri' => $file->getFileUri(),
+      'uri' => $uri_old,
       'filesize' => $file->getSize(),
       'filemime' => $file->getMimeType()
     );
     $file_new = File::create($values);
 
-    $basename = basename($file->getFileUri());
+    $basename = basename($uri_old);
 
-    $uri_new = str_replace($basename, $file_new->getFilename(), $file->getFileUri());
+    $uri_new = str_replace($basename, $file_new->getFilename(), $uri_old);
 
     $update = Drupal::database()->update('file_managed');
     $update->fields([
@@ -60,8 +61,18 @@ function drush_infinite_base_image_files_transliteration($fid = FALSE){
     $update->condition('fid', $file->id());
     $update->execute();
 
-    if(file_exists($file->getFileUri())) {
-      file_unmanaged_move($file->getFileUri(), $uri_new);
+    $move = TRUE;
+    $url = file_create_url($uri_old);
+    if(!file_exists($uri_old)) {
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_HEADER, 0);
+      $move = curl_exec($ch);
+      curl_close($ch);
+    }
+
+    if($move){
+      file_unmanaged_move($uri_old, $uri_new);
     }
 
   }
