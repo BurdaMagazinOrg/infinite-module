@@ -28,7 +28,7 @@ function drush_infinite_base_image_files_transliteration($fid = FALSE){
   else {
     $select = Drupal::database()->select('file_managed', 'fm');
     $select->fields('fm', ['fid', 'uri', 'created']);
-    $select->condition('uri', '^.+://([^/]+/)*[[:alnum:]_-]+\..+$', 'NOT REGEXP');
+    $select->condition('uri', '^.+://([^/]+/)*[[:alnum:]_-]+\.[[:alnum:]]{3,4}$', 'NOT REGEXP');
     $result = $select->execute();
     $rows = $result->fetchAllAssoc('fid');
     $fids = array_keys($rows);
