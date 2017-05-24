@@ -12,58 +12,86 @@ function infinite_base_drush_command(){
   $items['image-files-transliteration'] = [
     'description' => 'Transliterate the filenames of old image files',
     'arguments' => [
-      'fid' => 'The nummeric id of the file entity',
+      'fid' => 'The nummeric id of the file entity or all to process all files (default: all)',
+      'start' => 'The position to start with (default: 0)',
+      'batchsize' => 'The count of elements to process at once (default: 500)',
     ],
     'aliases' => ['ift'],
+    'examples' => [
+      'drush ift all 0 500' => 'Transliterate all image files starting from 0 in 500 items chunks'
+    ],
   ];
 
   return $items;
 }
 
-function drush_infinite_base_image_files_transliteration($fid = FALSE){
+function drush_infinite_base_image_files_transliteration($fid = FALSE, $start = 0, $batchsize = 500){
 
   if(is_numeric($fid)){
-    $fids = [$fid];
+    return _infinite_base_file_transliteration($fid);
   }
-  else {
+
+  do {
+
     $select = Drupal::database()->select('file_managed', 'fm');
     $select->fields('fm', ['fid', 'uri', 'created']);
-    $select->condition('uri', '^.+://([^/]+/)*[[:alnum:]_-]+\.[[:alnum:]]{3,4}$', 'NOT REGEXP');
+    $select->condition('uri', '^.+://([^/]+/)*[[:alnum:]_-]+(\.[[:alnum:]_-]+)?$', 'NOT REGEXP');
+    $select->range(0, $batchsize);
+
     $result = $select->execute();
     $rows = $result->fetchAllAssoc('fid');
+    $count = count($rows);
+    drush_print("Processing $count items ...");
+
     $fids = array_keys($rows);
+
+    foreach ($fids as $fid) {
+      _infinite_base_file_transliteration($fid);
+    }
+
+  }
+  while(count($rows) == $batchsize);
+
+  return;
+}
+
+/**
+ * Helper function to transliterate an image file name by
+ * the file entity id
+ *
+ * @param $fid
+ *  id of the file entity
+ *
+ * @return bool
+ */
+function _infinite_base_file_transliteration($fid) {
+  $file = file_load($fid);
+  if(!$file){
+    return FALSE;
   }
 
-  foreach ($fids as $fid) {
+  $uri_old = $file->getFileUri();
 
-    $file = file_load($fid);
-    $uri_old = $file->getFileUri();
+  $values = [
+    'uid' => $file->get('uid'),
+    'status' => $file->get('status'),
+    'filename' => $file->getFilename(),
+    'uri' => $uri_old,
+    'filesize' => $file->getSize(),
+    'filemime' => $file->getMimeType()
+  ];
+  $file_new = File::create($values);
 
-    $values = array(
-      'uid' => $file->get('uid'),
-      'status' => $file->get('status'),
-      'filename' => $file->getFilename(),
-      'uri' => $uri_old,
-      'filesize' => $file->getSize(),
-      'filemime' => $file->getMimeType()
-    );
-    $file_new = File::create($values);
+  $basename = basename($uri_old);
 
-    $basename = basename($uri_old);
+  $pattern = '/(.+:\/\/)(([^\/]*\/)*)'.preg_quote($basename).'/';
+  $uri_new = preg_replace($pattern, '$1${2}'.$file_new->getFilename(), $uri_old);
 
-    $uri_new = str_replace($basename, $file_new->getFilename(), $uri_old);
-
-    $update = Drupal::database()->update('file_managed');
-    $update->fields([
-      'uri' => $uri_new,
-      'filename' => $file_new->getFilename()
-    ]);
-    $update->condition('fid', $file->id());
-    $update->execute();
+  if($uri_old != $uri_new) {
 
     $move = TRUE;
     $url = file_create_url($uri_old);
-    if(!file_exists($uri_old)) {
+    if (!file_exists($uri_old)) {
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $url);
       curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -71,11 +99,15 @@ function drush_infinite_base_image_files_transliteration($fid = FALSE){
       curl_close($ch);
     }
 
-    if($move){
-      file_unmanaged_move($uri_old, $uri_new);
+    if ($move) {
+      file_move($file, $uri_new);
     }
 
   }
+  else {
+    return FALSE;
+  }
 
-  return;
+  return FALSE;
 }
+
