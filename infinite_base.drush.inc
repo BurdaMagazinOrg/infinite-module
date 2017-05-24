@@ -13,22 +13,27 @@ function infinite_base_drush_command(){
     'description' => 'Transliterate the filenames of old image files',
     'arguments' => [
       'fid' => 'The nummeric id of the file entity or all to process all files (default: all)',
-      'start' => 'The position to start with (default: 0)',
       'batchsize' => 'The count of elements to process at once (default: 500)',
+      'baseurl' => 'The base url to be uses for stage file proxy functionality',
     ],
+    'options' => array(
+      'baseurl' => 'The base url to be uses for stage file proxy functionality',
+    ),
     'aliases' => ['ift'],
     'examples' => [
-      'drush ift all 0 500' => 'Transliterate all image files starting from 0 in 500 items chunks'
+      'drush ift all 500 --baseurl="http://example.com"' => 'Transliterate all image files starting from 0 in 500 items chunks'
     ],
   ];
 
   return $items;
 }
 
-function drush_infinite_base_image_files_transliteration($fid = FALSE, $start = 0, $batchsize = 500){
+function drush_infinite_base_image_files_transliteration($fid = FALSE, $batchsize = 500){
+
+  $baseurl = drush_get_option('baseurl', FALSE);
 
   if(is_numeric($fid)){
-    return _infinite_base_file_transliteration($fid);
+    return _infinite_base_file_transliteration($fid, $baseurl);
   }
 
   do {
@@ -46,7 +51,7 @@ function drush_infinite_base_image_files_transliteration($fid = FALSE, $start = 
     $fids = array_keys($rows);
 
     foreach ($fids as $fid) {
-      _infinite_base_file_transliteration($fid);
+      _infinite_base_file_transliteration($fid, $baseurl);
     }
 
   }
@@ -64,7 +69,7 @@ function drush_infinite_base_image_files_transliteration($fid = FALSE, $start = 
  *
  * @return bool
  */
-function _infinite_base_file_transliteration($fid) {
+function _infinite_base_file_transliteration($fid, $baseurl = false) {
   $file = file_load($fid);
   if(!$file){
     return FALSE;
@@ -90,11 +95,12 @@ function _infinite_base_file_transliteration($fid) {
   if($uri_old != $uri_new) {
 
     $move = TRUE;
+    if(is_string($baseurl) && strlen($baseurl)){
+      $GLOBALS['base_url'] = $baseurl;
+    }
     $url = file_create_url($uri_old);
     if (!file_exists($uri_old)) {
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_HEADER, 0);
+      $ch = curl_init($url);
       $move = curl_exec($ch);
       curl_close($ch);
     }
