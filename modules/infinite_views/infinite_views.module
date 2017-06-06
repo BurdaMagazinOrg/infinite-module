@@ -87,7 +87,7 @@ function infinite_views_preprocess_views_view(&$variables) {
     case 'infinite_taxonomy_term':
       $variables['sidebar'] = _infinite_views_sidebar_ad_block('advertisingslot_rectangle_any_channel');
       if (\Drupal::moduleHandler()->moduleExists('ad_entity')){
-        $variables['sidebar'] = _infinite_views_sidebar_ad_block('advertisingblock_skyscraper_stream');
+        $variables['sidebar'] = _infinite_views_sidebar_ad_block('adblock_sidebar_stream');
       }
 
       if ($view->current_display != 'front' &&
@@ -96,7 +96,7 @@ function infinite_views_preprocess_views_view(&$variables) {
 
         $variables['sidebar'] = _infinite_views_sidebar_ad_block('advertisingslot_rectangle_any_channel_2');
         if (\Drupal::moduleHandler()->moduleExists('ad_entity')) {
-          $variables['sidebar'] = _infinite_views_sidebar_ad_block('advertisingblock_skyscraper_stream_2');
+          $variables['sidebar'] = _infinite_views_sidebar_ad_block('adblock_sidebar_stream_2');
         }
       }
       break;
