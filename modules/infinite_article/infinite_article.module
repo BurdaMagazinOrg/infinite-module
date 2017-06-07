@@ -18,6 +18,14 @@ function infinite_article_node_build_defaults_alter(array &$build, EntityInterfa
         $header_block['target_id'] = 'advertisingslot_banner_any_2';
         $node->set('field_header_blocks', $header_blocks);
       }
+      else {
+        if (\Drupal::moduleHandler()
+            ->moduleExists('ad_entity') && $header_block['target_id'] == 'adblock_full_article'
+        ) {
+          $header_block['target_id'] = 'adblock_full_article_2';
+          $node->set('field_header_blocks', $header_blocks);
+        }
+      }
     }
   }
 }
