@@ -139,7 +139,7 @@ function infinite_views_preprocess_views_view_unformatted(&$variables) {
 
       // Place dynamic block after 3rd teaser.
       $dyn_block_row[] = ['content' => $block_content];
-      array_splice($variables['rows'], 3, 0, $dyn_block_row);
+      array_splice($variables['rows'], 2, 0, $dyn_block_row);
     }
   }
 }
