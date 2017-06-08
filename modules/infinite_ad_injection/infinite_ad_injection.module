@@ -22,7 +22,6 @@ function infinite_ad_injection_node_view_alter(array &$build, EntityInterface $e
 }
 
 function infinite_ad_injection_article_inject_content($children, $elements){
-//  return $children;
   $contents = infinite_ad_injection_get_content();
 //  $contents = infinite_ad_injection_get_content__dummy();
   $contents_count = count($contents);
@@ -55,8 +54,12 @@ function infinite_ad_injection_article_inject_content($children, $elements){
     $qp = html5qp($crawler);
     $qp->find('article .pread')->each(function($i, $e) use ($contents, $contents_count){
       if($content = $contents[$i % $contents_count]){
-        $content =  qp($content)->find('body')->innerHTML();
-        qp($e)->removeClass('pread')->after($content);
+        // Wrapping is required because querypath creates a whole valid html structure
+        // qp('<div>some content</div>') -> <html><head></head><body><div>some content</div></body></html>
+        // qp('<script src="..."></script>') -> <html><head><script src="..."></script></head></html>
+        $content_wrapped =  '<div class="ad-injct-wrpr">'.$content.'</div>';
+        $content_inner = qp($content_wrapped)->find('body div.ad-injct-wrpr')->innerHTML();
+        qp($e)->removeClass('pread')->after($content_inner);
       }
     });
 
@@ -70,6 +73,7 @@ function infinite_ad_injection_article_inject_content($children, $elements){
 
 function infinite_ad_injection_get_content__dummy(){
   $contents = [];
+  $contents[] = '<script src="//a.teads.tv/page/66057/tag" async="true"></script>';
   $contents[] = '<div style="background-color: #f00">Mautz 1</div>';
   $contents[] = '<div style="background-color: #0f0">Mautz 2</div>';
   $contents[] = '<div style="background-color: #00f">Mautz 3</div>';
