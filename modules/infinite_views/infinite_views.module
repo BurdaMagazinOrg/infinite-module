@@ -9,7 +9,6 @@ use Drupal\Core\Render\Element;
 use Drupal\block\Entity\Block;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\views\Entity\View;
-use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -122,24 +121,17 @@ function infinite_views_preprocess_views_view_unformatted(&$variables) {
       $render_dyn_block_key = $view->pager->current_page + 1;
     }
 
-    if(Drupal::moduleHandler()->moduleExists('ad_entity')){
-      $i = $render_dyn_block_key % count($dyn_blocks);
-    }
-    else {
-      $i = $render_dyn_block_key;
-    }
-
     // Add block when one exists from block ordering of region.
-    if (isset($dyn_blocks[$i])) {
+    if (isset($dyn_blocks[$render_dyn_block_key])) {
 
       // Get render array of dynamic block.
       $block_content = \Drupal::entityTypeManager()
         ->getViewBuilder('block')
-        ->view($dyn_blocks[$i]);
+        ->view($dyn_blocks[$render_dyn_block_key]);
 
       // Place dynamic block after 3rd teaser.
       $dyn_block_row[] = ['content' => $block_content];
-      array_splice($variables['rows'], 2, 0, $dyn_block_row);
+      array_splice($variables['rows'], 3, 0, $dyn_block_row);
     }
   }
 }
