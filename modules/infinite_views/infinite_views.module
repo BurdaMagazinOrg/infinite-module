@@ -5,11 +5,8 @@
  * Primarily Drupal hooks and global API functions to manipulate infinite_views.
  */
 
-use Drupal\Core\Render\Element;
 use Drupal\block\Entity\Block;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\views\Entity\View;
-use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
