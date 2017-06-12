@@ -11,12 +11,7 @@ function infinite_ad_injection_entity_display_build_alter(&$build, $context) {
 }
 
 function infinite_ad_injection_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-  $view_modes = ['full'];
-  if(Drupal::moduleHandler()->moduleExists('ad_entity')){
-    $view_modes[] = 'lazyloading';
-  }
-
-  if($entity->bundle() == 'article' && in_array($build['#view_mode'], $view_modes)){
+  if($entity->bundle() == 'article' && $build['#view_mode'] == 'full'){
     $build['#post_render'][] = 'infinite_ad_injection_article_inject_content';
   }
 }
