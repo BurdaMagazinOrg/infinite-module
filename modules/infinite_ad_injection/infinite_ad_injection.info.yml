@@ -1,7 +1,7 @@
 name: Ad injection
 type: module
 description: Inject ads into articles after are rendered
-package: BurdaStyle
+package: Infinite
 core: '8.x'
 dependencies:
   - infinite_blocks
