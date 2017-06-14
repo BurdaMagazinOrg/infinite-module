@@ -1,0 +1,19 @@
+<?php
+
+function infinite_ad_entity_theme_registry_alter(&$theme_registry){
+  $hook = 'ad_integration_preprocess_views_view_row_fia';
+  $preprocess_functions = &$theme_registry['views_view_row_fia']['preprocess functions'];
+  $i = array_search($hook, $preprocess_functions);
+  if($i !== FALSE){
+    unset($preprocess_functions[$i]);
+  }
+  return;
+}
+
+function infinite_ad_entity_preprocess_views_view_row_fia(&$variables) {
+  $ad_entity = \Drupal::entityTypeManager()->getStorage('ad_entity')->load('adtech_facebook_instant_article');
+  $view_builder = \Drupal::entityTypeManager()
+    ->getViewBuilder($ad_entity->getEntityTypeId());
+  $variables['options']['automatic_ad'] = $view_builder->view($ad_entity);
+  return;
+}

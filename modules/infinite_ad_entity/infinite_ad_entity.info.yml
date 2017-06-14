@@ -1,0 +1,7 @@
+name: Infinite ad entity
+type: module
+description: Integration of ad_entity (currently for FIA rss feed)
+package: Infinite
+core: '8.x'
+dependencies:
+  - ad_entity
