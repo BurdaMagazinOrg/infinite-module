@@ -17,3 +17,8 @@ function infinite_ad_entity_preprocess_views_view_row_fia(&$variables) {
   $variables['options']['automatic_ad'] = $view_builder->view($ad_entity);
   return;
 }
+
+function infinite_ad_entity_theme_suggestions_ad_entity_alter(array &$suggestions, array $variables, $hook){
+  $suggestions[] = $hook . '__' . $variables['ad_entity']->id();
+  return;
+}
