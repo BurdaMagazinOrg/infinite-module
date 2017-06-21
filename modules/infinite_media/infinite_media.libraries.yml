@@ -1,0 +1,9 @@
+entity_browser_view:
+  css:
+    theme:
+      css/infinite_media_browser.view.css: {}
+  js:
+    js/infinite_media_browser.view.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
