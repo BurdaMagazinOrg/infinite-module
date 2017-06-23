@@ -7,18 +7,28 @@ function infinite_ad_entity_theme_registry_alter(&$theme_registry){
   if($i !== FALSE){
     unset($preprocess_functions[$i]);
   }
-  return;
 }
 
 function infinite_ad_entity_preprocess_views_view_row_fia(&$variables) {
-  $ad_entity = \Drupal::entityTypeManager()->getStorage('ad_entity')->load('adtech_facebook_instant_article');
-  $view_builder = \Drupal::entityTypeManager()
-    ->getViewBuilder($ad_entity->getEntityTypeId());
-  $variables['options']['automatic_ad'] = $view_builder->view($ad_entity);
-  return;
+  /** @var \Drupal\ad_entity\Plugin\AdContextManager $context_manager */
+  if ($context_manager = \Drupal::service('ad_entity.context_manager')) {
+    /** @var \Drupal\views\ResultRow $row */
+    $row = $variables['options']['row'];
+    $entity = $row->_entity;
+    $context_manager->resetContextDataForEntity($entity);
+
+    $ad_entity = \Drupal::entityTypeManager()
+      ->getStorage('ad_entity')
+      ->load('adtech_facebook_instant_article');
+    $view_builder = \Drupal::entityTypeManager()
+      ->getViewBuilder($ad_entity->getEntityTypeId());
+    $variables['options']['automatic_ad'] = $view_builder->view($ad_entity);
+
+    // Reset to previous context data state (if any).
+    $variables['options']['automatic_ad']['#post_render'][] = '_ad_entity_reset_to_previous_context_data';
+  }
 }
 
 function infinite_ad_entity_theme_suggestions_ad_entity_alter(array &$suggestions, array $variables, $hook){
   $suggestions[] = $hook . '__' . $variables['ad_entity']->id();
-  return;
 }
