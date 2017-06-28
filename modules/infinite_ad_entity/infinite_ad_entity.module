@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Component\Serialization\Json;
+
 function infinite_ad_entity_theme_registry_alter(&$theme_registry){
   $hook = 'ad_integration_preprocess_views_view_row_fia';
   $preprocess_functions = &$theme_registry['views_view_row_fia']['preprocess functions'];
@@ -31,4 +33,15 @@ function infinite_ad_entity_preprocess_views_view_row_fia(&$variables) {
 
 function infinite_ad_entity_theme_suggestions_ad_entity_alter(array &$suggestions, array $variables, $hook){
   $suggestions[] = $hook . '__' . $variables['ad_entity']->id();
+}
+
+function infinite_ad_entity_preprocess_dfp_amp(&$vars){
+  $targeting = Json::decode($vars['targeting']);
+  $channel = str_replace('homepage/', '', $targeting['channel']);
+  unset($targeting['channel']);
+  $vars['targeting'] = Json::encode($targeting);
+
+  /** @var Drupal\Core\Template\Attribute $attributes */
+  $attributes = &$vars['attributes'];
+  $attributes['data-slot'] = str_replace('/amp', '/' . $channel, $attributes['data-slot']);
 }
