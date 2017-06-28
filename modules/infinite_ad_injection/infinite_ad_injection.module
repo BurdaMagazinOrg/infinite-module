@@ -14,6 +14,7 @@ function infinite_ad_injection_node_view_alter(array &$build, EntityInterface $e
   $view_modes = ['full'];
   if(Drupal::moduleHandler()->moduleExists('ad_entity')){
     $view_modes[] = 'lazyloading';
+    $view_modes[] = 'amp';
   }
 
   if($entity->bundle() == 'article' && in_array($build['#view_mode'], $view_modes)){
