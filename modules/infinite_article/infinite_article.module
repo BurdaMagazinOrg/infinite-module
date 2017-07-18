@@ -41,16 +41,20 @@ function infinite_article_node_build_defaults_alter(array &$build, EntityInterfa
           ->getStorage('block')
           ->load($header_block['target_id']);
 
-        $replacement_block_id = $header_block['target_id'] . '_amp';
-        $replacement_block = \Drupal::entityTypeManager()
-          ->getStorage('block')
-          ->load($replacement_block_id);
+        if(isset($block) && $block->getPlugin() == 'ad_entity_block') {
 
-        if(isset($replacement_block)){
-          $header_block['target_id'] = $replacement_block_id;
-        }
-        elseif($block->getPlugin() == 'ad_entity_block') {
-          unset($header_blocks[$key]);
+          $replacement_block_id = $header_block['target_id'] . '_amp';
+          $replacement_block = \Drupal::entityTypeManager()
+            ->getStorage('block')
+            ->load($replacement_block_id);
+
+          if(isset($replacement_block)){
+            $header_block['target_id'] = $replacement_block_id;
+          }
+          else {
+            unset($header_blocks[$key]);
+          }
+
         }
       }
       $node->set('field_header_blocks', $header_blocks);
