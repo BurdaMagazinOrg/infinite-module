@@ -59,7 +59,8 @@ class InfiniteEventSubscriber implements EventSubscriberInterface {
 
     // get requests can be cached
     if ($response instanceof AjaxResponse && $request->getMethod() === 'GET') {
-      $max_age = $this->config->get('cache.page.max_age');
+      // set max_age to 300 as workaround for ajax caching problems
+      $max_age = '300'; //$this->config->get('cache.page.max_age');
       $response->headers->set('cache-control', 'public, max-age=' . $max_age);
       Html::setIsAjax(TRUE);
     }
