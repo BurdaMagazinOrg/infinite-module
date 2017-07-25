@@ -9,6 +9,8 @@
 {% set use_ajax_permissions = use_ajax_permissions | default('true') %}
 {% set external_permission_url = external_permission_url | default('/newsletter-datenschutzeinwilligung') %}
 
+{% block attach_library_block %}{% endblock %}
+
 <div {{ attributes.addClass(classes) }}
         data-view-type="newsletterView"
         data-newsletter-group-id="{{ groupId }}"
