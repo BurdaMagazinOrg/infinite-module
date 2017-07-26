@@ -214,10 +214,6 @@ function infinite_views_module_implements_alter(&$implementations, $hook) {
 function infinite_views_page_attachments_alter(array &$attachments) {
   global $pager_total, $pager_page_array;
 
-  /** @var \Drupal\Core\Theme\ActiveTheme $theme */
-  $theme = \Drupal::service('theme.manager')->getActiveTheme();
-  $base_themes = $theme->getBaseThemes();
-
   if(isset($pager_page_array[0])){
     $current_path = Url::fromRoute('<current>');
     $query = \Drupal::request()->query->all();
@@ -268,7 +264,7 @@ function infinite_views_page_attachments_alter(array &$attachments) {
     foreach ($attached['html_head_link'] as $key => &$item) {
       if($item[0]['rel'] == 'canonical'){
 
-        if(array_key_exists('infinite_amp', $base_themes)){
+        if(\Drupal::service('router.amp_context')->isAmpRoute()){
           unset($query['amp']);
           if($current_page){
             $query['page'] = $current_page;
