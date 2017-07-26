@@ -5,10 +5,9 @@
  * Primarily Drupal hooks and global API functions to manipulate infinite_views.
  */
 
-use Drupal\Core\Render\Element;
 use Drupal\block\Entity\Block;
+use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -247,4 +246,104 @@ function _infinite_views_get_exclude_nids_helper($views_id, $exclude_displays, a
   if (!empty($exclude_nids)) {
     $args[] = implode('+', $exclude_nids);
   }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function infinite_views_module_implements_alter(&$implementations, $hook) {
+  // Ensure that this module is called in the end.
+  if ($hook == 'page_attachments_alter') {
+    $group = $implementations['infinite_views'];
+    unset($implementations['infinite_views']);
+    $implementations['infinite_views'] = $group;
+  }
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function infinite_views_page_attachments_alter(array &$attachments) {
+  global $pager_total, $pager_page_array;
+
+  if(isset($pager_page_array[0])){
+    $current_path = Url::fromRoute('<current>');
+    $query = \Drupal::request()->query->all();
+    $current_page = $query['page'];
+    $attached = &$attachments['#attached'];
+
+    if($pager_page_array[0] > 1){
+      $query['page'] = ($pager_page_array[0] - 1);
+      $href = $current_path->setOption('query', $query)->toString();
+      $href = str_replace('amp=', 'amp', $href);
+      $attached['html_head'][] = [[
+        '#type' => 'html_tag',
+        '#tag' => 'link',
+        '#attributes' => [
+          'rel' => 'prev',
+          'href' => $href,
+        ],
+      ], 'rel_prev'];
+    }
+    elseif($pager_page_array[0] == 1) {
+      unset($query['page']);
+      $href = $current_path->setOption('query', $query)->toString();
+      $href = str_replace('amp=', 'amp', $href);
+      $attached['html_head'][] = [[
+        '#type' => 'html_tag',
+        '#tag' => 'link',
+        '#attributes' => [
+          'rel' => 'prev',
+          'href' => $href,
+        ],
+      ], 'rel_prev'];
+    }
+
+    if($pager_page_array[0] < $pager_total[0] - 1){
+      $query['page'] = ($pager_page_array[0] + 1);
+      $href = $current_path->setOption('query', $query)->toString();
+      $href = str_replace('amp=', 'amp', $href);
+      $attached['html_head'][] = [[
+        '#type' => 'html_tag',
+        '#tag' => 'link',
+        '#attributes' => [
+          'rel' => 'next',
+          'href' => $href,
+        ],
+      ], 'rel_next'];
+    }
+
+    foreach ($attached['html_head_link'] as $key => &$item) {
+      if($item[0]['rel'] == 'canonical'){
+
+        if(\Drupal::service('router.amp_context')->isAmpRoute()){
+          unset($query['amp']);
+          if($current_page){
+            $query['page'] = $current_page;
+          }
+          else {
+            unset($query['page']);
+          }
+
+          $current_path->setOption('absolute', TRUE);
+          $current_path->setOption('query', $query);
+
+          $attached['html_head'][] = [[
+            '#type' => 'html_tag',
+            '#tag' => 'link',
+            '#attributes' => [
+              'rel' => 'canonical',
+              'href' => $current_path->toString(),
+            ],
+          ], 'rel_canonical'];
+
+        }
+
+        unset($attached['html_head_link'][$key]);
+      }
+    }
+
+  }
+
+  return;
 }
