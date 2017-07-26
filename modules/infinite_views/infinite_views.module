@@ -214,45 +214,80 @@ function infinite_views_module_implements_alter(&$implementations, $hook) {
 function infinite_views_page_attachments_alter(array &$attachments) {
   global $pager_total, $pager_page_array;
 
+  /** @var \Drupal\Core\Theme\ActiveTheme $theme */
+  $theme = \Drupal::service('theme.manager')->getActiveTheme();
+  $base_themes = $theme->getBaseThemes();
+
   if(isset($pager_page_array[0])){
     $current_path = Url::fromRoute('<current>');
-    $path = $current_path->toString();
+    $query = \Drupal::request()->query->all();
+    $current_page = $query['page'];
     $attached = &$attachments['#attached'];
 
     if($pager_page_array[0] > 1){
+      $query['page'] = ($pager_page_array[0] - 1);
+      $href = $current_path->setOption('query', $query)->toString();
+      $href = str_replace('amp=', 'amp', $href);
       $attached['html_head'][] = [[
         '#type' => 'html_tag',
         '#tag' => 'link',
         '#attributes' => [
           'rel' => 'prev',
-          'href' => $path . '?page=' . ($pager_page_array[0] - 1),
+          'href' => $href,
         ],
       ], 'rel_prev'];
     }
     elseif($pager_page_array[0] == 1) {
+      unset($query['page']);
+      $href = $current_path->setOption('query', $query)->toString();
+      $href = str_replace('amp=', 'amp', $href);
       $attached['html_head'][] = [[
         '#type' => 'html_tag',
         '#tag' => 'link',
         '#attributes' => [
           'rel' => 'prev',
-          'href' => $path,
+          'href' => $href,
         ],
       ], 'rel_prev'];
     }
 
     if($pager_page_array[0] < $pager_total[0] - 1){
+      $query['page'] = ($pager_page_array[0] + 1);
+      $href = $current_path->setOption('query', $query)->toString();
+      $href = str_replace('amp=', 'amp', $href);
       $attached['html_head'][] = [[
         '#type' => 'html_tag',
         '#tag' => 'link',
         '#attributes' => [
           'rel' => 'next',
-          'href' => $path . '?page=' . ($pager_page_array[0] + 1),
+          'href' => $href,
         ],
       ], 'rel_next'];
     }
 
-    foreach ($attached['html_head_link'] as $key => $item) {
+    foreach ($attached['html_head_link'] as $key => &$item) {
       if($item[0]['rel'] == 'canonical'){
+
+        if(array_key_exists('infinite_amp', $base_themes)){
+          unset($query['amp']);
+          if($current_page){
+            $query['page'] = $current_page;
+          }
+          else {
+            unset($query['page']);
+          }
+
+          $attached['html_head'][] = [[
+            '#type' => 'html_tag',
+            '#tag' => 'link',
+            '#attributes' => [
+              'rel' => 'canonical',
+              'href' => $current_path->setOption('query', $query)->toString(),
+            ],
+          ], 'rel_canonical'];
+
+        }
+
         unset($attached['html_head_link'][$key]);
       }
     }
