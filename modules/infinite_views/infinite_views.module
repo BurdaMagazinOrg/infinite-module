@@ -36,7 +36,7 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
 
 				$args = [];  // Clear default added args to get exclude NIDs working.
 				$exclude_displays = ['exclude_top'];
-				$presenter_view = 'infinite_front_presenter';
+					$presenter_view = 'infinite_front_presenter';
 				_infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
 			}
 			break;
@@ -239,6 +239,10 @@ function infinite_views_page_attachments_alter(array &$attachments) {
     $current_page = isset($query['page']) ? $query['page'] : FALSE;
     $attached = &$attachments['#attached'];
 
+    if(isset($query['amp'])){
+      $query  = ['amp' => ''] + $query;
+    }
+
     if($pager_page_array[0] > 1){
       $query['page'] = ($pager_page_array[0] - 1);
       $href = $current_path->setOption('query', $query)->toString();
@@ -283,7 +287,9 @@ function infinite_views_page_attachments_alter(array &$attachments) {
     foreach ($attached['html_head_link'] as $key => &$item) {
       if($item[0]['rel'] == 'canonical'){
 
-        if(\Drupal::service('router.amp_context')->isAmpRoute()){
+        if(\Drupal::moduleHandler()->moduleExists('amp')
+          && \Drupal::service('router.amp_context')->isAmpRoute()){
+
           unset($query['amp']);
           if($current_page){
             $query['page'] = $current_page;

@@ -38,8 +38,13 @@ function infinite_gamp_page_attachments_alter(array &$attachments) {
 
         if(!\Drupal::service('router.amp_context')->isAmpRoute()) {
           $current_query = \Drupal::request()->query->all();
+
+          $current_query = [
+            'amp' => ''
+          ] + $current_query;
+
           $absolute_canonical = $taxonomyTerm->toUrl('canonical', ['absolute' => TRUE, 'query' => $current_query])->toString();
-          $amp_href = \Drupal::service('amp.query_parameters')->add($absolute_canonical);
+          $amp_href = str_replace('amp=', 'amp', $absolute_canonical);
 
           $attachments['#attached']['html_head_link'][] = [
             [
