@@ -19,8 +19,6 @@ use Drupal\views\ViewExecutable;
  */
 function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
 
-	$isFrontPage = \Drupal::service('path.matcher')->isFrontPage();
-
 	switch ($view->id()) {
 
 		case 'infinite_archive':
@@ -32,24 +30,20 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
 			break;
 
 		case 'infinite_front_presenter':
-		case 'infinite_channel_presenter':
 
-		// Exclude front / channel presenter nodes from infinite_front streaming view.
+		// Exclude top presenter nodes from infinite_front_presenter view.
 			if ($view->current_display == 'four_teasers') {
 
 				$args = [];  // Clear default added args to get exclude NIDs working.
 				$exclude_displays = ['exclude_top'];
-
-				$presenter_view = 'infinite_channel_presenter';
-				if ($isFrontPage) {
-					$presenter_view = 'infinite_front_presenter';
-				}
-
+				$presenter_view = 'infinite_front_presenter';
 				_infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
 			}
 			break;
 
 		case 'infinite_taxonomy_term':
+
+			$isFrontPage = \Drupal::service('path.matcher')->isFrontPage();
 
 			// Switch to other views display in infinite_taxonomy_term view for page displays.
 			if ($view->getDisplay()->getBaseId() == 'page' && $display_id != 'rss') {
@@ -95,33 +89,6 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
 
 	// Set possible changed $args for view.
 	$view->setArguments($args);
-
-
-//  TODO: Remove if tests are done. Deprecated code.
-//  if (($view->id() == 'infinite_front_presenter' && $view->current_display == 'four_teasers') ||
-//    ($view->id() == 'infinite_taxonomy_term' && ($view->getDisplay()->display['id'] == 'front' || $view->getDisplay()->display['id'] == 'channel'))
-//  ) {
-//
-//    $presenter_view = 'infinite_channel_presenter';
-//    $exclude_displays = array('exclude');
-//
-//    if ($isFrontPage) {
-//
-//      $presenter_view = 'infinite_front_presenter';
-//      $exclude_displays[] = 'exclude_top';
-//
-//      if ($view->current_display == 'four_teasers') {
-//        $exclude_displays = array('exclude_top');  // Here we must use only exclude_top display.
-//      }
-//    }
-//    _infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
-//	}
-//  elseif ($view->id() == 'infinite_front_presenter' && $view->current_display == 'exclude') {
-//    $presenter_view = 'infinite_front_presenter';
-//    $exclude_displays = ['exclude_top'];
-//    _infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
-//  }
-
 }
 
 /**
