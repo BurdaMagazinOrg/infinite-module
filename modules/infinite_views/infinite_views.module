@@ -269,7 +269,7 @@ function infinite_views_page_attachments_alter(array &$attachments) {
   if(isset($pager_page_array[0])){
     $current_path = Url::fromRoute('<current>');
     $query = \Drupal::request()->query->all();
-    $current_page = $query['page'];
+    $current_page = isset($query['page']) ? $query['page'] : FALSE;
     $attached = &$attachments['#attached'];
 
     if($pager_page_array[0] > 1){
@@ -321,7 +321,7 @@ function infinite_views_page_attachments_alter(array &$attachments) {
           if($current_page){
             $query['page'] = $current_page;
           }
-          else {
+          elseif(isset($query['page'])) {
             unset($query['page']);
           }
 
@@ -342,8 +342,5 @@ function infinite_views_page_attachments_alter(array &$attachments) {
         unset($attached['html_head_link'][$key]);
       }
     }
-
   }
-
-  return;
 }
