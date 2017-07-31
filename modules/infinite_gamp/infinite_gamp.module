@@ -37,23 +37,20 @@ function infinite_gamp_page_attachments_alter(array &$attachments) {
         }
 
         if(!\Drupal::service('router.amp_context')->isAmpRoute()) {
-          $current_query = \Drupal::request()->query->all();
+          global $pager_page_array;
+          if(!isset($pager_page_array[0]) || $pager_page_array[0] == 0){
 
-          $current_query = [
-            'amp' => ''
-          ] + $current_query;
+            $amp_href = \Drupal::service('amp.query_parameters')->add($absolute_canonical);
 
-          $absolute_canonical = $taxonomyTerm->toUrl('canonical', ['absolute' => TRUE, 'query' => $current_query])->toString();
-          $amp_href = str_replace('amp=', 'amp', $absolute_canonical);
-
-          $attachments['#attached']['html_head_link'][] = [
-            [
-              'rel' => 'amphtml',
-              'href' => $amp_href,
-            ],
-            TRUE,
-          ];
-          $attachments['#cache']['contexts'][] = 'url.site';
+            $attachments['#attached']['html_head_link'][] = [
+              [
+                'rel' => 'amphtml',
+                'href' => $amp_href,
+              ],
+              TRUE,
+            ];
+            $attachments['#cache']['contexts'][] = 'url.site';
+          }
         }
 
         if (\Drupal::service('router.amp_context')->isAmpRoute() && !empty($absolute_canonical)) {
