@@ -141,12 +141,12 @@ function infinite_views_preprocess_views_view_unformatted(&$variables) {
 
     if(Drupal::moduleHandler()->moduleExists('ad_entity')){
       $i = $render_dyn_block_key % count($dyn_blocks);
-      $inject_after = 2;
     }
     else {
       $i = $render_dyn_block_key;
-      $inject_after = 3;
     }
+    
+    $inject_after = 3;
 
     // Add block when one exists from block ordering of region.
     if (isset($dyn_blocks[$i])) {
