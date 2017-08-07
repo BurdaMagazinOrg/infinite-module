@@ -34,26 +34,22 @@ function infinite_gamp_page_attachments_alter(array &$attachments) {
               $attachments['#cache']['contexts'][] = 'url.site';
             }
           }
-          else {
-            if ($config[0]['rel'] == 'canonical' && !empty($config[0]['href'])) {
-              // Check if the canonical link is absolute and external. Do not
-              // expose AMP for those.
-              $current_canonical = $config[0]['href'];
-              if (UrlHelper::isExternal($current_canonical) && !UrlHelper::externalIsLocal($current_canonical, \Drupal::service('router.request_context')->getCompleteBaseUrl())) {
-                continue;
-              }
+        }
 
-              $amp_href = \Drupal::service('amp.query_parameters')->add($absolute_canonical);
+        if(!\Drupal::service('router.amp_context')->isAmpRoute()) {
+          global $pager_page_array;
+          if(!isset($pager_page_array[0]) || $pager_page_array[0] == 0){
 
-              $attachments['#attached']['html_head_link'][] = [
-                [
-                  'rel' => 'amphtml',
-                  'href' => $amp_href,
-                ],
-                TRUE,
-              ];
-              $attachments['#cache']['contexts'][] = 'url.site';
-            }
+            $amp_href = \Drupal::service('amp.query_parameters')->add($absolute_canonical);
+
+            $attachments['#attached']['html_head_link'][] = [
+              [
+                'rel' => 'amphtml',
+                'href' => $amp_href,
+              ],
+              TRUE,
+            ];
+            $attachments['#cache']['contexts'][] = 'url.site';
           }
         }
 

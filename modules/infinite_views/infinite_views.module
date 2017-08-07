@@ -19,57 +19,76 @@ use Drupal\views\ViewExecutable;
  */
 function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
 
-  // Switch to other views display in infinite_taxonomy_term view for page displays.
-  if ($view->id() == 'infinite_taxonomy_term' && $view->getDisplay()
-      ->getBaseId() == 'page' && $display_id != 'rss'
-  ) {
+	switch ($view->id()) {
 
-    if (\Drupal::service('path.matcher')->isFrontPage()) {
-      $view->setDisplay('front');
-    }
-    else {
-      /* @var Drupal\taxonomy\Entity\Term $term */
-      $term = Term::load($args[0]);
-      if ($term->getVocabularyId() == 'channel') {
-        $view->setDisplay('channel');
-      }
-      else {
-        $view->setDisplay('term');
-      }
-    }
-  }
+		case 'infinite_archive':
 
-  // Exclude front / channel presenter nodes from infinite_front / infinite_taxonomy_term streaming view.
-  if (($view->id() == 'infinite_front_presenter' && $view->current_display == 'four_teasers') ||
-    ($view->id() == 'infinite_taxonomy_term' && ($view->getDisplay()->display['id'] == 'front' || $view->getDisplay()->display['id'] == 'channel'))
-  ) {
+			// Get default contextual filter for loading /archive
+			if (empty($args)) {
+				$args[] = infinite_views_archive_default_argument();
+			}
+			break;
 
-    $presenter_view = 'infinite_channel_presenter';
-    $exclude_displays = array('exclude');
-    if (\Drupal::service('path.matcher')->isFrontPage()) {
+		case 'infinite_front_presenter':
 
-      $presenter_view = 'infinite_front_presenter';
-      $exclude_displays[] = 'exclude_top';
+		  // Exclude top presenter nodes from infinite_front_presenter view.
+			if ($view->current_display == 'four_teasers' || $view->current_display == 'exclude') {
 
-      if ($view->current_display == 'four_teasers') {
-        $exclude_displays = array('exclude_top');  // Here we must use only exclude_top display.
-      }
-    }
-    _infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
-  }
-  elseif ($view->id() == 'infinite_front_presenter' && $view->current_display == 'exclude') {
-    $presenter_view = 'infinite_front_presenter';
-    $exclude_displays = ['exclude_top'];
-    _infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
-  }
-  else {
-    if ($view->id() == 'infinite_archive' && empty($args)) {  // Get default contextual filter for loading /archive
-      $args[] = infinite_views_archive_default_argument();
-    }
-    else if ($view->id() == 'infinite_vocabulary' && $view->current_display == 'attachment_1') {
-      unset($args[1]);  // Remove second arg on infinite vocabulary attachment
-    }
-  }
+				$args = [];  // Clear default added args to get exclude NIDs working.
+				$exclude_displays = ['exclude_top'];
+					$presenter_view = 'infinite_front_presenter';
+				_infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
+			}
+			break;
+
+		case 'infinite_taxonomy_term':
+
+			$isFrontPage = \Drupal::service('path.matcher')->isFrontPage();
+
+			// Switch to other views display in infinite_taxonomy_term view for page displays.
+			if ($view->getDisplay()->getBaseId() == 'page' && $display_id != 'rss') {
+
+				if ($isFrontPage) {
+					$view->setDisplay('front');
+				}
+				else {
+					/* @var Drupal\taxonomy\Entity\Term $term */
+					$term = Term::load($args[0]);
+					if ($term->getVocabularyId() == 'channel') {
+						$view->setDisplay('channel');
+					}
+					else {
+						$view->setDisplay('term');
+					}
+				}
+			}
+
+			// Exclude front / channel presenter nodes infinite_taxonomy_term streaming view.
+			if ($view->getDisplay()->display['id'] == 'front' || $view->getDisplay()->display['id'] == 'channel') {
+
+				$exclude_displays = ['exclude_top', 'exclude'];
+				$presenter_view = 'infinite_channel_presenter';
+				if ($isFrontPage) {
+					$presenter_view = 'infinite_front_presenter';
+				}
+
+				_infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
+			}
+			break;
+
+		case 'infinite_vocabulary':
+
+			// Remove second arg on infinite vocabulary attachment
+			if ($view->current_display == 'attachment_1') {
+				unset($args[1]);
+			}
+       break;
+
+		default:
+	}
+
+	// Set possible changed $args for view.
+	$view->setArguments($args);
 }
 
 /**
@@ -225,48 +244,85 @@ function infinite_views_page_attachments_alter(array &$attachments) {
 
   if(isset($pager_page_array[0])){
     $current_path = Url::fromRoute('<current>');
-    $path = $current_path->toString();
+    $query = \Drupal::request()->query->all();
+    $current_page = isset($query['page']) ? $query['page'] : FALSE;
     $attached = &$attachments['#attached'];
 
+    if(isset($query['amp'])){
+      $query  = ['amp' => ''] + $query;
+    }
+
     if($pager_page_array[0] > 1){
+      $query['page'] = ($pager_page_array[0] - 1);
+      $href = $current_path->setOption('query', $query)->toString();
+      $href = str_replace('amp=', 'amp', $href);
       $attached['html_head'][] = [[
         '#type' => 'html_tag',
         '#tag' => 'link',
         '#attributes' => [
           'rel' => 'prev',
-          'href' => $path . '?page=' . ($pager_page_array[0] - 1),
+          'href' => $href,
         ],
       ], 'rel_prev'];
     }
     elseif($pager_page_array[0] == 1) {
+      unset($query['page']);
+      $href = $current_path->setOption('query', $query)->toString();
+      $href = str_replace('amp=', 'amp', $href);
       $attached['html_head'][] = [[
         '#type' => 'html_tag',
         '#tag' => 'link',
         '#attributes' => [
           'rel' => 'prev',
-          'href' => $path,
+          'href' => $href,
         ],
       ], 'rel_prev'];
     }
 
     if($pager_page_array[0] < $pager_total[0] - 1){
+      $query['page'] = ($pager_page_array[0] + 1);
+      $href = $current_path->setOption('query', $query)->toString();
+      $href = str_replace('amp=', 'amp', $href);
       $attached['html_head'][] = [[
         '#type' => 'html_tag',
         '#tag' => 'link',
         '#attributes' => [
           'rel' => 'next',
-          'href' => $path . '?page=' . ($pager_page_array[0] + 1),
+          'href' => $href,
         ],
       ], 'rel_next'];
     }
 
-    foreach ($attached['html_head_link'] as $key => $item) {
+    foreach ($attached['html_head_link'] as $key => &$item) {
       if($item[0]['rel'] == 'canonical'){
+
+        if(\Drupal::moduleHandler()->moduleExists('amp')
+          && \Drupal::service('router.amp_context')->isAmpRoute()){
+
+          unset($query['amp']);
+          if($current_page){
+            $query['page'] = $current_page;
+          }
+          elseif(isset($query['page'])) {
+            unset($query['page']);
+          }
+
+          $current_path->setOption('absolute', TRUE);
+          $current_path->setOption('query', $query);
+
+          $attached['html_head'][] = [[
+            '#type' => 'html_tag',
+            '#tag' => 'link',
+            '#attributes' => [
+              'rel' => 'canonical',
+              'href' => $current_path->toString(),
+            ],
+          ], 'rel_canonical'];
+
+        }
+
         unset($attached['html_head_link'][$key]);
       }
     }
-
   }
-
-  return;
 }
