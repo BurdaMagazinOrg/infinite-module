@@ -66,7 +66,7 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
 			// Exclude front / channel presenter nodes infinite_taxonomy_term streaming view.
 			if ($view->getDisplay()->display['id'] == 'front' || $view->getDisplay()->display['id'] == 'channel') {
 
-				$exclude_displays = ['exclude_top', 'exclude'];
+				$exclude_displays = ['exclude'];
 				$presenter_view = 'infinite_channel_presenter';
 				if ($isFrontPage) {
 					$presenter_view = 'infinite_front_presenter';
