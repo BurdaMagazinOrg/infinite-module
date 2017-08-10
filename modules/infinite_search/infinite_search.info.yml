@@ -3,7 +3,7 @@ type: module
 description: Provide core search integration for Infinite.
 package: Infinite
 core: 8.x
-version: 8.x-1.x-dev
+hidden: true
 dependencies:
   - search
   - views

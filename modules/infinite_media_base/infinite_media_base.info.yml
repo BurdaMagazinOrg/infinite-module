@@ -3,7 +3,7 @@ type: module
 description: provide media bundles for infinite.
 package: Infinite
 core: 8.x
-version: 8.x-1.x-dev
+hidden: true
 dependencies:
   - field
   - field_ui
