@@ -36,12 +36,16 @@ function infinite_ad_entity_theme_suggestions_ad_entity_alter(array &$suggestion
 }
 
 function infinite_ad_entity_preprocess_dfp_amp(&$vars){
-  $targeting = Json::decode($vars['targeting']);
-  $channel = str_replace('homepage/', '', $targeting['channel']);
-  unset($targeting['channel']);
-  $vars['targeting'] = Json::encode($targeting);
 
-  /** @var Drupal\Core\Template\Attribute $attributes */
-  $attributes = &$vars['attributes'];
-  $attributes['data-slot'] = str_replace('/amp', '/' . $channel, $attributes['data-slot']);
+  if(isset($vars['json']['targeting']['channel'])) {
+    $targeting = $vars['json']['targeting'];
+    $channel = str_replace('homepage/', '', $targeting['channel']);
+    unset($targeting['channel']);
+    $vars['json']['targeting'] = $targeting;
+
+    /** @var Drupal\Core\Template\Attribute $attributes */
+    $attributes = &$vars['attributes'];
+    $attributes['data-slot'] = str_replace('/amp', '/' . $channel, $attributes['data-slot']);
+  }
+
 }
