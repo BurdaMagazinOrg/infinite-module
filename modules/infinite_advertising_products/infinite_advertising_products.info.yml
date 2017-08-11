@@ -1,0 +1,7 @@
+name: Infinite advertising products
+type: module
+description: Extend advertising products
+package: Infinite
+core: '8.x'
+dependencies:
+  - advertising_products
