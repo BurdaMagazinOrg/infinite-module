@@ -36,7 +36,7 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
 
 				$args = [];  // Clear default added args to get exclude NIDs working.
 				$exclude_displays = ['exclude_top'];
-					$presenter_view = 'infinite_front_presenter';
+				$presenter_view = 'infinite_front_presenter';
 				_infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
 			}
 			break;
@@ -69,6 +69,7 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
 				$exclude_displays = ['exclude'];
 				$presenter_view = 'infinite_channel_presenter';
 				if ($isFrontPage) {
+					$exclude_displays = ['exclude_top', 'exclude'];  // exclude_top is currently only used on frontpage.
 					$presenter_view = 'infinite_front_presenter';
 				}
 
