@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\Core\Entity\EntityInterface;
-use Symfony\Component\Validator\Constraints\False;
 
 /**
  * Implements hook_drush_command().
