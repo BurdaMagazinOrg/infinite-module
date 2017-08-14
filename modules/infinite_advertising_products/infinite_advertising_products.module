@@ -7,7 +7,7 @@ function infinite_advertising_products_entity_presave(EntityInterface $entity){
   if($entity->getEntityTypeId() == 'advertising_product' && $entity->bundle() == 'advertising_product_tracdelight'){
     /** @var \Drupal\advertising_products\Entity\AdvertisingProduct $entity */
     if(isset($entity->product_data) && $entity->hasField('field_product_category_txt')) {
-      $entity->field_product_category_txt->value = $entity->product_data['category']['name'];
+      $entity->field_product_category_txt->value = $entity->product_data['category']['name']?:'not available';
     }
   }
 
