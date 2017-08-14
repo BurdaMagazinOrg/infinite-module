@@ -3,6 +3,7 @@ type: module
 description: provide blocks for infinite.
 package: Infinite
 core: 8.x
+hidden: true
 dependencies:
   - block
   - block_content

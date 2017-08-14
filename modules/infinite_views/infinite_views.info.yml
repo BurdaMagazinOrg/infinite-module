@@ -3,7 +3,7 @@ type: module
 description: Provide basic Views and Views related functions for Infinite.
 package: Infinite
 core: 8.x
-version: 8.x-1.x-dev
+hidden: true
 dependencies:
   - views
   - views_load_more
