@@ -97,12 +97,9 @@ CKEDITOR.dialog.add('infinite_buttons', function (editor) {
                         type: "select",
                         label: lang.buttonTargetLabel,
                         items: [
-                            ['Not Set', ''],
-                            ['Frame', "frame"],
-                            ['Popup', "popup"],
+                            ['Same Window (_self)', "_self"],
                             ['New Window (_blank)', "_blank"],
                             ['Topmost Window (_top)', "_top"],
-                            ['Same Window (_self)', "_self"],
                             ['Parent Window (_parent)', "_parent"]
                         ],
                         setup: function (widget) {
@@ -127,32 +124,31 @@ CKEDITOR.dialog.add('infinite_buttons', function (editor) {
                                 children: [
                                     {
                                         type: 'html',
-                                        html: '<strong>Bootstrap Glyphicon</strong>' +
-                                        '<p><a href="http://getbootstrap.com/components/#glyphicons" target="_blank" style="padding: 0px; vertical-align: top;">List of Icons</a></p><br/>' +
+                                        html: '<strong>Custom Icons</strong>' +
                                         '<p>e.g. <em>glyphicon-pencil</em></p>'
                                     },
                                     {
-                                        id: 'bsiconleft',
+                                        id: 'customiconsleft',
                                         type: 'text',
                                         width: '150px',
                                         label: 'Left Icon',
                                         setup: function (widget) {
-                                            this.setValue(widget.data.bsiconleft || '');
+                                            this.setValue(widget.data.customiconsleft || '');
                                         },
                                         commit: function (widget) {
-                                            widget.setData('bsiconleft', this.getValue());
+                                            widget.setData('customiconsleft', this.getValue());
                                         }
                                     },
                                     {
-                                        id: 'bsiconright',
+                                        id: 'customiconsright',
                                         type: 'text',
                                         width: '150px',
                                         label: 'Right Icon',
                                         setup: function (widget) {
-                                            this.setValue(widget.data.bsiconright || '');
+                                            this.setValue(widget.data.customiconsright || '');
                                         },
                                         commit: function (widget) {
-                                            widget.setData('bsiconright', this.getValue());
+                                            widget.setData('customiconsright', this.getValue());
                                         }
                                     }
                                 ]

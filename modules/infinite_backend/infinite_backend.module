@@ -7,6 +7,11 @@
 
 use Drupal\Core\Routing\RouteMatchInterface;
 
+
+function infinite_backend_ckeditor_css_alter(array &$css, Editor $editor) {
+    $css[] = drupal_get_path('module', 'infinite_backend') . '/css/backend-form.css';
+}
+
 /**
  * Implements hook_help().
  */

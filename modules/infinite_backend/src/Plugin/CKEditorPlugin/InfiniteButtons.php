@@ -44,7 +44,7 @@ class InfiniteButtons extends CKEditorPluginBase {
     return array(
       'infinite_buttons' => array(
         'label' => t('Bootstrap Buttons'),
-        'image' => drupal_get_path('module', 'infinite_backend') . '/js/plugins/infinite_buttons/icons/infinite_buttons.png',
+        'image' => drupal_get_path('module', 'infinite_backend') . '/js/plugins/infinite_buttons/icon.png',
       ),
     );
   }
