@@ -13,13 +13,13 @@ function infinite_advertising_products_drush_command() {
     'description' => 'Transliterate the filenames of old image files',
     'callback' => 'drush_infinite_advertising_products_reimport',
     'arguments' => [
-      'pid' => 'The nummeric id of the product to reimport (default: all)',
+      'pid' => 'The nummeric id of the product to reimport or product type for bulk reimport',
       'chunksize' => 'The count of elements to process at once (default: 50)',
       'batchsize' => 'The count of elements to process at all (default: 500)',
     ],
     'aliases' => ['apreimp'],
     'examples' => [
-      'drush apreimp trecdelight 10 500"' => 'Reimport 500 advertising trecdelight products by importing 10 products at once.'
+      'drush apreimp tracdelight 10 500"' => 'Reimport 500 advertising trecdelight products by importing 10 products at once.'
     ],
   ];
 
