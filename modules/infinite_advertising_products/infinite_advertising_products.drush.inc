@@ -15,7 +15,7 @@ function infinite_advertising_products_drush_command() {
     'arguments' => [
       'pid' => 'The nummeric id of the product to reimport or product type for bulk reimport',
       'chunksize' => 'The count of elements to process at once (default: 50)',
-      'batchsize' => 'The count of elements to process at all (default: 500)',
+      'batchsize' => 'The count of elements to process at all (default: 0 for all)',
     ],
     'aliases' => ['apreimp'],
     'examples' => [
@@ -26,7 +26,7 @@ function infinite_advertising_products_drush_command() {
   return $items;
 }
 
-function drush_infinite_advertising_products_reimport($pid = 'tracdelight', $chunksize = 50, $batchsize = 500){
+function drush_infinite_advertising_products_reimport($pid = 'tracdelight', $chunksize = 50, $batchsize = 0){
   $advProdEntityTypeManager = \Drupal::entityTypeManager()->getStorage('advertising_product');
 
   if(is_numeric($pid)){
@@ -43,15 +43,21 @@ function drush_infinite_advertising_products_reimport($pid = 'tracdelight', $chu
     $def = \Drupal::service('entity_type.bundle.info')->getBundleInfo('advertising_product');
 
     if(isset($def[$bundle])){
-      $result = \Drupal::entityQuery('advertising_product')
+      $query = \Drupal::entityQuery('advertising_product')
         ->condition('type', $bundle)
         ->condition('status', TRUE)
-        ->notExists('field_product_category_txt')
-        ->range(0, $batchsize)
-        ->execute();
+        ->notExists('field_product_category_txt');
+
+      if($batchsize) {
+        $query->range(0, $batchsize);
+      }
+
+      $result = $query->execute();
 
       $success = 0;
       $error = 0;
+
+      drush_print(dt('Processing !count items.', ['!count' => count($result)]));
 
       while(!empty($result)){
         $chunk = array_splice($result, 0, $chunksize);
@@ -69,9 +75,9 @@ function drush_infinite_advertising_products_reimport($pid = 'tracdelight', $chu
         }
 
         $rows = [
-          ['success', $success],
-          ['error', $error],
-          ['total', $success + $error],
+          ['success:', $success],
+          ['error:', $error],
+          ['total:', $success + $error],
         ];
 
         drush_print_table($rows);
