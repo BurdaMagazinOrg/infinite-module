@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\editor\Entity\Editor;
 
 
 function infinite_backend_ckeditor_css_alter(array &$css, Editor $editor) {
