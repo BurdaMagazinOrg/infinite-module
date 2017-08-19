@@ -1,0 +1,8 @@
+name: Infinite Odoscope
+type: module
+description: Modifications needed for Odoscope.
+package: Infinite
+core: 8.x
+version: 8.x-2.x-dev
+dependencies:
+  - views
