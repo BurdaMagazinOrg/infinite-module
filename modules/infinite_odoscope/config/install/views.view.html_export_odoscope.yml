@@ -5,12 +5,16 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - node.type.article
+    - user.role.administrator
   module:
+    - csv_serialization
     - node
     - rest
     - serialization
     - user
     - views_data_export
+_core:
+  default_config_hash: ABlJGyczQcGIIV6rh9NJph0txcAtdrCvEB5ODTxs5aw
 id: html_export_odoscope
 label: html_export_odoscope
 module: views
@@ -27,9 +31,10 @@ display:
     position: 0
     display_options:
       access:
-        type: perm
+        type: role
         options:
-          perm: 'administer nodes'
+          role:
+            administrator: administrator
       cache:
         type: tag
         options: {  }
@@ -197,7 +202,7 @@ display:
         - 'languages:language_interface'
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags: {  }
   data_export_1:
     display_plugin: data_export
@@ -210,8 +215,37 @@ display:
       filename: ''
       automatic_download: 0
       redirect_path: ''
-      auth:
-        - user
+      auth: {  }
+      export_method: batch
+      export_batch_size: '100'
+      style:
+        type: data_export
+        options:
+          uses_fields: true
+          formats:
+            csv: csv
+          csv_settings:
+            delimiter: ','
+            enclosure: '"'
+            escape_char: \
+            strip_tags: true
+            trim: true
+            encoding: utf8
+          xls_settings:
+            xls_format: Excel2007
+            metadata:
+              creator: ''
+              last_modified_by: ''
+              title: ''
+              description: ''
+              subject: ''
+              keywords: ''
+              category: ''
+              manager: ''
+              company: ''
+      row:
+        type: data_entity
+        options: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -219,5 +253,53 @@ display:
         - 'languages:language_interface'
         - request_format
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
+      tags: {  }
+  data_export_2:
+    display_plugin: data_export
+    id: data_export_2
+    display_title: 'Data export 2'
+    position: 2
+    display_options:
+      display_extenders: {  }
+      row:
+        type: data_entity
+        options: {  }
+      style:
+        type: data_export
+        options:
+          uses_fields: true
+          formats:
+            json: json
+          csv_settings:
+            delimiter: ','
+            enclosure: '"'
+            escape_char: \
+            strip_tags: true
+            trim: true
+            encoding: utf8
+          xls_settings:
+            xls_format: Excel2007
+            metadata:
+              creator: ''
+              last_modified_by: ''
+              title: ''
+              description: ''
+              subject: ''
+              keywords: ''
+              category: ''
+              manager: ''
+              company: ''
+      path: article-entities.json
+      filename: '[site:name]-html-export.json'
+      automatic_download: 0
+      redirect_path: ''
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - request_format
+        - 'user.node_grants:view'
+        - user.roles
       tags: {  }
