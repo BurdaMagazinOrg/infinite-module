@@ -6,7 +6,6 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - node.type.article
   module:
-    - null
     - node
     - rest
     - serialization
