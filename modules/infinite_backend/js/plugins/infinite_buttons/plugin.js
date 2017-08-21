@@ -13,7 +13,7 @@
                 editor.ui.addButton('infinite_buttons', {
                     label: lang.buttonTitle,
                     command: 'infinite_buttons',
-                    icon: this.path + 'icon.png'
+                    icon: this.path + 'icons/btn.jpg'
                 });
 
                 editor.widgets.add('infinite_buttons', {
@@ -29,11 +29,11 @@
                         var $el = jQuery(this.element.$);
 
                         if (this.data.btntype) {
-                            $el.removeClass('btn-link btn-default btn-primary btn-info btn-success btn-warning btn-danger').addClass(this.data.btntype);
+                            $el.removeClass('button--bg-colored-default button--lined-colored-default button--lined-gray-default button--lined-light button--plain-colored-default button--plain-gray-default').addClass(this.data.btntype);
                         }
 
                         if (this.data.btnsize) {
-                            $el.removeClass('btn-xs btn-sm btn-lg').addClass(this.data.btnsize);
+                            $el.removeClass('button--sm button--md button--lg button--xl').addClass(this.data.btnsize);
                         }
 
                         if (this.data.href) {

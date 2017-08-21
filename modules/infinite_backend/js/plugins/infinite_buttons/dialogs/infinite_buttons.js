@@ -46,7 +46,7 @@ CKEDITOR.dialog.add('infinite_buttons', function (editor) {
                                     [lang.buttonSizeExtraLarge, 'button--xl']
                                 ],
                                 setup: function (widget) {
-                                    this.setValue(widget.data.btnsize || '');
+                                    this.setValue(widget.data.btnsize || 'button--lg');
                                 },
                                 commit: function (widget) {
                                     widget.setData('btnsize', this.getValue());
@@ -103,7 +103,7 @@ CKEDITOR.dialog.add('infinite_buttons', function (editor) {
                             ['Parent Window (_parent)', "_parent"]
                         ],
                         setup: function (widget) {
-                            this.setValue(widget.data.target || '');
+                            this.setValue(widget.data.target || '_self');
                         },
                         commit: function (widget) {
                             widget.setData('target', this.getValue());
