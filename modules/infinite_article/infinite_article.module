@@ -7,27 +7,61 @@ use Drupal\Core\Form\FormStateInterface;
  * Implements hook_entity_build_defaults_alter().
  */
 function infinite_article_node_build_defaults_alter(array &$build, EntityInterface $node, $view_mode) {
-  if ($view_mode == 'lazyloading' &&
-      $node->bundle() == 'article' &&
-      !$node->get('field_header_blocks')->isEmpty()) {
 
-    // Replace 'advertisingslot_banner_any' with 'advertisingslot_banner_any_2' in header blocks on lazyloading.
-    $header_blocks = $node->get('field_header_blocks')->getValue();
-    foreach ($header_blocks as $key => &$header_block) {
-      if ($header_block['target_id'] == 'advertisingslot_banner_any') {
-        $header_block['target_id'] = 'advertisingslot_banner_any_2';
-        $node->set('field_header_blocks', $header_blocks);
-      }
-      else {
-        if (\Drupal::moduleHandler()
-            ->moduleExists('ad_entity') && $header_block['target_id'] == 'adblock_full_article'
-        ) {
-          $header_block['target_id'] = 'adblock_full_article_2';
+  if($node->bundle() == 'article' && !$node->get('field_header_blocks')->isEmpty()){
+
+    /** @var \Drupal\Core\Theme\ActiveTheme $theme */
+    $theme = \Drupal::service('theme.manager')->getActiveTheme();
+    $base_themes = $theme->getBaseThemes();
+
+    if ($view_mode == 'lazyloading') {
+
+      // Replace 'advertisingslot_banner_any' with 'advertisingslot_banner_any_2' in header blocks on lazyloading.
+      $header_blocks = $node->get('field_header_blocks')->getValue();
+      foreach ($header_blocks as $key => &$header_block) {
+        if ($header_block['target_id'] == 'advertisingslot_banner_any') {
+          $header_block['target_id'] = 'advertisingslot_banner_any_2';
           $node->set('field_header_blocks', $header_blocks);
+        }
+        else {
+          if (\Drupal::moduleHandler()
+              ->moduleExists('ad_entity') && $header_block['target_id'] == 'adblock_full_article'
+          ) {
+            $header_block['target_id'] = 'adblock_full_article_2';
+            $node->set('field_header_blocks', $header_blocks);
+          }
         }
       }
     }
+    elseif(array_key_exists('infinite_amp', $base_themes)) {
+      // Replace defined ad blocks by the corresponding amp ad blocks.
+      $header_blocks = $node->get('field_header_blocks')->getValue();
+      foreach ($header_blocks as $key => &$header_block) {
+        $block = \Drupal::entityTypeManager()
+          ->getStorage('block')
+          ->load($header_block['target_id']);
+
+        if(isset($block) && $block->getPlugin() == 'ad_entity_block') {
+
+          $replacement_block_id = $header_block['target_id'] . '_amp';
+          $replacement_block = \Drupal::entityTypeManager()
+            ->getStorage('block')
+            ->load($replacement_block_id);
+
+          if(isset($replacement_block)){
+            $header_block['target_id'] = $replacement_block_id;
+          }
+          else {
+            unset($header_blocks[$key]);
+          }
+
+        }
+      }
+      $node->set('field_header_blocks', $header_blocks);
+    }
+
   }
+
 }
 
 /**
