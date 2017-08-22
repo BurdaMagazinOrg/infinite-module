@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Contains ckeditor_bootstrap_buttons.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\editor\Entity\Editor;
+
+
+function infinite_backend_ckeditor_css_alter(array &$css, Editor $editor) {
+    $css[] = drupal_get_path('module', 'infinite_backend') . '/css/backend-form.css';
+}
+
+/**
+ * Implements hook_help().
+ */
+function infinite_backend_help($route_name, RouteMatchInterface $route_match) {
+    switch ($route_name) {
+        // Main module help for the ckeditor_entity_link module.
+        case 'help.page.infinite_backend':
+            $output = '';
+            $output .= '<h3>' . t('About') . '</h3>';
+            $output .= '<p>' . t('Allows to insert bootstrap buttons in CKEditor.') . '</p>';
+            return $output;
+
+        default:
+    }
+}

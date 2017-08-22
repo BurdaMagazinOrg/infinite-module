@@ -1,0 +1,5 @@
+backend_form_styling:
+  version: 1.0
+  css:
+    theme:
+      css/backend-form.css: { }
