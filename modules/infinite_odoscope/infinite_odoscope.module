@@ -4,3 +4,32 @@
  * @file
  * Primarily Drupal hooks functions to manipulate Odoscope views.
  */
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function infinite_odoscope_views_data_alter(array &$data) {
+  foreach ($data as $base_table => $field) {
+    if (isset($data[$base_table]['rendered_entity'])) {
+      $data[$base_table]['rendered_entity_base64'] = [
+        'field' => [
+          'title' => t('Rendered entity in base 64'),
+          'help' => t('Renders an entity in a view mode and encodes the result in base 64.'),
+          'id' => 'rendered_entity_base64',
+        ],
+      ];
+    }
+  }
+  return $data;
+}
+
+/**
+ * Callback function for the #post_render array.
+ *
+ * @param (string) $markup
+ *
+ * @return (string) base64 encoded markup
+ */
+function infinite_odoscope_base64_postrender($markup) {
+  return base64_encode($markup);
+}
