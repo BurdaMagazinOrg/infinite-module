@@ -5,6 +5,9 @@
  * Primarily Drupal hooks functions to manipulate Odoscope views.
  */
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * Implements hook_views_data_alter().
  */
@@ -21,6 +24,39 @@ function infinite_odoscope_views_data_alter(array &$data) {
     }
   }
   return $data;
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function infinite_odoscope_library_info_alter(&$libraries, $extension) {
+  if($extension == 'infinite_odoscope') {
+    $cdn = Drupal::config('odoscope')->get('cdn');
+    if($cdn) {
+      $data = reset($libraries['odoscope.cdn']['js']);
+      $libraries['odoscope.cdn']['js'] = [
+        $cdn => $data
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function infinite_odoscope_views_pre_render(ViewExecutable $view) {
+  if (isset($view) && ($view->id() == 'infinite_taxonomy_term') && $view->current_display == 'front') {
+    $view->element['#attached']['library'][] = 'infinite_odoscope/odoscope.cdn';
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+function infinite_odoscope_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if($entity->bundle() == 'article' && $build['#view_mode'] == 'full') {
+    $build['#attached']['library'][] = 'infinite_odoscope/odoscope.cdn';
+  }
 }
 
 /**
