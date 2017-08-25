@@ -77,6 +77,7 @@ function infinite_odoscope_entity_insert(EntityInterface $entity) {
   $queue = $queue_factory->get('OdoscopeUpdater');
   $item = new \stdClass();
   $item->nid = $entity->id();
+  $item->action = 'create';
   $queue->createItem($item);
 }
 
@@ -95,6 +96,26 @@ function infinite_odoscope_entity_update(EntityInterface $entity) {
   // Note: we do not care if duplicate items end up in the queue.
   $item = new \stdClass();
   $item->nid = $entity->id();
+  $item->action = 'update';
+  $queue->createItem($item);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function infinite_odoscope_entity_delete(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'article') {
+    return;
+  }
+
+  /** @var QueueFactory $queue_factory */
+  $queue_factory = \Drupal::service('queue');
+  /** @var QueueInterface $queue */
+  $queue = $queue_factory->get('OdoscopeUpdater');
+  // Note: we do not care if duplicate items end up in the queue.
+  $item = new \stdClass();
+  $item->nid = $entity->id();
+  $item->action = 'delete';
   $queue->createItem($item);
 }
 
