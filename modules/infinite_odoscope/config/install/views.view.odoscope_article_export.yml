@@ -1559,9 +1559,9 @@ display:
         - 'config:field.storage.node.field_tags'
         - 'config:field.storage.user.field_forename'
         - 'config:field.storage.user.field_surname'
-  data_export_2:
+  data_update:
     display_plugin: data_export
-    id: data_export_2
+    id: data_update
     display_title: 'Data update'
     position: 1
     display_options:
