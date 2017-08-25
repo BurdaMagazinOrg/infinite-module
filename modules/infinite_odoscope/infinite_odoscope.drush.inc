@@ -6,6 +6,10 @@
 
 use Drupal\Core\Queue\RequeueException;
 use Drupal\Core\Queue\SuspendQueueException;
+use Drupal\views\Views;
+use Drupal\views\ViewExecutable;
+use Drupal\views_data_export\Plugin\views\display;
+use Drupal\views_data_export\Plugin\views\display\DataExport;
 
 
 /**
@@ -75,9 +79,11 @@ function drush_infinite_odoscope_odoscope_queue() {
 }
 
 function _odoscope_infinite_execute_view($args) {
+  $views_args = [$args[0]];
+  $views_args[] = implode('+', $args[1]);
   $view = Views::getView('odoscope_article_export');
   $view->setDisplay('data_update');
-  $view->setArguments($args);
+  $view->setArguments($views_args);
   $view->get_total_rows = TRUE;
   $export_limit = $view->getDisplay()->getOption('export_limit');
 
