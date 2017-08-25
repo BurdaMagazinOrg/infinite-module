@@ -8,6 +8,8 @@
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\views\ViewExecutable;
+use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Queue\QueueInterface;
 
 /**
  * Implements hook_views_data_alter().
@@ -58,6 +60,42 @@ function infinite_odoscope_node_view_alter(array &$build, EntityInterface $entit
   if($entity->bundle() == 'article' && $build['#view_mode'] == 'full') {
     $build['#attached']['library'][] = 'infinite_odoscope/odoscope.cdn';
   }
+}
+
+
+/**
+ * Implements hook_entity_insert().
+ */
+function infinite_odoscope_entity_insert(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'article') {
+    return;
+  }
+
+  /** @var QueueFactory $queue_factory */
+  $queue_factory = \Drupal::service('queue');
+  /** @var QueueInterface $queue */
+  $queue = $queue_factory->get('OdoscopeUpdater');
+  $item = new \stdClass();
+  $item->nid = $entity->id();
+  $queue->createItem($item);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function infinite_odoscope_entity_update(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'article') {
+    return;
+  }
+
+  /** @var QueueFactory $queue_factory */
+  $queue_factory = \Drupal::service('queue');
+  /** @var QueueInterface $queue */
+  $queue = $queue_factory->get('OdoscopeUpdater');
+  // Note: we do not care if duplicate items end up in the queue.
+  $item = new \stdClass();
+  $item->nid = $entity->id();
+  $queue->createItem($item);
 }
 
 /**
