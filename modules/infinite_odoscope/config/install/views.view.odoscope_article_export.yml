@@ -292,7 +292,7 @@ display:
           click_sort_column: value
           type: boolean
           settings:
-            format: enabled-disabled
+            format: boolean
             format_custom_true: ''
             format_custom_false: ''
           group_column: value
@@ -1184,6 +1184,90 @@ display:
           entity_field: type
           plugin_id: bundle
           group: 1
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '>='
+          value:
+            min: ''
+            max: ''
+            value: '-2 years'
+            type: offset
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+        changed:
+          id: changed
+          table: node_field_data
+          field: changed
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '>='
+          value:
+            min: ''
+            max: ''
+            value: '-2 years'
+            type: date
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          entity_field: changed
+          plugin_id: date
       sorts:
         created:
           id: created
@@ -1391,11 +1475,14 @@ display:
             field_tags_1:
               alias: Tag-Names
               raw_output: false
+            path:
+              alias: URL
+              raw_output: false
             rendered_entity_base64:
               alias: Base64
               raw_output: false
-            path:
-              alias: URL
+            status:
+              alias: Published
               raw_output: false
     cache_metadata:
       max-age: -1
