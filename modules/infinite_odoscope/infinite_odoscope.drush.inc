@@ -46,18 +46,18 @@ function drush_infinite_odoscope_odoscope_queue() {
 
       for ($i = 1; $i <= $itemcount; $i++) {
         $claim = $queue->claimItem();
-        switch ($claim['data']['action']) {
+        switch ($claim->data->action) {
           case 'update':
             $claims_update[] = $claim;
-            $args_update[1][] = $claim->data['nid'];
+            $args_update[1][] = $claim->data->nid;
             break;
           case 'create':
             $claims_create[] = $claim;
-            $args_create[1][] = $claim->data['nid'];
+            $args_create[1][] = $claim->data->nid;
             break;
           case 'delete':
             $claims_delete[] = $claim;
-            $args_delete[1][] = $claim->data['nid'];
+            $args_delete[1][] = $claim->data->nid;
             break;
         }
       }
