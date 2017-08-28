@@ -1,6 +1,7 @@
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.teaser_selectable
     - field.storage.media.field_image
     - field.storage.node.field_channel
     - field.storage.node.field_tags
@@ -12,6 +13,7 @@ dependencies:
   module:
     - csv_serialization
     - image
+    - infinite_odoscope
     - media_entity
     - node
     - rest
@@ -239,6 +241,73 @@ display:
           entity_type: node
           entity_field: nid
           plugin_id: field
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Published
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: boolean
+          settings:
+            format: enabled-disabled
+            format_custom_true: ''
+            format_custom_false: ''
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: status
+          plugin_id: field
         title:
           id: title
           table: node_field_data
@@ -246,7 +315,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Title
+          label: Titel
           exclude: false
           alter:
             alter_text: false
@@ -693,7 +762,7 @@ display:
           relationship: field_teaser_media
           group_type: group
           admin_label: ''
-          label: Image
+          label: Bild
           exclude: false
           alter:
             alter_text: true
@@ -756,7 +825,7 @@ display:
           relationship: field_teaser_media
           group_type: group
           admin_label: ''
-          label: Thumbnail
+          label: Vorschaubild
           exclude: false
           alter:
             alter_text: true
@@ -1002,18 +1071,109 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-      filters:
-        status:
-          value: '1'
-          table: node_field_data
-          field: status
-          plugin_id: boolean
+        path:
+          id: path
+          table: node
+          field: path
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: URL
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          absolute: true
           entity_type: node
-          entity_field: status
-          id: status
-          expose:
-            operator: ''
-          group: 1
+          plugin_id: node_path
+        rendered_entity_base64:
+          id: rendered_entity_base64
+          table: node
+          field: rendered_entity_base64
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Base64
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          view_mode: teaser_selectable
+          entity_type: node
+          plugin_id: rendered_entity_base64
+      filters:
         type:
           id: type
           table: node_field_data
@@ -1023,22 +1183,23 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
+          group: 1
       sorts:
         created:
           id: created
           table: node_field_data
           field: created
-          order: DESC
-          entity_type: node
-          entity_field: created
-          plugin_id: date
           relationship: none
           group_type: group
           admin_label: ''
+          order: ASC
           exposed: false
           expose:
             label: ''
           granularity: second
+          entity_type: node
+          entity_field: created
+          plugin_id: date
       header: {  }
       footer: {  }
       empty: {  }
@@ -1074,6 +1235,10 @@ display:
           plugin_id: standard
       arguments: {  }
       display_extenders: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
     cache_metadata:
       max-age: 0
       contexts:
@@ -1083,6 +1248,67 @@ display:
         - 'user.node_grants:view'
         - user.roles
       tags:
+        - 'config:core.entity_view_display.node.article.amp'
+        - 'config:core.entity_view_display.node.article.amp_teaser_landscape_l'
+        - 'config:core.entity_view_display.node.article.amp_teaser_landscape_m'
+        - 'config:core.entity_view_display.node.article.amp_teaser_portrait_m'
+        - 'config:core.entity_view_display.node.article.amp_teaser_portrait_s'
+        - 'config:core.entity_view_display.node.article.amp_teaser_square_m'
+        - 'config:core.entity_view_display.node.article.amp_teaser_square_s'
+        - 'config:core.entity_view_display.node.article.amp_teaser_square_s_responsive'
+        - 'config:core.entity_view_display.node.article.amp_teaser_square_xs'
+        - 'config:core.entity_view_display.node.article.default'
+        - 'config:core.entity_view_display.node.article.fb_instant_articles_rss'
+        - 'config:core.entity_view_display.node.article.lazyloading'
+        - 'config:core.entity_view_display.node.article.presenter_full'
+        - 'config:core.entity_view_display.node.article.presenter_half'
+        - 'config:core.entity_view_display.node.article.presenter_home_selectable'
+        - 'config:core.entity_view_display.node.article.rss'
+        - 'config:core.entity_view_display.node.article.teaser'
+        - 'config:core.entity_view_display.node.article.teaser_landscape_l'
+        - 'config:core.entity_view_display.node.article.teaser_landscape_m'
+        - 'config:core.entity_view_display.node.article.teaser_portrait_m'
+        - 'config:core.entity_view_display.node.article.teaser_portrait_s'
+        - 'config:core.entity_view_display.node.article.teaser_selectable'
+        - 'config:core.entity_view_display.node.article.teaser_square_m'
+        - 'config:core.entity_view_display.node.article.teaser_square_s'
+        - 'config:core.entity_view_display.node.article.teaser_square_xs'
+        - 'config:core.entity_view_display.node.article.token'
+        - 'config:core.entity_view_display.node.ecommerce_slider.amp'
+        - 'config:core.entity_view_display.node.ecommerce_slider.default'
+        - 'config:core.entity_view_display.node.ecommerce_slider.pragraph_small'
+        - 'config:core.entity_view_display.node.ecommerce_slider.teaser'
+        - 'config:core.entity_view_display.node.magazine_products.amp'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_landscape_l'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_landscape_m'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_portrait_m'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_portrait_s'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_square_m'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_square_s'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_square_s_responsive'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_square_xs'
+        - 'config:core.entity_view_display.node.magazine_products.default'
+        - 'config:core.entity_view_display.node.magazine_products.fb_instant_articles_rss'
+        - 'config:core.entity_view_display.node.magazine_products.lazyloading'
+        - 'config:core.entity_view_display.node.magazine_products.presenter_full'
+        - 'config:core.entity_view_display.node.magazine_products.presenter_half'
+        - 'config:core.entity_view_display.node.magazine_products.presenter_home_selectable'
+        - 'config:core.entity_view_display.node.magazine_products.rss'
+        - 'config:core.entity_view_display.node.magazine_products.teaser'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_landscape_l'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_landscape_m'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_portrait_m'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_portrait_s'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_selectable'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_square_m'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_square_s'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_square_xs'
+        - 'config:core.entity_view_display.node.magazine_products.token'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.promotion.default'
+        - 'config:core.entity_view_display.node.promotion.teaser'
+        - 'config:core.entity_view_display.node.promotion.teaser_square_m'
         - 'config:field.storage.media.field_image'
         - 'config:field.storage.node.field_channel'
         - 'config:field.storage.node.field_tags'
@@ -1165,6 +1391,12 @@ display:
             field_tags_1:
               alias: Tag-Names
               raw_output: false
+            rendered_entity_base64:
+              alias: Base64
+              raw_output: false
+            path:
+              alias: URL
+              raw_output: false
     cache_metadata:
       max-age: -1
       contexts:
@@ -1174,6 +1406,67 @@ display:
         - 'user.node_grants:view'
         - user.roles
       tags:
+        - 'config:core.entity_view_display.node.article.amp'
+        - 'config:core.entity_view_display.node.article.amp_teaser_landscape_l'
+        - 'config:core.entity_view_display.node.article.amp_teaser_landscape_m'
+        - 'config:core.entity_view_display.node.article.amp_teaser_portrait_m'
+        - 'config:core.entity_view_display.node.article.amp_teaser_portrait_s'
+        - 'config:core.entity_view_display.node.article.amp_teaser_square_m'
+        - 'config:core.entity_view_display.node.article.amp_teaser_square_s'
+        - 'config:core.entity_view_display.node.article.amp_teaser_square_s_responsive'
+        - 'config:core.entity_view_display.node.article.amp_teaser_square_xs'
+        - 'config:core.entity_view_display.node.article.default'
+        - 'config:core.entity_view_display.node.article.fb_instant_articles_rss'
+        - 'config:core.entity_view_display.node.article.lazyloading'
+        - 'config:core.entity_view_display.node.article.presenter_full'
+        - 'config:core.entity_view_display.node.article.presenter_half'
+        - 'config:core.entity_view_display.node.article.presenter_home_selectable'
+        - 'config:core.entity_view_display.node.article.rss'
+        - 'config:core.entity_view_display.node.article.teaser'
+        - 'config:core.entity_view_display.node.article.teaser_landscape_l'
+        - 'config:core.entity_view_display.node.article.teaser_landscape_m'
+        - 'config:core.entity_view_display.node.article.teaser_portrait_m'
+        - 'config:core.entity_view_display.node.article.teaser_portrait_s'
+        - 'config:core.entity_view_display.node.article.teaser_selectable'
+        - 'config:core.entity_view_display.node.article.teaser_square_m'
+        - 'config:core.entity_view_display.node.article.teaser_square_s'
+        - 'config:core.entity_view_display.node.article.teaser_square_xs'
+        - 'config:core.entity_view_display.node.article.token'
+        - 'config:core.entity_view_display.node.ecommerce_slider.amp'
+        - 'config:core.entity_view_display.node.ecommerce_slider.default'
+        - 'config:core.entity_view_display.node.ecommerce_slider.pragraph_small'
+        - 'config:core.entity_view_display.node.ecommerce_slider.teaser'
+        - 'config:core.entity_view_display.node.magazine_products.amp'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_landscape_l'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_landscape_m'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_portrait_m'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_portrait_s'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_square_m'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_square_s'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_square_s_responsive'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_square_xs'
+        - 'config:core.entity_view_display.node.magazine_products.default'
+        - 'config:core.entity_view_display.node.magazine_products.fb_instant_articles_rss'
+        - 'config:core.entity_view_display.node.magazine_products.lazyloading'
+        - 'config:core.entity_view_display.node.magazine_products.presenter_full'
+        - 'config:core.entity_view_display.node.magazine_products.presenter_half'
+        - 'config:core.entity_view_display.node.magazine_products.presenter_home_selectable'
+        - 'config:core.entity_view_display.node.magazine_products.rss'
+        - 'config:core.entity_view_display.node.magazine_products.teaser'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_landscape_l'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_landscape_m'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_portrait_m'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_portrait_s'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_selectable'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_square_m'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_square_s'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_square_xs'
+        - 'config:core.entity_view_display.node.magazine_products.token'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.promotion.default'
+        - 'config:core.entity_view_display.node.promotion.teaser'
+        - 'config:core.entity_view_display.node.promotion.teaser_square_m'
         - 'config:field.storage.media.field_image'
         - 'config:field.storage.node.field_channel'
         - 'config:field.storage.node.field_tags'
@@ -1196,6 +1489,67 @@ display:
         - 'user.node_grants:view'
         - user.roles
       tags:
+        - 'config:core.entity_view_display.node.article.amp'
+        - 'config:core.entity_view_display.node.article.amp_teaser_landscape_l'
+        - 'config:core.entity_view_display.node.article.amp_teaser_landscape_m'
+        - 'config:core.entity_view_display.node.article.amp_teaser_portrait_m'
+        - 'config:core.entity_view_display.node.article.amp_teaser_portrait_s'
+        - 'config:core.entity_view_display.node.article.amp_teaser_square_m'
+        - 'config:core.entity_view_display.node.article.amp_teaser_square_s'
+        - 'config:core.entity_view_display.node.article.amp_teaser_square_s_responsive'
+        - 'config:core.entity_view_display.node.article.amp_teaser_square_xs'
+        - 'config:core.entity_view_display.node.article.default'
+        - 'config:core.entity_view_display.node.article.fb_instant_articles_rss'
+        - 'config:core.entity_view_display.node.article.lazyloading'
+        - 'config:core.entity_view_display.node.article.presenter_full'
+        - 'config:core.entity_view_display.node.article.presenter_half'
+        - 'config:core.entity_view_display.node.article.presenter_home_selectable'
+        - 'config:core.entity_view_display.node.article.rss'
+        - 'config:core.entity_view_display.node.article.teaser'
+        - 'config:core.entity_view_display.node.article.teaser_landscape_l'
+        - 'config:core.entity_view_display.node.article.teaser_landscape_m'
+        - 'config:core.entity_view_display.node.article.teaser_portrait_m'
+        - 'config:core.entity_view_display.node.article.teaser_portrait_s'
+        - 'config:core.entity_view_display.node.article.teaser_selectable'
+        - 'config:core.entity_view_display.node.article.teaser_square_m'
+        - 'config:core.entity_view_display.node.article.teaser_square_s'
+        - 'config:core.entity_view_display.node.article.teaser_square_xs'
+        - 'config:core.entity_view_display.node.article.token'
+        - 'config:core.entity_view_display.node.ecommerce_slider.amp'
+        - 'config:core.entity_view_display.node.ecommerce_slider.default'
+        - 'config:core.entity_view_display.node.ecommerce_slider.pragraph_small'
+        - 'config:core.entity_view_display.node.ecommerce_slider.teaser'
+        - 'config:core.entity_view_display.node.magazine_products.amp'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_landscape_l'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_landscape_m'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_portrait_m'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_portrait_s'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_square_m'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_square_s'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_square_s_responsive'
+        - 'config:core.entity_view_display.node.magazine_products.amp_teaser_square_xs'
+        - 'config:core.entity_view_display.node.magazine_products.default'
+        - 'config:core.entity_view_display.node.magazine_products.fb_instant_articles_rss'
+        - 'config:core.entity_view_display.node.magazine_products.lazyloading'
+        - 'config:core.entity_view_display.node.magazine_products.presenter_full'
+        - 'config:core.entity_view_display.node.magazine_products.presenter_half'
+        - 'config:core.entity_view_display.node.magazine_products.presenter_home_selectable'
+        - 'config:core.entity_view_display.node.magazine_products.rss'
+        - 'config:core.entity_view_display.node.magazine_products.teaser'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_landscape_l'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_landscape_m'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_portrait_m'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_portrait_s'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_selectable'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_square_m'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_square_s'
+        - 'config:core.entity_view_display.node.magazine_products.teaser_square_xs'
+        - 'config:core.entity_view_display.node.magazine_products.token'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.promotion.default'
+        - 'config:core.entity_view_display.node.promotion.teaser'
+        - 'config:core.entity_view_display.node.promotion.teaser_square_m'
         - 'config:field.storage.media.field_image'
         - 'config:field.storage.node.field_channel'
         - 'config:field.storage.node.field_tags'
