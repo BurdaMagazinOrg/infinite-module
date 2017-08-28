@@ -1603,7 +1603,7 @@ display:
             nid:
               alias: ID
               raw_output: false
-            status:
+            nothing:
               alias: Published
               raw_output: false
             title:
@@ -1644,9 +1644,6 @@ display:
               raw_output: false
             rendered_entity_base64:
               alias: Base64
-              raw_output: false
-            nothing:
-              alias: Action
               raw_output: false
       display_description: ''
       arguments:
@@ -1721,7 +1718,7 @@ display:
             operation: view
             multiple: 1
             access: false
-          break_phrase: false
+          break_phrase: true
           not: false
           entity_type: node
           entity_field: nid
@@ -1730,55 +1727,6 @@ display:
         arguments: false
         fields: false
       fields:
-        nothing:
-          id: nothing
-          table: views
-          field: nothing
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: Action
-          exclude: false
-          alter:
-            alter_text: true
-            text: '{{ raw_arguments.null }}'
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: false
-          plugin_id: custom
         nid:
           id: nid
           table: node_field_data
@@ -1845,18 +1793,18 @@ display:
           entity_type: node
           entity_field: nid
           plugin_id: field
-        status:
-          id: status
-          table: node_field_data
-          field: status
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
           relationship: none
           group_type: group
           admin_label: ''
           label: Published
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: '{{ raw_arguments.null }}'
             make_link: false
             path: ''
             absolute: false
@@ -1892,26 +1840,8 @@ display:
           empty: ''
           hide_empty: false
           empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: boolean
-          settings:
-            format: boolean
-            format_custom_true: ''
-            format_custom_false: ''
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          entity_type: node
-          entity_field: status
-          plugin_id: field
+          hide_alter_empty: false
+          plugin_id: custom
         title:
           id: title
           table: node_field_data
@@ -3094,7 +3024,7 @@ display:
             operation: view
             multiple: 1
             access: false
-          break_phrase: false
+          break_phrase: true
           not: false
           entity_type: node
           entity_field: nid
@@ -3103,55 +3033,6 @@ display:
         arguments: false
         fields: false
       fields:
-        nothing:
-          id: nothing
-          table: views
-          field: nothing
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: Action
-          exclude: false
-          alter:
-            alter_text: true
-            text: '{{ raw_arguments.null }}'
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: false
-          plugin_id: custom
         nid:
           id: nid
           table: node_field_data
@@ -3218,18 +3099,18 @@ display:
           entity_type: node
           entity_field: nid
           plugin_id: field
-        status:
-          id: status
-          table: node_field_data
-          field: status
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
           relationship: none
           group_type: group
           admin_label: ''
           label: Published
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: '{{ raw_arguments.null }}'
             make_link: false
             path: ''
             absolute: false
@@ -3265,26 +3146,8 @@ display:
           empty: ''
           hide_empty: false
           empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: boolean
-          settings:
-            format: boolean
-            format_custom_true: ''
-            format_custom_false: ''
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          entity_type: node
-          entity_field: status
-          plugin_id: field
+          hide_alter_empty: false
+          plugin_id: custom
         title:
           id: title
           table: node_field_data
