@@ -21,6 +21,10 @@ function infinite_datalayer_entity_view(array &$build, EntityInterface $entity, 
   $entity_uuid = $entity->uuid();
   $label = $entity->label();
 
+  if(!in_array($entity_type, ['taxonomy_term', 'user', 'node'])) {
+    return;
+  }
+
   $datalayer_variables = _infinite_datalayer_initialize_variables();
 
   $datalayer_variables['page'] = [
@@ -117,20 +121,6 @@ function infinite_datalayer_infinite_datalayer_user_alter(&$build, &$datalayer_v
     \Drupal::routeMatch()->getParameter('user')->id() != $user->id()
   ) {
     $datalayer_variables = FALSE;
-  }
-}
-
-/**
- * Implements hook_infinite_datalayer_TYPE_alter().
- */
-function infinite_datalayer_infinite_datalayer_entity_alter(&$build, &$datalayer_variables, $context) {
-  switch ($context['entity']->getEntityTypeId()) {
-    case 'advertising_product':
-    case 'paragraph':
-    case 'media':
-    case 'seo_linker':
-    case 'block_content':
-      $datalayer_variables = FALSE;
   }
 }
 
