@@ -125,6 +125,7 @@ function infinite_datalayer_infinite_datalayer_user_alter(&$build, &$datalayer_v
  */
 function infinite_datalayer_infinite_datalayer_entity_alter(&$build, &$datalayer_variables, $context) {
   switch ($context['entity']->getEntityTypeId()) {
+    case 'advertising_product':
     case 'paragraph':
     case 'media':
     case 'seo_linker':
