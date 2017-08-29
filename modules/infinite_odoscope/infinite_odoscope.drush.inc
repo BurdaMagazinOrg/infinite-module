@@ -68,8 +68,10 @@ function drush_infinite_odoscope_odoscope_queue() {
     if (count($claims_delete)) {
       foreach ($args_delete as $nid) {
         $row = [];
+        // add ID and Publlished columns
         $row[] = $nid;
         $row[] = 0;
+        // Fill the rest with empty columns.
         $csv_data[] = $row + array_fill(2, 13,'');
       }
     }
@@ -79,30 +81,34 @@ function drush_infinite_odoscope_odoscope_queue() {
       // open the generated file. This sadly depends on executing drush with
       // -u 1 because the filename starts with the user ID.
       $handle = fopen('private://1article-update.csv', 'r');
-      $row = 0;
+      $rowcount = 0;
       while (($data = fgetcsv($handle)) !== FALSE) {
-        if ($row > 0) {
-          $num = count($data);
+        if ($rowcount > 0) {
           $csv_data[] = $data;
         }
-        $row++;
+        $rowcount++;
       }
       fclose($handle);
     }
 
     // Combine both sets of data into a new csv file.
     if (count($csv_data) > 1) {
-      $handle = fopen('private://odoscope_update.csv.gz', 'w');
+      $handle = fopen('compress.zlib://file:///tmp/odoscope_update.csv.gz', 'w');
       foreach ($csv_data as $fields) {
         fputcsv($handle, $fields);
       }
       fclose($handle);
-      $contents = file_get_contents('private://odoscope_update.csv.gz');
+      $contents = file_get_contents('file:///tmp/odoscope_update.csv.gz');
       $client = \Drupal::httpClient();
       try {
-        $request = $client->post('https://dev.odoscope.cloud/feeduploads/burda/product/0',
+        $config = \Drupal::config('infinite_odoscope.config');
+        $odoscope_user = $config->get('odoscope_user');
+        $odoscope_pass = $config->get('odoscope_pass');
+        $odoscope_url = $config->get('odoscope_url');
+
+        $request = $client->post("$odoscope_url",
                    [
-                     'auth' => ['burda','!CHANGEFORPROD!'],
+                     'auth' => ["$odoscope_user","$odoscope_pass"],
                      'multipart' => [
                        [
                          'name'     => 'file',
@@ -111,17 +117,35 @@ function drush_infinite_odoscope_odoscope_queue() {
                        ]
                      ]
                    ]);
-        var_dump($request);
+        $reply = $request->getBody()->getContents();
+        $status = $request->getStatusCode();
+        \Drupal::logger('infinite_odoscope')->notice('Sent CSV update and got resonse @r with apache code @a', ['@r' => $reply, '@a' => $status]);
       }
       catch (RequestException $e) {
         watchdog_exception('infinite_odoscope', $e->getMessage());
       }
-      $response = json_decode($request->getBody());
-      var_dump($response);
+      finally {
+        // we delete the claimed queue items when we get 200
+        if ($status == 200) {
+          foreach ($claims_create as $claim) {
+            $queue->deleteItem($claim);
+          }
+          foreach ($claims_delete as $claim) {
+            $queue->deleteItem($claim);
+          }
+          // We save the processed CSV-Data
+          $dir = 'private://odoscope-archive';
+          file_prepare_directory($dir, FILE_CREATE_DIRECTORY);
+          $contents = file_save_data($contents, $dir . '/' . date('Ymd-H:i:s') . '.csv.gz');
+        }
+      }
     }
   }
 }
 
+/**
+ * Execute a view using code from drush_views_data_export
+ */
 function _odoscope_infinite_execute_view($args) {
   $views_args[] = implode('+', $args);
   $view = Views::getView('odoscope_article_export');
