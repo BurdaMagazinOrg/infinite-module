@@ -93,19 +93,19 @@ function drush_infinite_odoscope_odoscope_queue() {
 
     // Combine both sets of data into a new csv file.
     if (count($csv_data) > 1) {
-      $handle = fopen('compress.zlib://file:///tmp/odoscope_update.csv.gz', 'w');
+      $handle = fopen('compress.zlib://temporary://odoscope_update.csv.gz', 'w');
       foreach ($csv_data as $fields) {
         fputcsv($handle, $fields);
       }
       fclose($handle);
-      $contents = file_get_contents('file:///tmp/odoscope_update.csv.gz');
+      $contents = file_get_contents('temporary://odoscope_update.csv.gz');
       $client = \Drupal::httpClient();
       try {
         $config = \Drupal::config('infinite_odoscope.config');
         $odoscope_user = $config->get('odoscope_user');
         $odoscope_pass = $config->get('odoscope_pass');
         $odoscope_url = $config->get('odoscope_url');
-
+        $date = date('Ymd-H:i:s');
         $request = $client->post("$odoscope_url",
                    [
                      'auth' => ["$odoscope_user","$odoscope_pass"],
@@ -113,7 +113,7 @@ function drush_infinite_odoscope_odoscope_queue() {
                        [
                          'name'     => 'file',
                          'contents' => $contents,
-                         'filename' => 'update.csv.gz',
+                         'filename' => "update-{$date}.csv.gz",
                        ]
                      ]
                    ]);
