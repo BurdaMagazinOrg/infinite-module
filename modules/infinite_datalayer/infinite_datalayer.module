@@ -67,13 +67,14 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$build, &$datalayer_v
     $datalayer_variables_page['contentSubType'] = $content_sub_type;
   }
 
-  if($node->bundle() == 'article'){
-
-    $datalayer_variables_page['articlePublishDate'] = date(DATE_ISO8601, $node->created->value);
-
+  if($node->hasField('field_channel')){
     if (isset($node->field_channel->entity)) {
       $datalayer_variables_page += _infinite_datalayer_category($node->field_channel->entity);
     }
+  }
+
+  if($node->bundle() == 'article'){
+    $datalayer_variables_page['articlePublishDate'] = date(DATE_ISO8601, $node->created->value);
 
     if (\Drupal::request()->attributes->get('js') == 'ajax') {
       $context['key'] = $node->uuid();
