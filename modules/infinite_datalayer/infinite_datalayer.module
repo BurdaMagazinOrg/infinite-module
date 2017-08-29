@@ -58,15 +58,16 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$build, &$datalayer_v
   $datalayer_variables_page = &$datalayer_variables['page'];
   $datalayer_variables_page['authorName'] = $node->getOwner()->getDisplayName();
 
+  if(!in_array($context['view_mode'], ['full', 'lazyloading'])){
+    $datalayer_variables = FALSE;
+    return;
+  }
+
   if($content_sub_type = _infinite_datalayer_content_sub_types($node)){
     $datalayer_variables_page['contentSubType'] = $content_sub_type;
   }
 
   if($node->bundle() == 'article'){
-    if(!in_array($context['view_mode'], ['full', 'lazyloading'])){
-      $datalayer_variables = FALSE;
-      return;
-    }
 
     $datalayer_variables_page['articlePublishDate'] = date(DATE_ISO8601, $node->created->value);
 
@@ -93,7 +94,7 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$build, &$datalayer_v
 function infinite_datalayer_infinite_datalayer_taxonomy_term_alter(&$build, &$datalayer_variables, $context) {
   /** @var \Drupal\taxonomy\Entity\Term $term */
   $term = $context['entity'];
-  if ($context['view_mode'] == 'amp' || !taxonomy_term_is_page($term)) {
+  if ($context['view_mode'] == 'amp' || !taxonomy_term_is_page($term) && $context['view_mode'] != 'paragraphs_only' ) {
     $datalayer_variables = FALSE;
     return;
   }
