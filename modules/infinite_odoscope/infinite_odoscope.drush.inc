@@ -82,13 +82,15 @@ function drush_infinite_odoscope_odoscope_queue() {
       // -u 1 because the filename starts with the user ID.
       $handle = fopen('private://1article-update.csv', 'r');
       $rowcount = 0;
-      while (($data = fgetcsv($handle)) !== FALSE) {
-        if ($rowcount > 0) {
-          $csv_data[] = $data;
+      if ($handle) {
+        while (($data = fgetcsv($handle)) !== FALSE) {
+          if ($rowcount > 0) {
+            $csv_data[] = $data;
+          }
+          $rowcount++;
         }
-        $rowcount++;
+        fclose($handle);
       }
-      fclose($handle);
     }
 
     // Combine both sets of data into a new csv file.
