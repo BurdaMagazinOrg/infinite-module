@@ -4,5 +4,5 @@ odoscope.cdn:
     https://cdn.odoscope.cloud/instyle/main.js:
       type: external
       minified: true
-      attributes:
-        defer: ""
+#      attributes:
+#        defer: ""
