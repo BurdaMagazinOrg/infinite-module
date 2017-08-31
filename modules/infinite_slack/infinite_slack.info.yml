@@ -1,0 +1,8 @@
+name: Infinite Slack
+type: module
+description: Notify Slack about certain problems.
+package: Infinite
+core: 8.x
+version: 8.x-2.x-dev
+dependencies:
+  - slack
