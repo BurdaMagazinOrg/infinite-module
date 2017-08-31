@@ -99,16 +99,18 @@ function _infinite_advertising_products_reimport(EntityInterface $product) {
   /** @var \Drupal\advertising_products\AdvertisingProductsProviderManager $providerManager */
   $providerManager = \Drupal::service('plugin.manager.advertising_products.provider');
 
-  /** @var \Drupal\advertising_products\AdvertisingProductsProviderInterface $provider */
-  $provider = $providerManager->createInstance($product->product_provider->value);
-  $product_id = $product->product_id->value;
-
   try {
+    /** @var \Drupal\advertising_products\AdvertisingProductsProviderInterface $provider */
+    $provider = $providerManager->createInstance($product->product_provider->value);
+    $product_id = $product->product_id->value;
+
     $product_data = $provider->queryProduct($product_id);
     return $provider->saveProduct($product_data, $product->id());
   }
   catch (Exception $e){
-    drush_set_error('an error accoured', $e->getMessage());
+    $message_prefix = dt('!type !id', ['!type' => $product->bundle(), '!id' => $product->id()]);
+    $message = $message_prefix . ': ' . $e->getMessage();
+    drush_set_error('an error accoured', $message);
     return FALSE;
   }
 
