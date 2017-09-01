@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Primarily Drupal hooks.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Queue\QueueInterface;
+
+
+/**
+ * Implements hook_cron().
+ */
+function infinite_slack_cron() {
+  // check the odoscope queue for too many queued items
+  $queueFactory = \Drupal::service('queue');
+  $queue_name = 'OdoscopeUpdater';
+  $queue = $queueFactory->get($queue_name);
+  if ($queue->numberOfItems() > 100) {
+    // notify slack
+    $message = t('Too many items in odoscope queue');
+    Drupal::service('slack.slack_service')->sendMessage($message);
+  }
+}

@@ -1,8 +1,41 @@
 <?php
 
 use Drupal\Core\Url;
+use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
 
+/**
+ * Implements hook_file_validate().
+ */
+function infinite_media_file_validate(FileInterface $file) {
+	$errors = [];
+
+	// Apply 'upload' image style on temporary image files.
+	if ($file->isTemporary() && in_array($file->getMimeType(), ['image/gif', 'image/jpeg', 'image/png'])) {
+		$image_style_name = 'upload';
+		$image_style = ImageStyle::load($image_style_name);
+		if ($image_style === NULL) {
+			$errors[] = t("The image style %image_style to be applied on the uploaded image does not exist.", ['%image_style' => $image_style_name]);
+		}
+		else {
+			$derived_uri = $file->getFileUri() . '.derived';
+			if (!$image_style->createDerivative($file->getFileUri(), $derived_uri)) {
+				$errors[] = t('The uploaded image could not be processed with style %image_style. The image file may be invalid.', ['%image_style' => $image_style_name]);
+			}
+			else {
+				if (file_unmanaged_move($derived_uri, $file->getFileUri(), FILE_EXISTS_REPLACE) === FALSE) {
+					$errors[] = t('An error occurred while saving the uploaded image file.');
+				}
+			}
+		}
+	}
+
+	return $errors;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
 function infinite_media_theme_suggestions_image_alter(array &$suggestions, array $variables) {
   $style_name = $variables['style_name'];
   if ($style_name === NULL) {
