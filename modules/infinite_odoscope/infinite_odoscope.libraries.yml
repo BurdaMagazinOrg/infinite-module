@@ -1,0 +1,8 @@
+odoscope.cdn:
+  header: true
+  js:
+    https://cdn.odoscope.cloud/instyle/main.js:
+      type: external
+      minified: true
+      attributes:
+        defer: ""

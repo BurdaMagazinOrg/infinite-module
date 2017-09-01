@@ -1,0 +1,5 @@
+infinite_odoscope.infinite_odoscope_settings_form:
+  title: 'Infinite Odoscope'
+  parent: system.admin_config_services
+  description: 'Configure the Odoscope API.'
+  route_name: infinite_odoscope.infinite_odoscope_settings_form

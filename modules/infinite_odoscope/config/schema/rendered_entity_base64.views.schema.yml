@@ -1,0 +1,7 @@
+views.field.rendered_entity_base64:
+  type: views_field
+  label: 'Rendered Entity in Base64'
+  mapping:
+    text:
+      type: label
+      label: 'Rendered Entity in Base64'

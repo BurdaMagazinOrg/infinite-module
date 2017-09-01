@@ -4,3 +4,144 @@
  * @file
  * Primarily Drupal hooks functions to manipulate Odoscope views.
  */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\views\ViewExecutable;
+use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Queue\QueueInterface;
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function infinite_odoscope_views_data_alter(array &$data) {
+  foreach ($data as $base_table => $field) {
+    if (isset($data[$base_table]['rendered_entity'])) {
+      $data[$base_table]['rendered_entity_base64'] = [
+        'field' => [
+          'title' => t('Rendered entity in base 64'),
+          'help' => t('Renders an entity in a view mode and encodes the result in base 64.'),
+          'id' => 'rendered_entity_base64',
+        ],
+      ];
+    }
+  }
+  return $data;
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function infinite_odoscope_library_info_alter(&$libraries, $extension) {
+  if($extension == 'infinite_odoscope') {
+    $cdn = Drupal::config('odoscope')->get('cdn');
+    if($cdn) {
+      $data = reset($libraries['odoscope.cdn']['js']);
+      $libraries['odoscope.cdn']['js'] = [
+        $cdn => $data
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function infinite_odoscope_views_pre_render(ViewExecutable $view) {
+  if (isset($view) && ($view->id() == 'infinite_taxonomy_term') && $view->current_display == 'front') {
+    $view->element['#attached']['library'][] = 'infinite_odoscope/odoscope.cdn';
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+function infinite_odoscope_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if($entity->bundle() == 'article' && $build['#view_mode'] == 'full') {
+    $build['#attached']['library'][] = 'infinite_odoscope/odoscope.cdn';
+  }
+}
+
+
+/**
+ * Implements hook_entity_insert().
+ */
+function infinite_odoscope_entity_insert(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'article') {
+    return;
+  }
+
+  /** @var QueueFactory $queue_factory */
+  $queue_factory = \Drupal::service('queue');
+  /** @var QueueInterface $queue */
+  $queue = $queue_factory->get('OdoscopeUpdater');
+  $item = new \stdClass();
+  $item->nid = $entity->id();
+  $item->action = 'create';
+  $queue->createItem($item);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function infinite_odoscope_entity_update(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'article') {
+    return;
+  }
+
+  /** @var QueueFactory $queue_factory */
+  $queue_factory = \Drupal::service('queue');
+  /** @var QueueInterface $queue */
+  $queue = $queue_factory->get('OdoscopeUpdater');
+  // Note: we do not care if duplicate items end up in the queue.
+  $item = new \stdClass();
+  $item->nid = $entity->id();
+  $item->action = 'update';
+  $queue->createItem($item);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function infinite_odoscope_entity_delete(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'article') {
+    return;
+  }
+
+  /** @var QueueFactory $queue_factory */
+  $queue_factory = \Drupal::service('queue');
+  /** @var QueueInterface $queue */
+  $queue = $queue_factory->get('OdoscopeUpdater');
+  // Note: we do not care if duplicate items end up in the queue.
+  $item = new \stdClass();
+  $item->nid = $entity->id();
+  $item->action = 'delete';
+  $queue->createItem($item);
+}
+
+/**
+ * Implements hook_cron().
+ */
+function infinite_odoscope_cron() {
+  // find and delete archived odoscope uploads that are older than 30 days.
+  $database = \Drupal::database();
+  $query = $database->select('file_managed', 'f');
+  $cond1 = $query->condition('uri', db_like('private://odoscope-archive/') . '%', 'LIKE');
+  $cond2 = $query->condition('created', REQUEST_TIME - 30*24*60*60, '<');
+  $query->fields('f', array('fid'));
+  $results = $query->execute()->fetchAll();
+  foreach($results as $result) {
+    file_delete($result->fid);
+  }
+}
+
+/**
+ * Callback function for the #post_render array.
+ *
+ * @param (string) $markup
+ *
+ * @return (string) base64 encoded markup
+ */
+function infinite_odoscope_base64_postrender($markup) {
+  return base64_encode($markup);
+}
