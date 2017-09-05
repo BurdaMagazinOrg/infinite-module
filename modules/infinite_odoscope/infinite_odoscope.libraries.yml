@@ -6,3 +6,15 @@ odoscope.cdn:
       minified: true
       attributes:
         defer: ""
+
+odoscope.manager:
+  version: 1
+  js:
+    js/managers/odoscope-manager.js: { }
+
+odoscope.article:
+  version: 1
+  js:
+    js/models/odoscope-article-model.js: { }
+  dependencies:
+    - infinite_odoscope/odoscope.manager
