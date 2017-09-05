@@ -93,8 +93,10 @@ function infinite_ad_injection_get_content(){
       ->getViewBuilder('block')
       ->view($block);
 
-    $block_render = \Drupal::service('renderer')->render($block_view);
-    $contents[] = (string)$block_render;
+    $block_render = trim((string)\Drupal::service('renderer')->render($block_view));
+    if(strlen($block_render)){
+      $contents[] = (string)$block_render;
+    }
   }
 
   return $contents;

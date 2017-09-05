@@ -12,80 +12,116 @@ use Drupal\taxonomy\Entity\Term;
  */
 
 /**
- * Implements hook_node_view().
+ * Implements hook_entity_view().
  */
-function infinite_datalayer_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
-  if (!in_array($view_mode, ['full', 'lazyloading']) || $node->bundle() != 'article') {
+function infinite_datalayer_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $entity_type = $entity->getEntityTypeId();
+  $entity_bundle = $entity->bundle();
+  $entity_id = $entity->id();
+  $entity_uuid = $entity->uuid();
+  $label = $entity->label();
+
+  if(!in_array($entity_type, ['taxonomy_term', 'user', 'node'])) {
     return;
   }
 
   $datalayer_variables = _infinite_datalayer_initialize_variables();
+
   $datalayer_variables['page'] = [
-    'name' => $node->title->value,
-    'contentType' => $node->bundle(),
-    'contentSubType' => _infinite_datalayer_content_sub_types($node),
-    'articlePublishDate' => date(DATE_ISO8601, $node->created->value),
-    'authorName' => $node->uid->entity->getDisplayName(),
+    'name' => $label,
+    'entityType' => $entity_type,
+    'contentType' => $entity_bundle,
+    'entityID' => $entity_id,
   ];
+  $key = $entity_uuid;
 
-  if (isset($node->field_channel->entity)) {
-    $datalayer_variables['page'] += _infinite_datalayer_category($node->field_channel->entity);
+  $alter_hooks = [
+    'infinite_datalayer_entity',
+    'infinite_datalayer_' . $entity_type,
+    'infinite_datalayer_' . $entity_type . '_' . $entity_bundle
+  ];
+  $context = [
+    'key' => $key,
+    'entity' => $entity,
+    'view_mode' => $view_mode
+  ];
+  \Drupal::moduleHandler()->alter($alter_hooks, $build, $datalayer_variables, $context);
+
+  if($datalayer_variables){
+    infinite_datalayer_add($build, $context['key'], $datalayer_variables);
   }
 
-  if (\Drupal::request()->attributes->get('js') == 'ajax') {
-    $key = $node->uuid();
-  }
-  else {
-    $key = 'page';
-  }
-
-  infinite_datalayer_add($build, $key, $datalayer_variables);
 }
 
 /**
- * Implements hook_taxonomy_term_view().
+ * Implements hook_infinite_datalayer_TYPE_alter().
  */
-function infinite_datalayer_taxonomy_term_view(array &$build, EntityInterface $term, EntityViewDisplayInterface $display, $view_mode) {
-  if ($view_mode == 'amp' || !taxonomy_term_is_page($term)) {
+function infinite_datalayer_infinite_datalayer_node_alter(&$build, &$datalayer_variables, $context) {
+  /** @var \Drupal\node\Entity\Node $node */
+  $node = $context['entity'];
+  $datalayer_variables_page = &$datalayer_variables['page'];
+  $datalayer_variables_page['authorName'] = $node->getOwner()->getDisplayName();
+
+  if(!in_array($context['view_mode'], ['full', 'lazyloading'])){
+    $datalayer_variables = FALSE;
     return;
   }
 
-  $datalayer_variables = _infinite_datalayer_initialize_variables();
-  $datalayer_variables['page'] = [
-    'name' => $term->name->value,
-    'contentType' => $term->bundle(),
-  ];
+  if($content_sub_type = _infinite_datalayer_content_sub_types($node)){
+    $datalayer_variables_page['contentSubType'] = $content_sub_type;
+  }
+
+  if($node->hasField('field_channel')){
+    if (isset($node->field_channel->entity)) {
+      $datalayer_variables_page += _infinite_datalayer_category($node->field_channel->entity);
+    }
+  }
+
+  if($node->bundle() == 'article'){
+    $datalayer_variables_page['articlePublishDate'] = date(DATE_ISO8601, $node->created->value);
+
+    if (\Drupal::request()->attributes->get('js') == 'ajax') {
+      $context['key'] = $node->uuid();
+    }
+    else {
+      $context['key'] = 'page';
+    }
+  }
+  else {
+    $datalayer_variables_page['publishDate'] = date(DATE_ISO8601, $node->created->value);
+  }
+
+}
+
+/**
+ * Implements hook_infinite_datalayer_TYPE_alter().
+ */
+function infinite_datalayer_infinite_datalayer_taxonomy_term_alter(&$build, &$datalayer_variables, $context) {
+  /** @var \Drupal\taxonomy\Entity\Term $term */
+  $term = $context['entity'];
+  if ($context['view_mode'] == 'amp' || !taxonomy_term_is_page($term) && $context['view_mode'] != 'paragraphs_only' ) {
+    $datalayer_variables = FALSE;
+    return;
+  }
 
   if ($term->bundle() == 'channel') {
     $datalayer_variables['page'] += _infinite_datalayer_category($term);
   }
-
-  infinite_datalayer_add($build, 'page', $datalayer_variables);
+  $context['key'] = 'page';
 }
 
 /**
- * Implements hook_user_view().
+ * Implements hook_infinite_datalayer_TYPE_alter().
  */
-function infinite_datalayer_user_view(array &$build, EntityInterface $user, EntityViewDisplayInterface $display, $view_mode) {
-  if ($view_mode == 'amp') {
-    return;
+function infinite_datalayer_infinite_datalayer_user_alter(&$build, &$datalayer_variables, $context) {
+  /** @var \Drupal\user\Entity\User $user */
+  $user = $context['entity'];
+  if ($context['view_mode'] == 'amp' ||
+    \Drupal::routeMatch()->getRouteName() != 'entity.user.canonical' ||
+    \Drupal::routeMatch()->getParameter('user')->id() != $user->id()
+  ) {
+    $datalayer_variables = FALSE;
   }
-
-  if (\Drupal::routeMatch()->getRouteName() != 'entity.user.canonical') {
-    return;
-  }
-
-  if (\Drupal::routeMatch()->getParameter('user')->id() != $user->id()) {
-    return;
-  }
-
-  $datalayer_variables = _infinite_datalayer_initialize_variables();
-  $datalayer_variables['page'] = [
-    'name' => $user->getDisplayName(),
-    'contentType' => $user->bundle(),
-  ];
-
-  infinite_datalayer_add($build, 'page', $datalayer_variables);
 }
 
 /**
@@ -103,7 +139,7 @@ function infinite_datalayer_preprocess_node(&$variables) {
  * @param array $variables
  */
 function infinite_datalayer_add(&$build, $key, $variables) {
-  $datalayer_object = json_encode($variables);
+  $datalayer_object = json_encode($variables, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
   $build['#attached']['html_head'][] = [
     [
@@ -143,27 +179,36 @@ function _infinite_datalayer_initialize_variables() {
 function _infinite_datalayer_content_sub_types(Node $node) {
   $content_sub_types = [];
 
-  if ($node->field_sponsor_type->value == 'native' && isset($node->field_campaign->entity)) {
+  if ($node->hasField('field_sponsor_type')
+    && $node->field_sponsor_type->value == 'native'
+    && isset($node->field_campaign->entity)) {
     $content_sub_types[] = 'NativeArticle';
   }
 
-  foreach ($node->field_paragraphs->referencedEntities() as $paragraph) {
-    if (in_array($paragraph->bundle(), ['gallery', 'instagram', 'nexx_video', 'pinterest', 'riddle', 'twitter'])) {
-      $content_sub_types[] = Unicode::ucfirst($paragraph->bundle());
-    }
-    elseif ($paragraph->bundle() == 'media' && isset($paragraph->field_media->entity)) {
-      $content_sub_types[] = Unicode::ucfirst($paragraph->field_media->entity->bundle());
-    }
-    elseif ($paragraph->bundle() == 'tracdelight') {
-      $content_sub_types[] = 'Affiliate-Tracdelight';
-    }
-    elseif ($paragraph->bundle() == 'advertising_products_paragraph') {
-      foreach ($paragraph->field_advertising_products->referencedEntities() as $product) {
-        if ($product->bundle() == 'advertising_product_amazon') {
-          $content_sub_types[] = 'Affiliate-Amazon';
-        }
-        elseif ($product->bundle() == 'advertising_product_tracdelight') {
-          $content_sub_types[] = 'Affiliate-Tracdelight';
+  if ($node->hasField('field_paragraphs')) {
+    foreach ($node->field_paragraphs->referencedEntities() as $paragraph) {
+      if (in_array($paragraph->bundle(), ['gallery', 'instagram', 'nexx_video', 'pinterest', 'riddle', 'twitter'])) {
+        $content_sub_types[] = Unicode::ucfirst($paragraph->bundle());
+      }
+      elseif ($paragraph->bundle() == 'media' && isset($paragraph->field_media->entity)) {
+        $content_sub_types[] = Unicode::ucfirst($paragraph->field_media->entity->bundle());
+      }
+      elseif ($paragraph->bundle() == 'tracdelight') {
+        $content_sub_types[] = 'Affiliate-Tracdelight';
+      }
+      elseif ($paragraph->bundle() == 'advertising_products_paragraph') {
+        foreach ($paragraph->field_advertising_products->referencedEntities() as $product) {
+          switch ($product->bundle()) {
+            case 'advertising_product_generic':
+              $content_sub_types[] = 'Affiliate-Generic';
+              break;
+            case 'advertising_product_amazon':
+              $content_sub_types[] = 'Affiliate-Amazon';
+              break;
+            case 'advertising_product_tracdelight':
+              $content_sub_types[] = 'Affiliate-Tracdelight';
+              break;
+          }
         }
       }
     }

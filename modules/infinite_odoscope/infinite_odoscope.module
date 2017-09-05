@@ -123,6 +123,22 @@ function infinite_odoscope_entity_delete(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_cron().
+ */
+function infinite_odoscope_cron() {
+  // find and delete archived odoscope uploads that are older than 30 days.
+  $database = \Drupal::database();
+  $query = $database->select('file_managed', 'f');
+  $cond1 = $query->condition('uri', db_like('private://odoscope-archive/') . '%', 'LIKE');
+  $cond2 = $query->condition('created', REQUEST_TIME - 30*24*60*60, '<');
+  $query->fields('f', array('fid'));
+  $results = $query->execute()->fetchAll();
+  foreach($results as $result) {
+    file_delete($result->fid);
+  }
+}
+
+/**
  * Callback function for the #post_render array.
  *
  * @param (string) $markup

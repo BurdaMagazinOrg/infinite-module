@@ -765,8 +765,8 @@ display:
           label: Bild
           exclude: false
           alter:
-            alter_text: true
-            text: 'http://www.instyle.de{{field_image}}'
+            alter_text: false
+            text: ''
             make_link: false
             path: ''
             absolute: false
@@ -828,8 +828,8 @@ display:
           label: Vorschaubild
           exclude: false
           alter:
-            alter_text: true
-            text: 'http://www.instyle.de{{thumbnail__target_id}}'
+            alter_text: false
+            text: ''
             make_link: false
             path: ''
             absolute: false
@@ -2283,8 +2283,8 @@ display:
           label: Bild
           exclude: false
           alter:
-            alter_text: true
-            text: 'http://www.instyle.de{{field_image}}'
+            alter_text: false
+            text: ''
             make_link: false
             path: ''
             absolute: false
@@ -2346,8 +2346,8 @@ display:
           label: Vorschaubild
           exclude: false
           alter:
-            alter_text: true
-            text: 'http://www.instyle.de{{thumbnail__target_id}}'
+            alter_text: false
+            text: ''
             make_link: false
             path: ''
             absolute: false
@@ -3573,8 +3573,8 @@ display:
           label: Bild
           exclude: false
           alter:
-            alter_text: true
-            text: 'http://www.instyle.de{{field_image}}'
+            alter_text: false
+            text: ''
             make_link: false
             path: ''
             absolute: false
@@ -3636,8 +3636,8 @@ display:
           label: Vorschaubild
           exclude: false
           alter:
-            alter_text: true
-            text: 'http://www.instyle.de{{thumbnail__target_id}}'
+            alter_text: false
+            text: ''
             make_link: false
             path: ''
             absolute: false

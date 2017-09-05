@@ -22,7 +22,7 @@ class SettingsForm extends ConfigFormBase {
    */
   protected function getEditableConfigNames() {
     return [
-      'infinite_odoscope.config'
+      'infinite_odoscope.settings'
     ];
   }
 
@@ -37,7 +37,7 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('infinite_odoscope.config');
+    $config = $this->config('infinite_odoscope.settings');
 
     $form['odoscope_user'] = array(
       '#type' => 'textfield',
@@ -80,15 +80,15 @@ class SettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $this->config('infinite_odoscope.config')
+    $this->config('infinite_odoscope.settings')
       ->set('odoscope_user', $form_state->getValue('odoscope_user'))
       ->save();
 
-    $this->config('infinite_odoscope.config')
+    $this->config('infinite_odoscope.settings')
       ->set('odoscope_pass', $form_state->getValue('odoscope_pass'))
       ->save();
 
-    $this->config('infinite_odoscope.config')
+    $this->config('infinite_odoscope.settings')
       ->set('odoscope_url', $form_state->getValue('odoscope_url'))
       ->save();
   }
