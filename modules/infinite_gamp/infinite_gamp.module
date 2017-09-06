@@ -3,11 +3,13 @@
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\media_entity\Entity\Media;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 
 /**
  * Implements hook_page_attachments().
  */
 function infinite_gamp_page_attachments_alter(array &$attachments) {
+
   // Check if it's a views page of a term.
   if (\Drupal::routeMatch()->getParameter('view_id') && \Drupal::routeMatch()->getParameter('taxonomy_term') && !\Drupal::service('path.matcher')->isFrontPage()) {
     $taxonomyTerm = \Drupal::routeMatch()->getParameter('taxonomy_term');
@@ -129,4 +131,49 @@ function infinite_gamp_entity_view_mode_alter(&$view_mode, EntityInterface $enti
     }
   }
 
+}
+
+/**
+ *
+ * Implements hook_entity_view_alter().
+ *
+ * @param array $build
+ * @param EntityInterface $entity
+ * @param EntityViewDisplayInterface $display
+ */
+function infinite_gamp_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+
+    if($build['#view_mode'] === 'full') {
+
+        $config = \Drupal::config('infinite_gamp.settings')->get('content_types');
+        $content_types = explode('|', $config);
+        $content_types = array_flip($content_types);
+
+        switch ($entity->getEntityType()->id()) {
+            case 'node':
+                _infinite_gamp_remove_amp_header($build, $entity, $content_types);
+                break;
+            default:
+                '';
+        }
+
+    }
+}
+
+/**
+ *
+ * Helper function to remove amp metatag.
+ *
+ * @param $build
+ * @param EntityInterface $entity
+ * @param $content_types
+ */
+function _infinite_gamp_remove_amp_header(&$build, EntityInterface $entity, $content_types) {
+    if (isset($content_types[$entity->bundle()])) {
+        foreach ($build['#attached']['html_head_link'] as $key => $item) {
+            if ($build['#attached']['html_head_link'][$key][0]['rel'] == 'amphtml') {
+                unset($build['#attached']['html_head_link'][$key]);
+            }
+        }
+    }
 }
