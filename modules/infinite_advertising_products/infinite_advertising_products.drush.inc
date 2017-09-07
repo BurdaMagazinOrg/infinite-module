@@ -39,7 +39,12 @@ function drush_infinite_advertising_products_reimport($pid = 'tracdelight', $chu
     }
   }
   else {
-    $bundle = 'advertising_product_' . $pid;
+    if(strpos($pid,'advertising_product_') === 0) {
+      $bundle = $pid;
+    }
+    else {
+      $bundle = 'advertising_product_' . $pid;
+    }
     $def = \Drupal::service('entity_type.bundle.info')->getBundleInfo('advertising_product');
 
     if(isset($def[$bundle])){
