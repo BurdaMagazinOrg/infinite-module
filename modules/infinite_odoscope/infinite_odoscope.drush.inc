@@ -103,7 +103,7 @@ function drush_infinite_odoscope_odoscope_queue() {
       $contents = file_get_contents('temporary://odoscope_update.csv.gz');
       $client = \Drupal::httpClient();
       try {
-        $config = \Drupal::config('infinite_odoscope.config');
+        $config = \Drupal::config('infinite_odoscope.settings');
         $odoscope_user = $config->get('odoscope_user');
         $odoscope_pass = $config->get('odoscope_pass');
         $odoscope_url = $config->get('odoscope_url');
