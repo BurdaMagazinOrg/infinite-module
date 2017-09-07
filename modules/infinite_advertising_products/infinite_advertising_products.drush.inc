@@ -109,8 +109,7 @@ function _infinite_advertising_products_reimport(EntityInterface $product) {
     $provider = $providerManager->createInstance($product->product_provider->value);
     $product_id = $product->product_id->value;
 
-    $product_data = $provider->queryProduct($product_id);
-    return $provider->saveProduct($product_data, $product->id());
+    return $provider->fetchProductOnTheFly($product_id);
   }
   catch (Exception $e){
     $message_prefix = dt('!type !id', ['!type' => $product->bundle(), '!id' => $product->id()]);
