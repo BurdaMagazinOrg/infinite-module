@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Entity\EntityInterface;
+use Drush\Log\LogLevel;
 
 /**
  * Implements hook_drush_command().
@@ -32,7 +33,13 @@ function drush_infinite_advertising_products_reimport($pid = 'tracdelight', $chu
   if(is_numeric($pid)){
     $product = $advProdEntityTypeManager->load($pid);
     if($product) {
-      _infinite_advertising_products_reimport($product);
+      $product = _infinite_advertising_products_reimport($product);
+      if($product) {
+        drush_log('Product reimported', LogLevel::SUCCESS);
+      }
+      else {
+        drush_log('Product not reimported', LogLevel::ERROR);
+      }
     }
     else {
       drush_set_error('product not found', dt('The product whth ID "!id" could not be found.', ['!id' => $pid]));
