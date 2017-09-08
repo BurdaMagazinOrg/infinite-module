@@ -38,7 +38,7 @@ function drush_infinite_advertising_products_reimport($pid = 'tracdelight', $chu
         drush_log('Product reimported', LogLevel::SUCCESS);
       }
       else {
-        drush_log('Product not reimported', LogLevel::ERROR);
+        drush_log('Product not reimported', LogLevel::WARNING);
       }
     }
     else {
@@ -94,7 +94,6 @@ function drush_infinite_advertising_products_reimport($pid = 'tracdelight', $chu
 
         drush_print_table($rows);
       }
-
 
     }
     else {
