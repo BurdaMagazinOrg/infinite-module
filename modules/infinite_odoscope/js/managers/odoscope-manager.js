@@ -102,11 +102,17 @@
     console.log(">>> window.oscTeaserElementReplaced", pElement);
   };
 
+  window.replaceAvailableTeasers= function (pElement) {
+    // apply social icon code and timeago
+
+    console.log(">>> window.replaceAvailableTeasers", pElement);
+  };
+
   window.oscInfiniteBlockViewUpdated = function (pElement) {
     Drupal.behaviors.blazy.attach(pElement);
     jQuery(pElement).data('infiniteModel').refresh();
     // update waypoints
-    window.Waypoint.refreshAll();
+    // window.Waypoint.refreshAll();
     console.log(">>> window.oscInfiniteBlockViewUpdated", pElement);
 
     if (TrackingManager != undefined) {
