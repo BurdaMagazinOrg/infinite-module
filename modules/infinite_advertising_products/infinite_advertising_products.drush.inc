@@ -18,6 +18,9 @@ function infinite_advertising_products_drush_command() {
       'chunksize' => 'The count of elements to process at once (default: 50)',
       'batchsize' => 'The count of elements to process at all (default: 0 for all)',
     ],
+    'options' => array(
+      'delay' => 'How many millisoconds shlould be waited between each reimpor.',
+    ),
     'aliases' => ['apreimp'],
     'examples' => [
       'drush apreimp tracdelight 10 500"' => 'Reimport 500 advertising trecdelight products by importing 10 products at once.'
@@ -29,6 +32,7 @@ function infinite_advertising_products_drush_command() {
 
 function drush_infinite_advertising_products_reimport($pid = 'tracdelight', $chunksize = 50, $batchsize = 0){
   $advProdEntityTypeManager = \Drupal::entityTypeManager()->getStorage('advertising_product');
+  $delay = drush_get_option('delay');
 
   if(is_numeric($pid)){
     $product = $advProdEntityTypeManager->load($pid);
@@ -79,11 +83,14 @@ function drush_infinite_advertising_products_reimport($pid = 'tracdelight', $chu
         foreach ($products as $product) {
           $ret = _infinite_advertising_products_reimport($product);
           if($ret === FALSE) {
+            drush_log(dt('Product !id not reimported', ['!id' => $product->id()]), LogLevel::WARNING);
             $error++;
           }
           else {
+            drush_log(dt('Product !id reimported', ['!id' => $product->id()]), LogLevel::SUCCESS);
             $success++;
           }
+          usleep($delay * 1000);
         }
 
         $rows = [
