@@ -161,7 +161,7 @@ function drush_infinite_advertising_products_fix_images($pid = 'tracdelight', $c
       $query = \Drupal::entityQuery('advertising_product')
         ->condition('type', $bundle)
         ->condition('status', TRUE)
-        ->condition('product_image.target_id', 'IS NOT NULL')
+        ->condition('product_image.target_id', NULL, 'IS NOT NULL')
         ->condition('product_image.target_id.entity.filename', '%' . db_like('advert') . '%', 'LIKE');
 
       if($batchsize) {
