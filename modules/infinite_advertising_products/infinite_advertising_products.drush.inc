@@ -61,8 +61,7 @@ function drush_infinite_advertising_products_reimport($pid = 'tracdelight', $chu
     if(isset($def[$bundle])){
       $query = \Drupal::entityQuery('advertising_product')
         ->condition('type', $bundle)
-        ->condition('status', TRUE)
-        ->notExists('field_product_category_txt');
+        ->condition('status', TRUE);
 
       if($batchsize) {
         $query->range(0, $batchsize);
