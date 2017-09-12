@@ -181,7 +181,7 @@ function drush_infinite_advertising_products_fix_images($pid = 'tracdelight', $c
         $products = $advProdEntityTypeManager->loadMultiple($chunk);
 
         foreach ($products as $product) {
-          $ret = _infinite_advertising_products_reimport($product);
+          $ret = _infinite_advertising_products_reimport_extended($product);
           if($ret === FALSE) {
             drush_log(dt('Product !id not reimported', ['!id' => $product->id()]), LogLevel::WARNING);
             $error++;
@@ -226,7 +226,40 @@ function _infinite_advertising_products_reimport(EntityInterface $product) {
   catch (Exception $e){
     $message_prefix = dt('!type !id', ['!type' => $product->bundle(), '!id' => $product->id()]);
     $message = $message_prefix . ': ' . $e->getMessage();
-    drush_set_error('an error accoured', $message);
+    drush_set_error('ERROR', $message);
+    return FALSE;
+  }
+
+}
+
+
+function _infinite_advertising_products_reimport_extended(EntityInterface $product) {
+
+  /** @var \Drupal\advertising_products\AdvertisingProductsProviderManager $providerManager */
+  $providerManager = \Drupal::service('plugin.manager.advertising_products.provider');
+
+  try {
+    /** @var \Drupal\advertising_products\AdvertisingProductsProviderInterface $provider */
+    $provider = $providerManager->createInstance($product->product_provider->value);
+    $product_id = $product->product_id->value;
+
+    $product_data = $provider->queryProduct($product_id);
+    $entity_id = $provider->getEntityIdFromProductId($product_id);
+    if (empty($product_data['items'])) {
+      // No product
+      throw new \Exception(sprintf('No items found for entity "%s" with product ID "%s","%s"', $entity_id, $product_id, print_r($product_data, TRUE)));
+    }
+    else {
+      $product = reset($product_request['items']);
+      $fetchedProduct = $provider->saveProduct($product, $entity_id);
+
+    }
+
+  }
+  catch (Exception $e){
+    $message_prefix = dt('!type !id', ['!type' => $product->bundle(), '!id' => $product->id()]);
+    $message = $message_prefix . ': ' . $e->getMessage();
+    drush_set_error('ERROR', $message);
     return FALSE;
   }
 
