@@ -1,16 +1,19 @@
 odoscope.cdn:
+  version: 1
   header: true
   js:
+    js/utils/head-utils.js: {}
     https://cdn.odoscope.cloud/instyle/main.js:
       type: external
       minified: true
       attributes:
-        defer: ""
+#        defer: ""
 
 odoscope.manager:
   version: 1
+#  header: true
   js:
-    js/managers/odoscope-manager.js: { }
+    js/managers/odoscope-manager.js: {  }
 
 odoscope.article:
   version: 1

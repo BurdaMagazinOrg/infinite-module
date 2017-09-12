@@ -98,22 +98,15 @@
 
   window.oscTeaserElementReplaced = function (pElement) {
     // apply social icon code and timeago
-
-    console.log(">>> window.oscTeaserElementReplaced", pElement);
-  };
-
-  window.replaceAvailableTeasers= function (pElement) {
-    // apply social icon code and timeago
-
-    console.log(">>> window.replaceAvailableTeasers", pElement);
   };
 
   window.oscInfiniteBlockViewUpdated = function (pElement) {
+    console.log(">>> window.oscInfiniteBlockViewUpdated", pElement);
+
     Drupal.behaviors.blazy.attach(pElement);
     jQuery(pElement).data('infiniteModel').refresh();
     // update waypoints
     // window.Waypoint.refreshAll();
-    console.log(">>> window.oscInfiniteBlockViewUpdated", pElement);
 
     if (TrackingManager != undefined) {
       TrackingManager.trackEvent({
@@ -123,5 +116,17 @@
       });
     }
   };
+
+  if (typeof window.oscCallbackCalls != "undefined") {
+    $(document).ready(function () {
+
+      _.delay(function () {
+        jQuery(window.oscCallbackCalls).each(function (pIndex, pItem) {
+          window[pItem.functionName].apply(null, pItem.arguments);
+        });
+      }, 1);
+
+    });
+  }
 
 })(jQuery, Drupal, drupalSettings, Backbone, BurdaInfinite);
