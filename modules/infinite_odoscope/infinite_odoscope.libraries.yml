@@ -2,7 +2,7 @@ odoscope.cdn:
   version: 1
   header: true
   js:
-    js/utils/head-utils.js: {}
+    js/utils/head-utils.js: { }
     https://cdn.odoscope.cloud/instyle/main.js:
       type: external
       minified: true
