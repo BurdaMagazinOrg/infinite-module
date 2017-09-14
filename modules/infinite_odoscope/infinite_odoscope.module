@@ -49,6 +49,7 @@ function infinite_odoscope_library_info_alter(&$libraries, $extension) {
  */
 function infinite_odoscope_views_pre_render(ViewExecutable $view) {
   if (isset($view) && ($view->id() == 'infinite_taxonomy_term') && $view->current_display == 'front') {
+    $view->element['#attached']['library'][] = 'infinite_odoscope/odoscope.head';
     $view->element['#attached']['library'][] = 'infinite_odoscope/odoscope.cdn';
     $view->element['#attached']['library'][] = 'infinite_odoscope/odoscope.manager';
   }
@@ -59,6 +60,7 @@ function infinite_odoscope_views_pre_render(ViewExecutable $view) {
  */
 function infinite_odoscope_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   if($entity->bundle() == 'article' && $build['#view_mode'] == 'full') {
+    $build['#attached']['library'][] = 'infinite_odoscope/odoscope.head';
     $build['#attached']['library'][] = 'infinite_odoscope/odoscope.cdn';
     $build['#attached']['library'][] = 'infinite_odoscope/odoscope.manager';
     $build['#attached']['library'][] = 'infinite_odoscope/odoscope.article';

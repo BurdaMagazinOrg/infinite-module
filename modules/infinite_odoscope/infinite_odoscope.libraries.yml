@@ -1,8 +1,13 @@
-odoscope.cdn:
+odoscope.head:
   version: 1
   header: true
   js:
     js/utils/head-utils.js: { }
+
+odoscope.cdn:
+  version: 1
+  header: true
+  js:
     https://cdn.odoscope.cloud/instyle/main.js:
       type: external
       minified: true
