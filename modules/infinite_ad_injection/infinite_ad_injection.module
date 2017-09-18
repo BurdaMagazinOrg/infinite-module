@@ -56,6 +56,10 @@ function infinite_ad_injection_node_view_alter(array &$build, EntityInterface $e
   if($entity->bundle() == 'article' && in_array($build['#view_mode'], $view_modes)){
     $build['#post_render'][] = 'infinite_ad_injection_article_inject_content';
   }
+
+  if($entity->bundle() == 'viversum_horoscope' && in_array($build['#view_mode'], ['full'])){
+    $build['#post_render'][] = 'infinite_ad_injection_viversum_horoscope_inject_content';
+  }
 }
 
 /**
@@ -113,17 +117,39 @@ function infinite_ad_injection_article_inject_content($children, $elements){
 }
 
 /**
- *
+ * Post render callback for horoscope pages
  *
  * @param $children
- * @param $contents
- * @param $selectors
- * @param $first
- * @param $each
+ * @param $elements
  *
  * @return \Drupal\Component\Render\MarkupInterface|string
  */
-function infinite_ad_injection_inject_content($children, $contents, $selectors, $first, $each){
+function infinite_ad_injection_viversum_horoscope_inject_content($children, $elements){
+  $contents = infinite_ad_injection_get_content(['dyn_blocks_node']);
+//  $contents = infinite_ad_injection_get_content__dummy();
+  if(empty($contents)) {
+    return $children;
+  }
+  $selectors = [];
+  $selectors[] = CssSelector::toXPath('div.item-paragraph:not(.item-paragraph--text):not(.item-paragraph--viversum-zodiac)');
+  $selectors[] = CssSelector::toXPath('div.item-paragraph--text p');
+  $selectors[] = CssSelector::toXPath('div.item-paragraph--viversum-zodiac p');
+  return infinite_ad_injection_inject_content($children, $contents, $selectors, 0, 6, 'after');
+}
+
+/**
+ *
+ *
+ * @param array $children
+ * @param array $contents
+ * @param array $selectors
+ * @param int $first
+ * @param int $each
+ * @param string $placement
+ *
+ * @return \Drupal\Component\Render\MarkupInterface|string
+ */
+function infinite_ad_injection_inject_content($children, $contents, $selectors, $first, $each, $placement = 'after'){
   $contents_count = count($contents);
   $slelector = implode('|', $selectors);
 
@@ -147,14 +173,14 @@ function infinite_ad_injection_inject_content($children, $contents, $selectors, 
   libxml_use_internal_errors(TRUE);
   $qp = html5qp($crawler);
   $qp->find('.pread')
-    ->each(function($i, $e) use ($contents, $contents_count){
+    ->each(function($i, $e) use ($contents, $contents_count, $placement){
     if($content = $contents[$i % $contents_count]){
       // Wrapping is required because querypath creates a whole valid html structure
       // qp('<div>some content</div>') -> <html><head></head><body><div>some content</div></body></html>
       // qp('<script src="..."></script>') -> <html><head><script src="..."></script></head></html>
       $content_wrapped =  '<div class="ad-injct-wrpr">'.$content.'</div>';
       $content_inner = qp($content_wrapped)->find('body div.ad-injct-wrpr')->innerHTML();
-      qp($e)->removeClass('pread')->after($content_inner);
+      qp($e)->removeClass('pread')->$placement($content_inner);
     }
   });
   libxml_clear_errors();
@@ -176,19 +202,21 @@ function infinite_ad_injection_get_content($regions = ['dyn_blocks_node'], $rend
   $contents = [];
 
   $blocks = _infinite_blocks_get_dyn_region_blocks($regions);
-  foreach ($blocks as $id => $block) {
-    $block_view = \Drupal::entityTypeManager()
-      ->getViewBuilder('block')
-      ->view($block);
+  if(isset($blocks) && is_array($blocks)){
+    foreach ($blocks as $id => $block) {
+      $block_view = \Drupal::entityTypeManager()
+        ->getViewBuilder('block')
+        ->view($block);
 
-    if($rendered){
-      $block_render = trim((string)\Drupal::service('renderer')->render($block_view));
-      if(strlen($block_render)){
-        $contents[] = (string)$block_render;
+      if($rendered){
+        $block_render = trim((string)\Drupal::service('renderer')->render($block_view));
+        if(strlen($block_render)){
+          $contents[] = (string)$block_render;
+        }
       }
-    }
-    else {
-      $contents[] = $block_view;
+      else {
+        $contents[] = $block_view;
+      }
     }
   }
 
