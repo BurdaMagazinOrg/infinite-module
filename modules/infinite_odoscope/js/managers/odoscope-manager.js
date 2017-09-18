@@ -80,8 +80,8 @@
     OdoscopeManager.getInstance().activate(tmpOdoscopeAttr);
   };
 
-  window.oscInitializeArticlePageRendering = function (pDecisionFunction, pConfig, p1, p2) {
-    console.log("%codoscope | articlePageRendering", "color: green; font-weight: bold;", pConfig, p1, p2);
+  window.oscInitializeArticlePageRendering = function (pDecisionFunction, pConfig) {
+    console.log("%codoscope | articlePageRendering", "color: green; font-weight: bold;", pConfig);
 
     pDecisionFunction({}, function (pArticles, p1, p2) {
       console.log("%codoscope | articlePageRendering  | decision", "color: green; font-weight: bold;", OdoscopeManager.getInstance().getGroup(), pArticles, p1, p2);
@@ -120,11 +120,17 @@
   if (typeof window.oscCallbackCalls != "undefined") {
     $(document).ready(function () {
 
-      _.delay(function () {
-        jQuery(window.oscCallbackCalls).each(function (pIndex, pItem) {
+      jQuery(window.oscCallbackCalls).each(function (pIndex, pItem) {
+        if (pItem.functionName == "oscInfiniteBlockViewUpdated") {
+
+          _.delay(function () {
+            window[pItem.functionName].apply(null, pItem.arguments);
+          }, 0);
+        } else {
           window[pItem.functionName].apply(null, pItem.arguments);
-        });
-      }, 1);
+        }
+
+      });
 
     });
   }

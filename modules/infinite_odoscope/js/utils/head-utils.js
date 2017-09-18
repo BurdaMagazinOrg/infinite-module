@@ -26,3 +26,12 @@ window.oscTeaserElementReplaced = function () {
     }
   );
 };
+
+window.oscInitializeArticlePageRendering = function () {
+  window.oscCallbackCalls.push(
+    {
+      functionName: 'oscInitializeArticlePageRendering',
+      arguments: [].slice.call(arguments)
+    }
+  );
+};

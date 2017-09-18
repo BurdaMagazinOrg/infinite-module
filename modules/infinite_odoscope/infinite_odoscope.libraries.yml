@@ -18,7 +18,7 @@ odoscope.manager:
   version: 1
 #  header: true
   js:
-    js/managers/odoscope-manager.js: {  }
+    js/managers/odoscope-manager.js: { }
 
 odoscope.article:
   version: 1
