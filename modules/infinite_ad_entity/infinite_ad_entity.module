@@ -1,6 +1,7 @@
 <?php
 
-use Drupal\Component\Serialization\Json;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 
 function infinite_ad_entity_theme_registry_alter(&$theme_registry){
   $hook = 'ad_integration_preprocess_views_view_row_fia';
@@ -9,6 +10,50 @@ function infinite_ad_entity_theme_registry_alter(&$theme_registry){
   if($i !== FALSE){
     unset($preprocess_functions[$i]);
   }
+}
+
+/**
+ * Implements hook_entity_build_defaults_alter().
+ */
+function infinite_ad_entity_entity_build_defaults_alter(array &$build, EntityInterface $entity, $view_mode) {
+  /** @var FieldableEntityInterface $entity */
+  if($entity instanceof FieldableEntityInterface
+    && $entity->hasField('field_header_blocks')
+    && !$entity->get('field_header_blocks')->isEmpty()){
+
+    /** @var \Drupal\Core\Theme\ActiveTheme $theme */
+    $theme = \Drupal::service('theme.manager')->getActiveTheme();
+    $base_themes = $theme->getBaseThemes();
+
+    if(array_key_exists('infinite_amp', $base_themes)) {
+      // Replace defined ad blocks by the corresponding amp ad blocks.
+      $header_blocks = $entity->get('field_header_blocks')->getValue();
+      foreach ($header_blocks as $key => &$header_block) {
+        $block = \Drupal::entityTypeManager()
+          ->getStorage('block')
+          ->load($header_block['target_id']);
+
+        if(isset($block) && $block->getPlugin() == 'ad_entity_block') {
+
+          $replacement_block_id = $header_block['target_id'] . '_amp';
+          $replacement_block = \Drupal::entityTypeManager()
+            ->getStorage('block')
+            ->load($replacement_block_id);
+
+          if(isset($replacement_block)){
+            $header_block['target_id'] = $replacement_block_id;
+          }
+          else {
+            unset($header_blocks[$key]);
+          }
+
+        }
+      }
+      $entity->set('field_header_blocks', $header_blocks);
+    }
+
+  }
+
 }
 
 function infinite_ad_entity_preprocess_views_view_row_fia(&$variables) {
@@ -39,7 +84,8 @@ function infinite_ad_entity_preprocess_dfp_amp(&$vars){
 
   if(isset($vars['json']['targeting']['channel'])) {
     $targeting = $vars['json']['targeting'];
-    $channel = str_replace('homepage/', '', $targeting['channel']);
+    $channel = is_array($targeting['channel']) ? reset($targeting['channel']) : $targeting['channel'];
+    $channel = str_replace('homepage/', '', $channel);
     unset($targeting['channel']);
     $vars['json']['targeting'] = $targeting;
 
