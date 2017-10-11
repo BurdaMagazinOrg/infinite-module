@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * Alter the list of allowed widget plugins per view mode and entity type.
+ *
+ * Use this hook to restrict or allow the usage
+ * of given plugins in the widgets form.
+ *
+ * @param array &$plugin_definitions
+ *   The array of plugin definitions.
+ *   Keys are plugin ids, values are plugin labels.
+ * @param string &$default_plugin
+ *   The default plugin id to use on the widgets form.
+ * @param array $context
+ *   Consists of following keys:
+ *   - 'view_mode': The machine name of the given view mode.
+ *   - 'belonging_entity_type': The given entity type id.
+ */
+function infinite_imagepin_allowed_widget_plugins_alter(array &$plugin_definitions, &$default_plugin, array $context) {
+    // Don't include the default text widget.
+    #unset($plugin_definitions['text']);
+    #$default_plugin = 'product';
+}
+
+
