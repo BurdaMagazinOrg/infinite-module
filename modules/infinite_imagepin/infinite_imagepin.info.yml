@@ -1,0 +1,7 @@
+name: Infinite Imagepin
+type: module
+description: Impagepin related customizations
+core: 8.x
+package: Infinite
+dependencies:
+  - imagepin
