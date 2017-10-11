@@ -99,7 +99,7 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$build, &$datalayer_v
 function infinite_datalayer_infinite_datalayer_taxonomy_term_alter(&$build, &$datalayer_variables, $context) {
   /** @var \Drupal\taxonomy\Entity\Term $term */
   $term = $context['entity'];
-  if ($context['view_mode'] == 'amp' || !taxonomy_term_is_page($term) && $context['view_mode'] != 'paragraphs_only' ) {
+  if (strpos($context['view_mode'], 'amp') === 0 || !taxonomy_term_is_page($term) && $context['view_mode'] != 'paragraphs_only') {
     $datalayer_variables = FALSE;
     return;
   }
@@ -116,7 +116,7 @@ function infinite_datalayer_infinite_datalayer_taxonomy_term_alter(&$build, &$da
 function infinite_datalayer_infinite_datalayer_user_alter(&$build, &$datalayer_variables, $context) {
   /** @var \Drupal\user\Entity\User $user */
   $user = $context['entity'];
-  if ($context['view_mode'] == 'amp' ||
+  if (strpos($context['view_mode'], 'amp') === 0 ||
     \Drupal::routeMatch()->getRouteName() != 'entity.user.canonical' ||
     \Drupal::routeMatch()->getParameter('user')->id() != $user->id()
   ) {

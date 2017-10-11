@@ -51,7 +51,7 @@ function drush_infinite_advertising_products_reimport($pid = 'tracdelight', $chu
   $advProdEntityTypeManager = \Drupal::entityTypeManager()->getStorage('advertising_product');
   $delay = drush_get_option('delay');
 
-  if(is_numeric($pid)){
+  if(is_numeric($pid) && $pid != '004'){
     $product = $advProdEntityTypeManager->load($pid);
     if($product) {
       $product = _infinite_advertising_products_reimport($product);
@@ -133,7 +133,7 @@ function drush_infinite_advertising_products_fix_images($pid = 'tracdelight', $c
   $advProdEntityTypeManager = \Drupal::entityTypeManager()->getStorage('advertising_product');
   $delay = drush_get_option('delay');
 
-  if(is_numeric($pid)){
+  if(is_numeric($pid) && $pid != '004'){
     $product = $advProdEntityTypeManager->load($pid);
     if($product) {
       $product = _infinite_advertising_products_reimport($product);
