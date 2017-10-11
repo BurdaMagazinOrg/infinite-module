@@ -68,7 +68,8 @@ class InfinitePromotionTeaserBlock extends BlockBase implements ContainerFactory
    */
   public function build() {
     $parameters = $this->currentRouteMatch->getParameters();
-    $entity = reset(reset($parameters));
+    $parameter = reset($parameters);
+    $entity = reset($parameter);
 
     $cache = ['contexts' => ['url.path']];
 
