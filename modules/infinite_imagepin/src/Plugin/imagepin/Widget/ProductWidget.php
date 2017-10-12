@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\imagepin\Plugin\imagepin\Widget;
+namespace Drupal\infinite_imagepin\Plugin\imagepin\Widget;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\imagepin\Plugin\WidgetBase;
@@ -37,14 +37,14 @@ class ProductWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function previewContent($value) {
-    return ['#markup' => '<p>' . $value['text'] . '</p>'];
+    return ['#markup' => $value['text']];
   }
 
   /**
    * {@inheritdoc}
    */
   public function viewContent($value) {
-    return ['#markup' => '<p>' . $value['text'] . '</p>'];
+    return ['#markup' => $value['text']];
   }
 
 }
