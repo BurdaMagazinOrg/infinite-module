@@ -38,14 +38,14 @@ class ProductWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function previewContent($value) {
-    return ['#markup' => $value['text']];
+    return ['#markup' => $value['product']];
   }
 
   /**
    * {@inheritdoc}
    */
   public function viewContent($value) {
-    return ['#markup' => $value['text']];
+    return ['#markup' => $value['product']];
   }
 
 }
