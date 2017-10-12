@@ -8,7 +8,7 @@ use Drupal\imagepin\Plugin\WidgetBase;
 /**
  * The text widget plugin.
  *
- * @Product(
+ * @Widget(
  *   id = "product",
  *   label = @Translation("Text"),
  * )
@@ -24,8 +24,9 @@ class ProductWidget extends WidgetBase {
     // TODO Required fields currently don't work.
     // Form API documentation lacks here, again.
     $element['product'] = [
-      '#type' => 'textfield',
-      '#title' => t('Text').'ccsdf',
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'advertising_product',
+      '#title' => t('Product'),
       '#required' => FALSE,
       '#weight' => 10,
     ];
