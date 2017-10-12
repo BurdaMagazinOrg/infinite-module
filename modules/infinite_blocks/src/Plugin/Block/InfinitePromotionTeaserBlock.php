@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -80,10 +81,20 @@ class InfinitePromotionTeaserBlock extends BlockBase implements ContainerFactory
       }
     }
 
-    return [
+    $build = [
       '#theme' => 'block',
-      '#cache' => $cache
+      '#attributes' => [],
+      '#contextual_links' => [],
+      '#weight' => 0,
+      '#configuration' => $this->getConfiguration(),
+      '#plugin_id' => $this->getPluginId(),
+      '#base_plugin_id' => $this->getBaseId(),
+      '#derivative_plugin_id' => $this->getDerivativeId(),
+      '#cache' => $cache,
+      'content' => ['#markup' => Markup::create('')]
     ];
+
+    return $build;
   }
 
 }
