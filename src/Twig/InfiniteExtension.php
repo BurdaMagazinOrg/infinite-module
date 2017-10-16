@@ -118,7 +118,6 @@ class InfiniteExtension extends Twig_Extension {
     }
     $html = $dom->saveHtml();
     $renderArray['#text'] = Markup::create($html);
-    $renderArray['#format'] = 'full_html';
 
     return $renderArray;
   }
