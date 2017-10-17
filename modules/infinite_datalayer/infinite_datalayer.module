@@ -16,14 +16,15 @@ use Drupal\taxonomy\Entity\Term;
  */
 function infinite_datalayer_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   $entity_type = $entity->getEntityTypeId();
-  $entity_bundle = $entity->bundle();
-  $entity_id = $entity->id();
-  $entity_uuid = $entity->uuid();
-  $label = $entity->label();
 
   if(!in_array($entity_type, ['taxonomy_term', 'user', 'node'])) {
     return;
   }
+
+  $entity_bundle = $entity->bundle();
+  $entity_id = $entity->id();
+  $entity_uuid = $entity->uuid();
+  $label = $entity->label();
 
   $datalayer_variables = _infinite_datalayer_initialize_variables();
 
