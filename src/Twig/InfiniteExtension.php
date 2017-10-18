@@ -7,7 +7,11 @@
 
 namespace Drupal\infinite_base\Twig;
 
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\image\Entity\ImageStyle;
 use Exception;
 use Twig_Extension;
@@ -26,6 +30,7 @@ class InfiniteExtension extends Twig_Extension {
   public function getFilters() {
     return array(
       new Twig_SimpleFilter('plain_text', [$this, 'plainText']),
+      new Twig_SimpleFilter('inject_no_follow', [$this, 'injectNoFollow']),
     );
   }
 
@@ -99,4 +104,21 @@ class InfiniteExtension extends Twig_Extension {
     return $build;
   }
 
+  public static function injectNoFollow($renderArray)
+  {
+    $html = $renderArray['#text'];
+    $dom = new DOMDocument();
+    $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $x = new DOMXPath($dom);
+
+    /** @var DOMElement $node */
+    foreach($x->query("//a") as $node)
+    {
+      $node->setAttribute("rel","nofollow");
+    }
+    $html = $dom->saveHtml();
+    $renderArray['#text'] = Markup::create($html);
+
+    return $renderArray;
+  }
 }

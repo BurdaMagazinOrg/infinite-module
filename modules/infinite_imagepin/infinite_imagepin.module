@@ -18,7 +18,6 @@
  */
 function infinite_imagepin_allowed_widget_plugins_alter(array &$plugin_definitions, &$default_plugin, array $context) {
     // Don't include the default text widget.
-    #drupal_set_message($plugin_definitions);
     unset($plugin_definitions['text']);
     $default_plugin = 'product';
 }

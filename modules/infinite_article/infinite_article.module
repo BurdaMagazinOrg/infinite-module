@@ -31,31 +31,3 @@ function infinite_article_node_build_defaults_alter(array &$build, EntityInterfa
   }
 
 }
-
-/**
- * Implements hook_form_node_article_edit_form_alter().
- */
-function infinite_article_form_node_article_edit_form_alter(&$form, FormStateInterface $form_state) {
-  _infinite_article_form_alter_helper($form, $form_state);
-}
-
-/**
- * Implements hook_form_node_article_form_alter().
- */
-function infinite_article_form_node_article_form_alter(&$form, FormStateInterface $form_state) {
-  _infinite_article_form_alter_helper($form, $form_state);
-}
-
-/**
- * Helper function for article form alter hooks.
- *
- * @param $form
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- */
-function _infinite_article_form_alter_helper(&$form, FormStateInterface $form_state) {
-  // Move field_promote_states to options group.
-  $form['field_promote_states']['#group'] = 'options';
-  if (isset($form['field_hide_created'])) {
-    $form['field_hide_created']['#group'] = 'author';
-  }
-}

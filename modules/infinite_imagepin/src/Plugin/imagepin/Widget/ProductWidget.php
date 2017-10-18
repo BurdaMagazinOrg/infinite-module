@@ -10,7 +10,8 @@ use Drupal\imagepin\Plugin\WidgetBase;
  *
  * @Widget(
  *   id = "product",
- *   label = @Translation("Text"),
+
+ *   label = @Translation("Product"),
  * )
  */
 class ProductWidget extends WidgetBase {
@@ -29,6 +30,7 @@ class ProductWidget extends WidgetBase {
       '#title' => t('Product'),
       '#required' => FALSE,
       '#weight' => 10,
+
     ];
 
     return $element;
@@ -45,7 +47,7 @@ class ProductWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function viewContent($value) {
-    return ['#markup' => $value['product']];
+     return ['#markup' => $value['product']];
   }
 
 }

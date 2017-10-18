@@ -12,3 +12,11 @@
   text-decoration: none !important;
   display: inline-block;
 }
+
+.field--name-field-anchor {
+  display: none;
+}
+
+.node-magazine-products-form .field--name-field-anchor, .taxonomy-term-form .field--name-field-anchor {
+  display: block !important;
+}
