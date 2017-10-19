@@ -5,7 +5,7 @@ package: Infinite
 core: 8.x
 version: 8.x-1.x-dev
 dependencies:
-  - search
+  - search_api
   - views
   - views_load_more
   - infinite_base
