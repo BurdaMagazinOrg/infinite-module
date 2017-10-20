@@ -21,9 +21,7 @@ class ProductWidget extends WidgetBase {
      */
     public function formNewElement(array &$form, FormStateInterface $form_state) {
         $element = [];
-
-        // TODO Required fields currently don't work.
-        // Form API documentation lacks here, again.
+        
         $element['product'] = [
             '#type' => 'entity_autocomplete',
             '#target_type' => 'advertising_product',
