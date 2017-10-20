@@ -49,7 +49,7 @@ class ProductWidget extends WidgetBase {
     public function viewContent($value) {
         $entity_type = 'advertising_product';
         $entity_id = $value['product']; // static for example purpose
-        $view_mode = 'amp';
+        $view_mode = 'facebook_instant_articles_rss';
 
         $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id);
         $view_builder = \Drupal::entityTypeManager()->getViewBuilder('advertising_product');
