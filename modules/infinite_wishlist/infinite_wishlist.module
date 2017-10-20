@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * Implements hook_page_attachments().
+ */
+function infinite_wishlist_page_attachments(array &$attachments)
+{
+  if (false === \Drupal::service('router.admin_context')->isAdminRoute(
+    \Drupal::routeMatch()->getRouteObject()
+  )) {
+    $attachments['#attached']['library'][] = 'infinite_wishlist/basic';
+  }
+}

@@ -1,0 +1,6 @@
+basic:
+  css:
+    theme:
+      css/wishlist.css: {}
+  js:
+    js/wishlist.js: {}

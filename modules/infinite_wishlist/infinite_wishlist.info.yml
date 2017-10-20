@@ -1,0 +1,6 @@
+name: Infinite Wishlist
+type: module
+description: Provide a wishlist functionality
+package: Infinite
+core: 8.x
+version: 8.x-1.x-dev
