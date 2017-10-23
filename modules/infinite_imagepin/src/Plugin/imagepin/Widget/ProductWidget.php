@@ -21,7 +21,7 @@ class ProductWidget extends WidgetBase {
      */
     public function formNewElement(array &$form, FormStateInterface $form_state) {
         $element = [];
-        
+
         $element['product'] = [
             '#type' => 'entity_autocomplete',
             '#target_type' => 'advertising_product',
@@ -50,11 +50,11 @@ class ProductWidget extends WidgetBase {
         $view_mode = 'facebook_instant_articles_rss';
 
         $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id);
-        $view_builder = \Drupal::entityTypeManager()->getViewBuilder('advertising_product');
+        $view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity_type);
         $pre_render = $view_builder->view($entity, $view_mode);
         $render_output = render($pre_render);
 
-        return ['#markup' => $render_output ];
+        return ['#markup' => $value['product']];
     }
 
 }
