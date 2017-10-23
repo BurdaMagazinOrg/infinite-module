@@ -1,4 +1,7 @@
-infinite_wishlist.wishlist:
-  path: '/wishlist'
+infinite_wishlist.fetch-products:
+  path: '/wishlist/fetch-products'
+  defaults:
+    _title: ''
+    _controller: '\Drupal\infinite_wishlist\Controller\InfiniteWishlistController::show'
   requirements:
     _permission: 'access content'

@@ -29,6 +29,59 @@ Drupal.behaviors.infiniteWishlist = {
         this.growl('added item ' + productId + ' to wishlist');
     },
 
+    growl: function (message) {
+        var growl = document.createElement('div');
+        growl.setAttribute('style', 'position: fixed; bottom: 0; right: 0; background: black; color: deeppink; font-weight: bold; padding: 10px 20px');
+        growl.innerText = message;
+        document.body.appendChild(growl);
+        window.setTimeout(function () {
+            document.body.removeChild(growl);
+        }, 5000);
+    },
+
+    fetchProducts: function () {
+        var storedWishlist = this.getWishlist();
+        jQuery.ajax({
+            url: '/wishlist/fetch-products',
+            method: 'post',
+            dataType: 'json',
+            data: {
+                wishlist: storedWishlist
+            },
+            success: function (result) {
+                for (var i = 0; i < Object.keys(storedWishlist).length; i++) {
+                    var storedItem = storedWishlist[Object.keys(storedWishlist)[i]];
+                    var itemProductId = storedItem.productId;
+                    for (var j = 0; j < result.products.length; j++) {
+                        var resultItem = result.products[j];
+                        if (resultItem.productId === itemProductId) {
+                            storedWishlist[i].markup = resultItem.markup;
+                            storedWishlist[i].expires = Date.now() + (60 * 60 * 1000);
+                        }
+                    }
+                }
+
+                localStorage.setItem('infinite_wishlist', JSON.stringify(storedWishlist));
+                Drupal.behaviors.infiniteWishlist.renderList();
+            },
+            error: function () {
+
+            }
+        });
+    },
+
+    renderList: function () {
+        var list = document.getElementById('wishlist');
+        list.innerHTML = '';
+        var items = this.getWishlist();
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var li = document.createElement('li');
+            li.innerHTML = item.markup;
+            list.appendChild(li);
+        }
+    },
+
     injectIcons: function () {
         var items = document.getElementsByClassName('item-ecommerce');
         for (var i = 0; i < items.length; i++) {
@@ -47,53 +100,39 @@ Drupal.behaviors.infiniteWishlist = {
         }
     },
 
-    growl: function (message) {
-        var growl = document.createElement('div');
-        growl.setAttribute('style', 'position: fixed; bottom: 0; right: 0; background: black; color: deeppink; font-weight: bold; padding: 10px 20px');
-        growl.innerText = message;
-        document.body.appendChild(growl);
-        window.setTimeout(function () {
-            document.body.removeChild(growl);
-        }, 5000);
+    injectHeaderIcon: function () {
+        var container = document.createElement('div');
+        var list = document.createElement('ul');
+        var button = document.createElement('button');
+
+        container.id = 'wishlist__container';
+
+        button.innerText = '❤';
+        button.id = 'wishlist__toggle';
+        button.addEventListener('click', function () {
+            list.classList.toggle('open');
+        });
+        button.addEventListener('mouseover', function () {
+            Drupal.behaviors.infiniteWishlist.fetchProducts();
+            Drupal.behaviors.infiniteWishlist.growl('prefetch rendered products if not cached');
+        });
+
+        list.id = 'wishlist';
+
+        document.getElementById('menu-main-navigation').insertBefore(container, document.getElementById('search-open-btn'));
+        container.appendChild(button);
+        container.appendChild(list);
     },
 
     attach: function () {
         try {
-            var test = 'test';
+            var test = 'local_storage_availability_test';
             localStorage.setItem(test, test);
             localStorage.removeItem(test);
+            this.injectHeaderIcon();
             this.injectIcons();
         } catch (e) { // local storage is unavailable
             return false;
         }
     }
 };
-
-
-// var container = document.createElement('div');
-// container.id = 'wishlist__container';
-//
-// var button = document.createElement('button');
-// button.innerText = 'add to wishlist';
-// button.setAttribute('style', 'color: darkred; background: black;');
-// button.addEventListener('click', function() {
-//
-// });
-//
-// var list = document.createElement('ul');
-// list.id = 'wishlist';
-//
-// document.body.insertBefore(container, document.body.firstChild);
-// container.appendChild(button);
-// container.appendChild(list);
-//
-// var items = [{
-//     'title': 'Hello',
-//     'url': 'http://instyle.local/test',
-// }];
-// for(var i = 0; i < items.length; i++) {
-//     var item = items[i];
-//     var li = document.createElement('li');
-//     li.innerHTML = '<a href="' + item.url + '">' + item.title + '</a>';
-//     list.appendChild(li);
-// }
