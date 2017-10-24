@@ -23,7 +23,9 @@ Drupal.behaviors.infiniteWishlist = {
             return;
         }
         wishlist.push({
-            productId: productId
+            productId: productId,
+            expires: 0,
+            markup: ''
         });
         localStorage.setItem('infinite_wishlist', JSON.stringify(wishlist));
         this.growl('added item ' + productId + ' to wishlist');
@@ -41,6 +43,21 @@ Drupal.behaviors.infiniteWishlist = {
 
     fetchProducts: function () {
         var storedWishlist = this.getWishlist();
+
+        // only fetch products is at least one has not been cached or not in the last hour
+        var fetch = false;
+        for (var i = 0; i < storedWishlist.length; i++) {
+            var item = storedWishlist[i];
+            if(item.expires < Date.now()) {
+                fetch = true;
+                break;
+            }
+        }
+        if (false === fetch) {
+            console.log('everything fetched');
+            return;
+        }
+
         if (window.Worker) {
             var worker = new Worker('/modules/contrib/infinite_base/modules/infinite_wishlist/js/wishlist-worker.js');
             worker.onmessage = function (e) {
