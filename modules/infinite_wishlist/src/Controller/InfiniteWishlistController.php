@@ -14,7 +14,7 @@ class InfiniteWishlistController extends ControllerBase
   {
     $productIds = [];
     $products = [];
-    $wishlist = $request->get('wishlist');
+    $wishlist = json_decode($request->get('wishlist'), true);
     foreach ($wishlist as $wishlistItem) {
       $productIds[] = $wishlistItem['productId'];
     }

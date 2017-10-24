@@ -41,33 +41,17 @@ Drupal.behaviors.infiniteWishlist = {
 
     fetchProducts: function () {
         var storedWishlist = this.getWishlist();
-        jQuery.ajax({
-            url: '/wishlist/fetch-products',
-            method: 'post',
-            dataType: 'json',
-            data: {
-                wishlist: storedWishlist
-            },
-            success: function (result) {
-                for (var i = 0; i < Object.keys(storedWishlist).length; i++) {
-                    var storedItem = storedWishlist[Object.keys(storedWishlist)[i]];
-                    var itemProductId = storedItem.productId;
-                    for (var j = 0; j < result.products.length; j++) {
-                        var resultItem = result.products[j];
-                        if (resultItem.productId === itemProductId) {
-                            storedWishlist[i].markup = resultItem.markup;
-                            storedWishlist[i].expires = Date.now() + (60 * 60 * 1000);
-                        }
-                    }
-                }
-
+        if (window.Worker) {
+            var worker = new Worker('/modules/contrib/infinite_base/modules/infinite_wishlist/js/wishlist-worker.js');
+            worker.onmessage = function (e) {
+                storedWishlist = e.data;
                 localStorage.setItem('infinite_wishlist', JSON.stringify(storedWishlist));
                 Drupal.behaviors.infiniteWishlist.renderList();
-            },
-            error: function () {
-
-            }
-        });
+            };
+            worker.postMessage(storedWishlist);
+        } else {
+            // TODO: do we need a fallback for this? http://caniuse.com/#search=web%20worker
+        }
     },
 
     renderList: function () {
@@ -132,6 +116,7 @@ Drupal.behaviors.infiniteWishlist = {
             var test = 'local_storage_availability_test';
             localStorage.setItem(test, test);
             localStorage.removeItem(test);
+
             this.injectHeaderIcon();
             this.injectIcons();
         } catch (e) { // local storage is unavailable
