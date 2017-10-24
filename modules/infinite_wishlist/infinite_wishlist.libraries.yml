@@ -4,3 +4,4 @@ basic:
       css/wishlist.css: {}
   js:
     js/wishlist.js: {}
+    js/wishlist-page.js: {}

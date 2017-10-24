@@ -48,7 +48,12 @@ Drupal.behaviors.infiniteWishlist = {
         }, 5000);
     },
 
-    fetchProducts: function () {
+    fetchProducts: function (callback) {
+        if (typeof callback === 'undefined') {
+            callback = function(storedWishlist) {
+                Drupal.behaviors.infiniteWishlist.renderList();
+            }
+        }
         var storedWishlist = this.getWishlist();
 
         // only fetch products is at least one has not been cached or not in the last hour
@@ -62,7 +67,7 @@ Drupal.behaviors.infiniteWishlist = {
         }
         if (false === fetch) {
             this.growl('everything already fetched');
-            Drupal.behaviors.infiniteWishlist.renderList();
+            callback(this.getWishlist());
             return;
         }
 
@@ -71,7 +76,8 @@ Drupal.behaviors.infiniteWishlist = {
             worker.onmessage = function (e) {
                 storedWishlist = e.data;
                 localStorage.setItem('infinite_wishlist', JSON.stringify(storedWishlist));
-                Drupal.behaviors.infiniteWishlist.renderList();
+
+                callback(storedWishlist);
             };
             worker.postMessage(storedWishlist);
         } else {

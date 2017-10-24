@@ -5,12 +5,23 @@ namespace Drupal\infinite_wishlist\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Render\Markup;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class InfiniteWishlistController extends ControllerBase
 {
-  public function show(Request $request)
+  public function show()
+  {
+    $build = array(
+      '#type' => 'markup',
+      '#markup' => Markup::create('<div id="wishlist-page"></div>'),
+    );
+    return $build;
+  }
+
+
+  public function loadProducts(Request $request)
   {
     $productIds = [];
     $products = [];
@@ -30,7 +41,7 @@ class InfiniteWishlistController extends ControllerBase
         $products[] = [
           'productId' => $product->product_id,
           'markup' => sprintf(
-            '<li><a href="%s" target="_blank">%s</a></li>',
+            '<a href="%s" target="_blank">%s</a>',
             $product->product_url__uri,
             $product->product_name
           ),
