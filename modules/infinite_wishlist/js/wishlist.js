@@ -22,12 +22,19 @@ Drupal.behaviors.infiniteWishlist = {
             this.growl('item ' + productId + ' is already present in wishlist');
             return;
         }
+        if (null === productId) {
+            this.growl('Unalbe to retrieve product id');
+            return;
+        }
         wishlist.push({
             productId: productId,
             expires: 0,
             markup: ''
         });
         localStorage.setItem('infinite_wishlist', JSON.stringify(wishlist));
+
+        this.fetchProducts();
+
         this.growl('added item ' + productId + ' to wishlist');
     },
 
@@ -54,7 +61,8 @@ Drupal.behaviors.infiniteWishlist = {
             }
         }
         if (false === fetch) {
-            console.log('everything fetched');
+            this.growl('everything already fetched');
+            Drupal.behaviors.infiniteWishlist.renderList();
             return;
         }
 
