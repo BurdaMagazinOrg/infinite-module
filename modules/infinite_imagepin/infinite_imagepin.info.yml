@@ -5,6 +5,3 @@ core: 8.x
 package: Infinite
 dependencies:
   - imagepin
-
-libraries-override:
-  contrib/imagepin: false

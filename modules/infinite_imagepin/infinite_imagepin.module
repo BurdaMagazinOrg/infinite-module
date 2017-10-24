@@ -22,4 +22,9 @@ function infinite_imagepin_allowed_widget_plugins_alter(array &$plugin_definitio
     $default_plugin = 'product';
 }
 
+function infinite_imagepin_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
+    // Swap out jQuery to use an updated version of the library.
+    $javascript[drupal_get_path('module', 'imagepin') . '/js/imagepin.view.js']['data'] = drupal_get_path('module', 'infinite_imagepin') . '/js/infinite_imagepin.view.js';
+
+}
 
