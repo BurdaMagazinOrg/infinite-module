@@ -105,6 +105,7 @@ Drupal.behaviors.infiniteWishlist = {
         var list = document.createElement('ul');
         var button = document.createElement('button');
 
+        list.id = 'wishlist';
         container.id = 'wishlist__container';
 
         button.innerText = '❤';
@@ -113,11 +114,13 @@ Drupal.behaviors.infiniteWishlist = {
             list.classList.toggle('open');
         });
         button.addEventListener('mouseover', function () {
-            Drupal.behaviors.infiniteWishlist.fetchProducts();
-            Drupal.behaviors.infiniteWishlist.growl('prefetch rendered products if not cached');
+            // only prefetch if overlay is not currently open
+            if (false === list.classList.contains('open')) {
+                Drupal.behaviors.infiniteWishlist.fetchProducts();
+                Drupal.behaviors.infiniteWishlist.growl('prefetch rendered products if not cached');
+            }
         });
 
-        list.id = 'wishlist';
 
         document.getElementById('menu-main-navigation').insertBefore(container, document.getElementById('search-open-btn'));
         container.appendChild(button);

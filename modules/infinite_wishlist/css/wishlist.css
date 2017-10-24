@@ -14,11 +14,12 @@
     align-self: center;
     color: #ed3109;
     font-size: 24px;
+    cursor: pointer;
 }
 
 #wishlist {
     position: absolute;
-    too: 100%;
+    top: 100%;
     right: 0;
 
     background: white;
