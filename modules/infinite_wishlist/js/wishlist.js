@@ -72,6 +72,7 @@ Drupal.behaviors.infiniteWishlist = {
         }
 
         if (window.Worker) {
+            this.growl('prefetch products');
             var worker = new Worker('/modules/contrib/infinite_base/modules/infinite_wishlist/js/wishlist-worker.js');
             worker.onmessage = function (e) {
                 storedWishlist = e.data;
@@ -132,7 +133,6 @@ Drupal.behaviors.infiniteWishlist = {
             // only prefetch if overlay is not currently open
             if (false === list.classList.contains('open')) {
                 Drupal.behaviors.infiniteWishlist.fetchProducts();
-                Drupal.behaviors.infiniteWishlist.growl('prefetch rendered products if not cached');
             }
         });
 
@@ -150,6 +150,10 @@ Drupal.behaviors.infiniteWishlist = {
 
             this.injectHeaderIcon();
             this.injectIcons();
+
+            window.addEventListener('focus', function () {
+                Drupal.behaviors.infiniteWishlist.fetchProducts();
+            });
         } catch (e) { // local storage is unavailable
             return false;
         }
