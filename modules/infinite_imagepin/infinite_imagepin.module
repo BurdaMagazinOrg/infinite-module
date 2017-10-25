@@ -22,9 +22,23 @@ function infinite_imagepin_allowed_widget_plugins_alter(array &$plugin_definitio
     $default_plugin = 'product';
 }
 
+/**
+ * Implements hook_js_alter().
+ */
 function infinite_imagepin_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
+
     // Swap out jQuery to use an updated version of the library.
+
     $javascript[drupal_get_path('module', 'imagepin') . '/js/imagepin.view.js']['data'] = drupal_get_path('module', 'infinite_imagepin') . '/js/infinite_imagepin.view.js';
 
+    // Remove js slick files
+    unset($javascript[drupal_get_path('module', 'imagepin') . '/js/extensions/imagepin.slick.js']);
+}
+
+
+function infinite_imagepin_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
+
+    // Remove defaults.css file.
+    unset($css[drupal_get_path('module', 'imagepin') . '/css/extensions/imagepin.slick.css']);
 }
 
