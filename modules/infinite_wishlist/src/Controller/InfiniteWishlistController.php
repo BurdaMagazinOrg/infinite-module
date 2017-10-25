@@ -41,9 +41,15 @@ class InfiniteWishlistController extends ControllerBase
         $products[] = [
           'productId' => $product->product_id,
           'markup' => sprintf(
-            '<a href="%s" target="_blank">%s</a>',
+            '<a class="wishlist__item" href="%s" target="_blank">
+                <span class="wishlist__item__brand">%s</span>
+                <span class="wishlist__item__name">%s</span>
+                <span class="wishlist__item__price">%s</span>
+            </a>',
             $product->product_url__uri,
-            $product->product_name
+            $product->product_brand,
+            $product->product_name,
+            $product->product_price
           ),
         ];
       }
