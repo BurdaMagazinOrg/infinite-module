@@ -72,7 +72,7 @@
       overlay_height,
       top_position,
       left_position,
-      horizontal_diff = 0,
+      horizontal_diff = -10,
       pin_width = pin.width(),
       pin_height = pin.height(),
       pin_top_position = parseInt(pin.css('top')),
@@ -88,10 +88,10 @@
     /**
      * append overlay
      */
-    $widget_content = $('<div class="imagepin-widget-content"></div>').appendTo(overlay);
-    $arrow = $('<span class="arrow"></span>').appendTo($widget_content);
 
     pin.before(overlay);
+    $widget_content = overlay.children().wrapAll('<div class="imagepin-widget-content"></div>');
+    $arrow = $('<span class="arrow"></span>').appendTo(overlay.find('.imagepin-widget-content'));
 
     overlay.attr('class', widget.attr('data-imagepin-overlay-class'));
     overlay.css('position', 'absolute');
