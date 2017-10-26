@@ -64,6 +64,8 @@
   Drupal.imagepin.overlay = function (pin, widget) {
     var overlay = widget.clone(),
       $img = pin.parent().find('img').not('.imagepin-widget img'),
+      $arrow = [],
+      $widget_content = [],
       img_width = $img.width(),
       img_height = $img.height(),
       overlay_width,
@@ -75,7 +77,8 @@
       pin_height = pin.height(),
       pin_top_position = parseInt(pin.css('top')),
       pin_left_position = parseInt(pin.css('left')),
-      direction = 'down';
+      direction = 'down',
+      isTouchDevice = ('ontouchstart' in window || 'onmsgesturechange' in window);
 
     /**
      * remove all overlays
@@ -85,6 +88,9 @@
     /**
      * append overlay
      */
+    $widget_content = $('<div class="imagepin-widget-content"></div>').appendTo(overlay);
+    $arrow = $('<span class="arrow"></span>').appendTo($widget_content);
+
     pin.before(overlay);
 
     overlay.attr('class', widget.attr('data-imagepin-overlay-class'));
@@ -97,17 +103,7 @@
      * pos overlay
      * @type {number}
      */
-
-    horizontal_diff = 0;
-    // if ((pin_top_position + pin_height) > img_height) {
-    //   vertical_diff = img_height - pin_top_position;
-    // }
-    //
-    // if ((pin_left_position + pin_width) > img_width) {
-    //   horizontal_diff = img_width - pin_left_position;
-    // }
-
-    if((pin_top_position + overlay_height) > img_height) {
+    if ((pin_top_position + overlay_height) > img_height) {
       direction = 'up';
       top_position = pin_top_position + pin_height - overlay_height;
     } else {
@@ -120,12 +116,13 @@
     // left_position = Math.max(padding_left, Math.min(left_position, pin_left_position - overlay_width));
     left_position = Math.max(horizontal_diff, Math.min(left_position, img_width - overlay_width - horizontal_diff));
 
+    $arrow.css('left', pin_left_position - left_position);
+
     overlay.css('top', (top_position).toString() + 'px');
     overlay.css('left', (left_position).toString() + 'px');
     overlay.css('z-index', '9');
     overlay.css('display', 'none');
     overlay.fadeIn('fast');
-
 
     /**
      * pos stupid arrow
@@ -134,9 +131,11 @@
     pin.addClass('imagepin--active');
     widget.addClass('imagepin--active');
 
-    overlay.mouseleave(function () {
-      Drupal.imagepin.removeOverlays(pin);
-    });
+    if (!isTouchDevice) {
+      overlay.mouseleave(function () {
+        Drupal.imagepin.removeOverlays(pin, true);
+      });
+    }
   };
 
   Drupal.imagepin.removeOverlays = function (pin) {
@@ -151,25 +150,6 @@
     $parent.find('.imagepin').removeClass('imagepin--active');
 
   }
-
-  Drupal.imagepin.onDesktop = function (widgets) {
-    return true;
-    // HACK!
-
-    var attach_id = widgets.attr('data-imagepin-attach-to');
-    var breakpoint = drupalSettings.imagepin[attach_id].breakpoint;
-    if (typeof (breakpoint) === 'undefined') {
-      breakpoint = 1024;
-    }
-    if (breakpoint === '') {
-      return false;
-    }
-    breakpoint = parseInt(breakpoint);
-    if ($(window).width() < breakpoint) {
-      return false;
-    }
-
-  };
 
   $(window).resize(function () {
     Drupal.imagepin.adjustPositions();
