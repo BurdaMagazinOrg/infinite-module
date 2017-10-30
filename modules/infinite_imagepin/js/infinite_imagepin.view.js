@@ -72,9 +72,10 @@
       overlay_height,
       top_position,
       left_position,
-      horizontal_diff = -10,
+      img_overlay_diff = 0,
       pin_width = pin.width(),
       pin_height = pin.height(),
+      horizontal_diff = - (pin_width / 2),
       pin_top_position = parseInt(pin.css('top')),
       pin_left_position = parseInt(pin.css('left')),
       direction = 'down',
@@ -110,13 +111,18 @@
       top_position = pin_top_position;
     }
 
+    img_overlay_diff = (img_width - overlay_width) / 2;
+    if(pin_left_position > img_overlay_diff && pin_left_position < img_width - img_overlay_diff) {
+      left_position = (img_width / 2) - (overlay_width / 2);
+    } else {
+      left_position = Math.max(horizontal_diff, pin_left_position - (overlay_width / 2));
+      left_position = Math.max(horizontal_diff, Math.min(left_position, img_width - overlay_width - horizontal_diff));
+    }
+
+
     overlay.addClass(direction);
 
-    left_position = Math.max(horizontal_diff, pin_left_position - (overlay_width / 2));
-    // left_position = Math.max(padding_left, Math.min(left_position, pin_left_position - overlay_width));
-    left_position = Math.max(horizontal_diff, Math.min(left_position, img_width - overlay_width - horizontal_diff));
-
-    $arrow.css('left', pin_left_position - left_position);
+    $arrow.css('left', Math.max(0, pin_left_position - left_position));
 
     overlay.css('top', (top_position).toString() + 'px');
     overlay.css('left', (left_position).toString() + 'px');
@@ -138,8 +144,8 @@
     }
   };
 
-  Drupal.imagepin.removeOverlays = function (pin) {
-    var $parent = pin.parent();
+  Drupal.imagepin.removeOverlays = function ($element) {
+    var $parent = $element.parent();
 
     $.each($parent.find('.imagepin-widget'), function (pIndex, pItem) {
       $(pItem).fadeOut('slow', function () {
@@ -176,6 +182,10 @@
         });
         // Prepare widgets container display.
 
+        image.on('click', function () {
+          Drupal.imagepin.removeOverlays(image);
+        });
+
         widgets.find('.imagepin').each(function () {
           var pin = $(this);
           Drupal.imagepin.attachPin(pin);
@@ -187,9 +197,6 @@
             Drupal.imagepin.overlay(pin, widget);
           });
 
-          // pin.on('mouseout touchend', function () {
-          //   Drupal.imagepin.removeOverlays($(this));
-          // });
 
         });
       });
