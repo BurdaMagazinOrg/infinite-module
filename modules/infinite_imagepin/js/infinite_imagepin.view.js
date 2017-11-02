@@ -75,7 +75,7 @@
       img_overlay_diff = 0,
       pin_width = pin.width(),
       pin_height = pin.height(),
-      horizontal_diff = - (pin_width / 2),
+      horizontal_diff = 0,
       pin_top_position = parseInt(pin.css('top')),
       pin_left_position = parseInt(pin.css('left')),
       direction = 'down',
@@ -113,17 +113,21 @@
       top_position = pin_top_position;
     }
 
-    img_overlay_diff = (img_width - overlay_width) / 2;
-    if(pin_left_position > img_overlay_diff && pin_left_position < img_width - img_overlay_diff) {
+    overlay.addClass(direction);
+    horizontal_diff = -(($arrow.outerWidth() / 2) + 1);
+    img_overlay_diff = ((img_width - overlay_width) / 2) + ($arrow.outerWidth() / 2);
+
+    if (pin_left_position > img_overlay_diff && pin_left_position < img_width - img_overlay_diff) {
       left_position = (img_width / 2) - (overlay_width / 2);
     } else {
       left_position = Math.max(horizontal_diff, pin_left_position - (overlay_width / 2));
-      left_position = Math.max(horizontal_diff, Math.min(left_position, img_width - overlay_width - horizontal_diff));
+      left_position = Math.max(horizontal_diff, Math.min(left_position, pin_left_position - overlay_width - horizontal_diff));
     }
 
-
-    overlay.addClass(direction);
-
+    /**
+     * pos stupid arrow
+     * @type {number}
+     */
     $arrow.css('left', Math.max(0, pin_left_position - left_position));
 
     overlay.css('top', (top_position).toString() + 'px');
@@ -132,10 +136,6 @@
     overlay.css('display', 'none');
     overlay.fadeIn('fast');
 
-    /**
-     * pos stupid arrow
-     * @type {number}
-     */
     pin.addClass('imagepin--active');
     widget.addClass('imagepin--active');
 
