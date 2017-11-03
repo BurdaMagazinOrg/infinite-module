@@ -62,6 +62,18 @@
   };
 
   Drupal.imagepin.overlay = function (pin, widget) {
+    var isTouchDevice = ('ontouchstart' in window || 'onmsgesturechange' in window),
+      $visibleOverlay = [];
+
+    if (isTouchDevice && pin.parent().find('.imagepin-overlay').length > 0) {
+      $visibleOverlay = pin.parent().find('.imagepin-overlay');
+      if (widget.data('imagepin-key') == $visibleOverlay.data('imagepin-key')) {
+        Drupal.imagepin.removeOverlays(pin);
+        return;
+      }
+    }
+
+
     var overlay = widget.clone(true),
       $img = pin.parent().find('img').not('.imagepin-widget img'),
       $arrow = [],
@@ -78,8 +90,7 @@
       horizontal_diff = 0,
       pin_top_position = parseInt(pin.css('top')),
       pin_left_position = parseInt(pin.css('left')),
-      direction = 'down',
-      isTouchDevice = ('ontouchstart' in window || 'onmsgesturechange' in window);
+      direction = 'down';
 
     /**
      * remove all overlays
@@ -132,7 +143,6 @@
 
     overlay.css('top', (top_position).toString() + 'px');
     overlay.css('left', (left_position).toString() + 'px');
-    overlay.css('z-index', '9');
     overlay.css('display', 'none');
     overlay.fadeIn('fast');
 
@@ -195,7 +205,13 @@
           var key = pin.attr('data-imagepin-key');
           var widget = $("[data-imagepin-attach-to='" + attach_id + "'] .imagepin-widget[data-imagepin-key='" + key + "']");
 
-          pin.on('mouseover click touchstart', function () {
+          //click touchstart
+          pin.on('touchstart', function (e) {
+            e.preventDefault();
+            Drupal.imagepin.overlay(pin, widget);
+          });
+
+          pin.on('mouseover', function (e) {
             Drupal.imagepin.overlay(pin, widget);
           });
 
