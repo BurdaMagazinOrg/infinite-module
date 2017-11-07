@@ -4,6 +4,9 @@ namespace Drupal\infinite_imagepin\Plugin\imagepin\Widget;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\imagepin\Plugin\WidgetBase;
+use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget;
+use Drupal\advertising_products\Plugin\Field\FieldWidget;
+
 
 /**
  * The text widget plugin.
@@ -25,6 +28,7 @@ class ProductWidget extends WidgetBase {
         $element['product'] = [
             '#type' => 'entity_autocomplete',
             '#target_type' => 'advertising_product',
+            '#selection_handler' => 'advertising_products:product',
             '#title' => t('Product'),
             '#required' => FALSE,
             '#weight' => 10,
