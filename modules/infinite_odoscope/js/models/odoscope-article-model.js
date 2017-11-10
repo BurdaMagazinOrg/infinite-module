@@ -12,8 +12,8 @@
     },
     create: function (pData) {
       console.log("%codoscopeArticleModel | create", "color: blue; font-weight: bold;", pData, this);
-      this.set('list', pData);
-      this.set('restoredList', _.clone(pData, true));
+      this.set('list', pData.variants);
+      this.set('restoredList', _.clone(pData.variants, true));
 
       this.trigger('set:articleModel', this);
     },
