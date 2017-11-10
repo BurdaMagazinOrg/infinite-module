@@ -83,13 +83,13 @@
   window.oscInitializeArticlePageRendering = function (pDecisionFunction, pConfig) {
     console.log("%codoscope | articlePageRendering", "color: deepskyblue;", pDecisionFunction, pConfig);
 
-    pDecisionFunction({}, function (pArticles) {
+    pDecisionFunction({}).then(function (pArticles) {
       console.log("%codoscope | articlePageRendering  | decision", "color: deepskyblue;", OdoscopeManager.getInstance().getGroup(), pArticles);
 
       // if (OdoscopeManager.getInstance().isOdoscopeGroup()) {
       OdoscopeManager.getInstance().get('articleModel').create(pArticles);
 
-    }, function (pError) {
+    }).catch(function (pError) {
       console.log("%codoscope | articlePageRendering | error", "color: red;", pError);
       // error callback
     });
