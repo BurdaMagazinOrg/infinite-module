@@ -103,6 +103,15 @@
   window.oscSaveTracking = function(tracking) {
     // tracking is oscTracking string to push to aquia lift
     console.log("%codoscope | oscSaveTracking", "color: deepskyblue;", tracking);
+
+    if (TrackingManager != undefined) {
+      TrackingManager.trackEvent({
+        event: AppConfig.gtmEventName,
+        category: OdoscopeManager.GTM_EVENT_CATEGORY,
+        action: 'oscSaveTracking',
+        label: tracking + ''
+      });
+    }
   };
 
   window.oscInfiniteBlockViewUpdated = function (pElement) {
