@@ -187,12 +187,14 @@
         var widgets = $(this);
         var attach_id = widgets.attr('data-imagepin-attach-to');
         var image = $("img[data-imagepin-attach-from='" + attach_id + "']");
-        image.load(function () {
+
+        image.one("load", function () {
           widgets.css('max-width', image.width());
           image.parent().addClass('initialized');
           Drupal.imagepin.adjustPositions();
+        }).each(function () {
+          if (this.complete) $(this).load();
         });
-        // Prepare widgets container display.
 
         image.on('click', function () {
           Drupal.imagepin.removeOverlays(image);
