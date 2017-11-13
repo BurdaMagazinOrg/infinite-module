@@ -18,7 +18,7 @@
       this.set('active', true);
 
       // this.setGroupCookie(this.get('group'));
-      console.log("%codoscopeManager | activate", "color: green; font-weight: bold;", pOdoscopeAttr, this);
+      console.log("%codoscopeManager | activate", "color: deepskyblue;", pOdoscopeAttr, this);
 
       TrackingManager.trackEvent({
         event: AppConfig.gtmEventName,
@@ -31,7 +31,7 @@
 
       if (typeof OdoscopeArticleModel != "undefined") {
         this.set('articleModel', new OdoscopeArticleModel());
-        console.log("%codoscopeManager | createModels | OdoscopeArticleModel", "color: green; font-weight: bold;");
+        // console.log("%codoscopeManager | createModels | OdoscopeArticleModel", "color: deepskyblue;");
       }
 
     },
@@ -74,23 +74,23 @@
 
   window.oscSplitTestCallback = function (pType, pGroup) {
 
-    console.log("%cwindow | oscSplitTestCallback", "color: green; font-weight: bold;", pType, pGroup);
+    console.log("%cwindow | oscSplitTestCallback", "color: deepskyblue;", pType, pGroup);
 
     var tmpOdoscopeAttr = {type: pType, group: pGroup};
     OdoscopeManager.getInstance().activate(tmpOdoscopeAttr);
   };
 
   window.oscInitializeArticlePageRendering = function (pDecisionFunction, pConfig) {
-    console.log("%codoscope | articlePageRendering", "color: green; font-weight: bold;", pConfig);
+    console.log("%codoscope | articlePageRendering", "color: deepskyblue;", pDecisionFunction, pConfig);
 
-    pDecisionFunction({}, function (pArticles, p1, p2) {
-      console.log("%codoscope | articlePageRendering  | decision", "color: green; font-weight: bold;", OdoscopeManager.getInstance().getGroup(), pArticles, p1, p2);
+    pDecisionFunction({}).then(function (pArticles) {
+      console.log("%codoscope | articlePageRendering  | decision", "color: deepskyblue;", OdoscopeManager.getInstance().getGroup(), pArticles);
 
       // if (OdoscopeManager.getInstance().isOdoscopeGroup()) {
       OdoscopeManager.getInstance().get('articleModel').create(pArticles);
 
-    }, function (pError) {
-      console.log("%codoscope | articlePageRendering | error", "color: red; font-weight: bold;", pError);
+    }).catch(function (pError) {
+      console.log("%codoscope | articlePageRendering | error", "color: red;", pError);
       // error callback
     });
   };
@@ -100,9 +100,21 @@
     // apply social icon code and timeago
   };
 
-  window.oscInfiniteBlockViewUpdated = function (pElement) {
-    console.log(">>> window.oscInfiniteBlockViewUpdated", pElement);
+  window.oscSaveTracking = function(tracking) {
+    // tracking is oscTracking string to push to aquia lift
+    console.log("%codoscope | oscSaveTracking", "color: deepskyblue;", tracking);
 
+    if (TrackingManager != undefined) {
+      TrackingManager.trackEvent({
+        event: AppConfig.gtmEventName,
+        category: OdoscopeManager.GTM_EVENT_CATEGORY,
+        action: 'oscSaveTracking',
+        label: tracking + ''
+      });
+    }
+  };
+
+  window.oscInfiniteBlockViewUpdated = function (pElement) {
     Drupal.behaviors.blazy.attach(pElement);
     jQuery(pElement).data('infiniteModel').refresh();
     // update waypoints
