@@ -1,0 +1,5 @@
+admin:
+  js:
+    js/infinite_imagepin.edit.js: {}
+  dependencies:
+    - imagepin/admin

@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Alter the list of allowed widget plugins per view mode and entity type.
  *
@@ -42,3 +44,10 @@ function infinite_imagepin_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInt
     unset($css[drupal_get_path('module', 'imagepin') . '/css/extensions/imagepin.slick.css']);
 }
 
+function infinite_imagepin_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+  if(isset($element['imagepin'])){
+    $element['imagepin']['#prefix'] = '<div class="imagepin-modal-link">';
+    $element['imagepin']['#attached']['library'][] = 'infinite_imagepin/admin';
+  }
+  return;
+}
