@@ -72,16 +72,26 @@
 
   window.OdoscopeManager = window.OdoscopeManager || BurdaInfinite.managers.OdoscopeManager;
 
-  window.oscSplitTestCallback = function (pType, pGroup) {
+  window.oscSplitTestCallback = function (pPage, pGroup, pData) {
 
-    console.log("%cwindow | oscSplitTestCallback", "color: deepskyblue;", pType, pGroup);
+    if (!OdoscopeManager.getInstance().get('active')) {
+      var tmpOdoscopeAttr = {type: pPage, group: pGroup};
+      OdoscopeManager.getInstance().activate(tmpOdoscopeAttr);
+    }
 
-    var tmpOdoscopeAttr = {type: pType, group: pGroup};
-    OdoscopeManager.getInstance().activate(tmpOdoscopeAttr);
+    if (pData != null && typeof TrackingManager != 'undefined') {
+      TrackingManager.trackEvent({
+        event: AppConfig.gtmEventName,
+        category: OdoscopeManager.GTM_EVENT_CATEGORY,
+        action: 'oscSaveTracking',
+        label: pGroup + '/' + pData
+      });
+    }
+
   };
 
   window.oscInitializeArticlePageRendering = function (pDecisionFunction, pConfig) {
-    console.log("%codoscope | articlePageRendering", "color: deepskyblue;", pDecisionFunction, pConfig);
+    // console.log("%codoscope | articlePageRendering", "color: deepskyblue;", pDecisionFunction, pConfig);
 
     pDecisionFunction({}).then(function (pArticles) {
       console.log("%codoscope | articlePageRendering  | decision", "color: deepskyblue;", OdoscopeManager.getInstance().getGroup(), pArticles);
@@ -98,20 +108,6 @@
 
   window.oscTeaserElementReplaced = function (pElement) {
     // apply social icon code and timeago
-  };
-
-  window.oscSaveTracking = function(tracking) {
-    // tracking is oscTracking string to push to aquia lift
-    console.log("%codoscope | oscSaveTracking", "color: deepskyblue;", tracking);
-
-    if (TrackingManager != undefined) {
-      TrackingManager.trackEvent({
-        event: AppConfig.gtmEventName,
-        category: OdoscopeManager.GTM_EVENT_CATEGORY,
-        action: 'oscSaveTracking',
-        label: tracking + ''
-      });
-    }
   };
 
   window.oscInfiniteBlockViewUpdated = function (pElement) {

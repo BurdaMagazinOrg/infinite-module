@@ -35,12 +35,3 @@ window.oscInitializeArticlePageRendering = function () {
     }
   );
 };
-
-window.oscSaveTracking = function() {
-  window.oscCallbackCalls.push(
-    {
-      functionName: 'oscSaveTracking',
-      arguments: [].slice.call(arguments)
-    }
-  );
-};
