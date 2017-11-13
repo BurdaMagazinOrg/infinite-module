@@ -188,7 +188,7 @@
         var attach_id = widgets.attr('data-imagepin-attach-to');
         var image = $("img[data-imagepin-attach-from='" + attach_id + "']");
 
-        image.one("load", function () {
+        image.load(function () {
           widgets.css('max-width', image.width());
           image.parent().addClass('initialized');
           Drupal.imagepin.adjustPositions();
