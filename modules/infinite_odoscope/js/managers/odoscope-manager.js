@@ -97,7 +97,9 @@
       console.log("%codoscope | articlePageRendering  | decision", "color: deepskyblue;", OdoscopeManager.getInstance().getGroup(), pArticles);
 
       // if (OdoscopeManager.getInstance().isOdoscopeGroup()) {
-      OdoscopeManager.getInstance().get('articleModel').create(pArticles);
+      if (pArticles != null) {
+        OdoscopeManager.getInstance().get('articleModel').create(pArticles);
+      }
 
     }).catch(function (pError) {
       console.log("%codoscope | articlePageRendering | error", "color: red;", pError);
