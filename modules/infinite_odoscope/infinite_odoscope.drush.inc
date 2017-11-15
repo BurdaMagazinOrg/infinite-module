@@ -102,12 +102,13 @@ function drush_infinite_odoscope_odoscope_queue() {
       fclose($handle);
       $contents = file_get_contents('temporary://odoscope_update.csv.gz');
       $client = \Drupal::httpClient();
+      $date_format = 'Y-m-d\TH-i-s';
       try {
         $config = \Drupal::config('infinite_odoscope.settings');
         $odoscope_user = $config->get('odoscope_user');
         $odoscope_pass = $config->get('odoscope_pass');
         $odoscope_url = $config->get('odoscope_url');
-        $date = date('Ymd-H:i:s');
+        $date = date($date_format);
         $request = $client->post("$odoscope_url",
                    [
                      'auth' => ["$odoscope_user","$odoscope_pass"],
@@ -138,7 +139,7 @@ function drush_infinite_odoscope_odoscope_queue() {
           // We save the processed CSV-Data
           $dir = 'private://odoscope-archive';
           file_prepare_directory($dir, FILE_CREATE_DIRECTORY);
-          $contents = file_save_data($contents, $dir . '/' . date('Ymd-H:i:s') . '.csv.gz');
+          $contents = file_save_data($contents, $dir . '/' . date($date_format) . '.csv.gz');
         }
       }
     }
