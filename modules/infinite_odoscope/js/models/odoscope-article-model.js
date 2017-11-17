@@ -36,7 +36,7 @@
       /**
        * Check if properties available
        */
-      if (!tmpModel.hasOwnProperty('variantInfo') && !tmpModel.variantInfo.hasOwnProperty('ProductURL')) {
+      if (!tmpModel.hasOwnProperty('variantID')) {
         return null;
       }
 
