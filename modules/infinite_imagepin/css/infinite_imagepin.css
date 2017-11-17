@@ -1,0 +1,3 @@
+.imagepin-widgets .imagepin-widget, .imagepin-widget.imagepin-overlay{
+    display: block !important;
+}

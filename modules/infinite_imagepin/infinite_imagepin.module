@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Alter the list of allowed widget plugins per view mode and entity type.
  *
@@ -18,8 +20,34 @@
  */
 function infinite_imagepin_allowed_widget_plugins_alter(array &$plugin_definitions, &$default_plugin, array $context) {
     // Don't include the default text widget.
-    #unset($plugin_definitions['text']);
-    #$default_plugin = 'product';
+    unset($plugin_definitions['text']);
+    $default_plugin = 'product';
+}
+
+/**
+ * Implements hook_js_alter().
+ */
+function infinite_imagepin_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
+
+    // Swap out jQuery to use an updated version of the library.
+
+    $javascript[drupal_get_path('module', 'imagepin') . '/js/imagepin.view.js']['data'] = drupal_get_path('module', 'infinite_imagepin') . '/js/infinite_imagepin.view.js';
+
+    // Remove js slick files
+    unset($javascript[drupal_get_path('module', 'imagepin') . '/js/extensions/imagepin.slick.js']);
 }
 
 
+function infinite_imagepin_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
+
+    // Remove defaults.css file.
+    unset($css[drupal_get_path('module', 'imagepin') . '/css/extensions/imagepin.slick.css']);
+}
+
+function infinite_imagepin_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+  if(isset($element['imagepin'])){
+    $element['imagepin']['#prefix'] = '<div class="imagepin-modal-link">';
+    $element['imagepin']['#attached']['library'][] = 'infinite_imagepin/admin';
+  }
+  return;
+}
