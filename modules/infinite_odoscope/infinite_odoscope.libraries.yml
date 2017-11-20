@@ -12,6 +12,7 @@ odoscope.cdn:
       type: external
       minified: true
       attributes:
+        async: true
 #        defer: ""
 
 odoscope.manager:
