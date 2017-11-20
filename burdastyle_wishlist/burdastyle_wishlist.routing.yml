@@ -1,0 +1,14 @@
+burdastyle_wishlist:
+  path: '/wishlist'
+  defaults:
+    _title: ''
+    _controller: '\Drupal\burdastyle_wishlist\Controller\BurdastyleWishlistController::show'
+  requirements:
+    _permission: 'access content'
+burdastyle_wishlist.fetch-products:
+  path: '/wishlist/fetch-products'
+  defaults:
+    _title: ''
+    _controller: '\Drupal\burdastyle_wishlist\Controller\BurdastyleWishlistController::loadProducts'
+  requirements:
+    _permission: 'access content'

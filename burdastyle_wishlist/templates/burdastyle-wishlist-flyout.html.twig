@@ -1,0 +1,20 @@
+<div id="wishlist__container" class="flyout--wishlist">
+    <button id="wishlist__toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+            <g fill="none" fill-rule="evenodd">
+                <path fill-rule="nonzero" d="M30.996 14.69c0-3.695-2.84-6.69-6.343-6.69-2.472 0-4.609 1.494-5.655 3.67C17.951 9.494 15.815 8 13.343 8 9.84 8 7 10.995 7 14.69c0 6.987 10.642 14.64 11.998 14.64 1.357 0 11.998-7.619 11.998-14.64z" opacity=".5"/>
+                <path fill="#222" fill-rule="nonzero" d="M28.989 14.042c0 .368-.028.74-.082 1.115-.4 2.764-2.194 5.596-4.922 8.422a37.867 37.867 0 0 1-4.851 4.219c-.36.253-.835.27-1.212.043-.085-.05-.234-.144-.438-.277a31.147 31.147 0 0 1-4.45-3.534C9.903 21.028 8 17.836 8 14.523c0-6.825 7.499-8.433 10.502-3.976 3.01-4.395 10.487-3.022 10.487 3.495z"/>
+            </g>
+        </svg>
+        <div id="wishlist__toggle__count">
+            <span></span>
+        </div>
+    </button>
+    <div id="wishlist">
+        <h1>Wunschliste</h1>
+        <ul id="wishlist__list"></ul>
+        <div id="wishlist__button__wrapper">
+            <a id="wishlist__button" href="{{ path('burdastyle_wishlist') }}">Zur Wunschliste</a>
+        </div>
+    </div>
+</div>

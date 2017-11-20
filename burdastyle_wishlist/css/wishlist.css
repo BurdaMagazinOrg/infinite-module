@@ -1,0 +1,36 @@
+.wishlist__icon--add {
+    color: #ed3109;
+}
+
+#wishlist__container {
+    position: absolute;
+    top: 0;
+    right: 80px;
+    height: 100%;
+    display: flex;
+}
+
+#wishlist__toggle {
+    align-self: center;
+    color: #ed3109;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#wishlist {
+    position: absolute;
+    top: 100%;
+    right: 0;
+
+    background: white;
+    box-shadow: 0 0 40px -10px rgba(150, 150, 150, 0.4);
+    border: 1px solid rgb(150, 150, 150);
+}
+
+#wishlist:not(.open) {
+    display: none;
+}
+
+#wishlist li {
+    padding: 8px 16px;
+}
