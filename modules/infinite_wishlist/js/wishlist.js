@@ -38,9 +38,32 @@ Drupal.behaviors.infiniteWishlist = {
         localStorage.setItem('infinite_wishlist', JSON.stringify(wishlist));
 
         this.fetchProducts();
-        this.setCount();
 
         this.growl('added item ' + productId + ' to wishlist');
+    },
+
+    animateStore: function (originalImage) {
+        var originalRect = originalImage.getBoundingClientRect();
+        var button = document.getElementById('wishlist__toggle');
+        var buttonRect = button.getBoundingClientRect();
+        var buttonTop = buttonRect.y;
+        var buttonLeft = buttonRect.x;
+        var duplicate = document.createElement('img');
+        duplicate.setAttribute('src', originalImage.getAttribute('src'));
+        duplicate.classList.add('wishlist__store-duplicate');
+        duplicate.style.position = 'fixed';
+        duplicate.style.top = originalRect.y + 'px';
+        duplicate.style.left = originalRect.x + 'px';
+        duplicate.style.width = originalRect.width + 'px';
+        duplicate.style.height = originalRect.height + 'px';
+        duplicate.style.transformOrigin = 'top left';
+        document.body.appendChild(duplicate);
+        window.setTimeout(function () {
+            var newLeft = buttonLeft - originalRect.x;
+            var newTop = buttonTop - originalRect.y;
+            duplicate.style.transform = 'translate(' + newLeft + 'px, ' + newTop + 'px) scale(0.3)';
+            duplicate.style.opacity = 0;
+        }, 0);
     },
 
     growl: function (message) {
@@ -150,6 +173,12 @@ Drupal.behaviors.infiniteWishlist = {
                 } else {
                     e.currentTarget.classList.add('in-wishlist');
                     Drupal.behaviors.infiniteWishlist.storeItem(e.currentTarget.productId);
+                    Drupal.behaviors.infiniteWishlist.animateStore(
+                        e.currentTarget.parentNode.querySelector('img')
+                    );
+                    window.setTimeout(function () {
+                        Drupal.behaviors.infiniteWishlist.setCount();
+                    }, 1000);
                 }
             });
 
@@ -230,6 +259,7 @@ Drupal.behaviors.infiniteWishlist = {
 
             this.injectHeaderIcon();
             this.injectIcons();
+            this.setCount();
 
             window.addEventListener('focus', function () {
                 Drupal.behaviors.infiniteWishlist.fetchProducts();
