@@ -11,3 +11,23 @@ function infinite_wishlist_page_attachments(array &$attachments)
     $attachments['#attached']['library'][] = 'infinite_wishlist/basic';
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function infinite_wishlist_theme() {
+  return [
+    'infinite_wishlist_item' => [
+      'variables' => [
+        'product' => [],
+        'image' => null,
+      ],
+    ],
+    'infinite_wishlist_page' => [
+      'variables' => [],
+    ],
+    'infinite_wishlist_flyout' => [
+      'variables' => [],
+    ],
+  ];
+}

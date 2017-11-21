@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\burdastyle_wishlist\Controller;
+namespace Drupal\infinite_wishlist\Controller;
 
 
 use Drupal\Core\Controller\ControllerBase;
@@ -10,12 +10,12 @@ use Drupal\file\Entity\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class BurdastyleWishlistController extends ControllerBase
+class WishlistController extends ControllerBase
 {
   public function show()
   {
     $build = array(
-      '#theme' => 'burdastyle_wishlist_page',
+      '#theme' => 'infinite_wishlist_page',
     );
     return $build;
   }
@@ -56,7 +56,7 @@ class BurdastyleWishlistController extends ControllerBase
         }
 
         $build = [
-          '#theme' => 'burdastyle_wishlist_item',
+          '#theme' => 'infinite_wishlist_item',
           '#product' => $product,
           '#image' => [
             '#theme' => 'image_style',

@@ -1,13 +1,7 @@
 Drupal.behaviors.infiniteWishlistPage = {
     render: function (storedWishlist) {
         var container = document.getElementById('wishlist-page');
-        container.innerHTML = '';
-        for(var i = 0; i < storedWishlist.length; i++) {
-            var item = storedWishlist[i];
-            var li = document.createElement('li');
-            li.innerHTML = item.markup;
-            container.appendChild(li);
-        }
+        Drupal.behaviors.infiniteWishlist.renderList(container);
     },
 
     attach: function () {

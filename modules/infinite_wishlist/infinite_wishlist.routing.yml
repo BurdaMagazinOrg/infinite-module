@@ -2,13 +2,13 @@ infinite_wishlist:
   path: '/wishlist'
   defaults:
     _title: ''
-    _controller: '\Drupal\infinite_wishlist\Controller\InfiniteWishlistController::show'
+    _controller: '\Drupal\infinite_wishlist\Controller\WishlistController::show'
   requirements:
     _permission: 'access content'
 infinite_wishlist.fetch-products:
   path: '/wishlist/fetch-products'
   defaults:
     _title: ''
-    _controller: '\Drupal\infinite_wishlist\Controller\InfiniteWishlistController::loadProducts'
+    _controller: '\Drupal\infinite_wishlist\Controller\WishlistController::loadProducts'
   requirements:
     _permission: 'access content'
