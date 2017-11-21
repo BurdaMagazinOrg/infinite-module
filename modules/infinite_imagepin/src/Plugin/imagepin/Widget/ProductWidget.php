@@ -35,6 +35,16 @@ class ProductWidget extends WidgetBase {
 
         ];
 
+				$element['product2'] = [
+					'#type' => 'entity_autocomplete',
+					'#target_type' => 'advertising_product',
+					'#selection_handler' => 'advertising_products:product',
+					'#title' => t('Product2'),
+					'#required' => FALSE,
+					'#weight' => 10,
+
+				];
+
         return $element;
     }
 
@@ -42,23 +52,14 @@ class ProductWidget extends WidgetBase {
      * {@inheritdoc}
      */
     public function previewContent($value) {
-        return ['#markup' => $value['product']];
+        return ['#markup' => $value['product'].'('.$value['product2'].')'];
     }
 
     /**
      * {@inheritdoc}
      */
     public function viewContent($value) {
-        $entity_type = 'advertising_product';
-        $entity_id = $value['product']; // static for example purpose
-        $view_mode = 'facebook_instant_articles_rss';
-
-        $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id);
-        $view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity_type);
-        $pre_render = $view_builder->view($entity, $view_mode);
-        $render_output = render($pre_render);
-
-        return ['#markup' => $value['product']];
+        return ['product_one' => $value['product'],'product_two' => $value['product2']];
     }
 
 }
