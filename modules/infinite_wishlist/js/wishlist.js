@@ -162,10 +162,10 @@ Drupal.behaviors.infiniteWishlist = {
             var item = items[i];
 
             var icon = document.createElement('button');
-            icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 22.87 21.79">\n' +
-                '    <path class="cls-1"\n' +
-                '          d="M22.87,6.58a8.52,8.52,0,0,1-.09,1.21c-.44,3-2.39,6.1-5.36,9.18a41.26,41.26,0,0,1-5.29,4.6,1.21,1.21,0,0,1-1.32,0l-.48-.3a33.94,33.94,0,0,1-4.85-3.85C2.07,14.2,0,10.72,0,7.11,0-.33,8.17-2.08,11.44,2.78A6.23,6.23,0,0,1,22.87,6.58Z"\n' +
-                '          transform="translate(0 0)"/>\n' +
+            icon.innerHTML = '<svg width="100%" height="100%" viewBox="-1 -1 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" >' +
+                '    <g transform="matrix(1,0,0,1,-8,-7.99976)">' +
+                '        <path d="M28.989,14.042C28.989,14.41 28.961,14.782 28.907,15.157C28.507,17.921 26.713,20.753 23.985,23.579C22.491,25.12 20.868,26.532 19.134,27.798C18.774,28.051 18.299,28.068 17.922,27.841C17.837,27.791 17.688,27.697 17.484,27.564C15.896,26.524 14.407,25.341 13.034,24.03C9.903,21.028 8,17.836 8,14.523C8,7.698 15.499,6.09 18.502,10.547C21.512,6.152 28.989,7.525 28.989,14.042Z"/>' +
+                '    </g>' +
                 '</svg>';
             icon.productId = item.getAttribute('data-product-id');
             icon.classList.add('wishlist__icon--add');
