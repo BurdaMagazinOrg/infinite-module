@@ -91,8 +91,10 @@ Drupal.behaviors.infiniteWishlist = {
 
         // only fetch products is at least one has not been cached or not in the last hour
         var fetch = false;
-// TODO: remove - for debug only
-        fetch = true;
+
+        // set to true for debugging purposes
+        // fetch = true;
+        
         for (var i = 0; i < storedWishlist.length; i++) {
             var item = storedWishlist[i];
 
