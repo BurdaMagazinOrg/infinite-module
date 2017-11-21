@@ -43,7 +43,7 @@ class WishlistController extends ControllerBase
         /** @var \Drupal\Core\Image\Image $image */
         $image = \Drupal::service('image.factory')->get($fileUri);
         $variables = array(
-          'style_name' => 'thumbnail',
+          'style_name' => 'wishlist_item',
           'uri' => $fileUri,
         );
 
@@ -59,10 +59,10 @@ class WishlistController extends ControllerBase
           '#theme' => 'infinite_wishlist_item',
           '#product' => $product,
           '#image' => [
-            '#theme' => 'image_style',
+            '#theme' => 'responsive_image',
             '#width' => $variables['width'],
             '#height' => $variables['height'],
-            '#style_name' => $variables['style_name'],
+            '#responsive_image_style_id' => $variables['style_name'],
             '#uri' => $variables['uri'],
           ],
         ];
