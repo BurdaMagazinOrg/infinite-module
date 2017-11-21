@@ -66,14 +66,19 @@ Drupal.behaviors.infiniteWishlist = {
         }, 0);
     },
 
+    /**
+     * Use this for debugging prefetch
+     * @param message
+     */
     growl: function (message) {
-        var growl = document.createElement('div');
-        growl.setAttribute('style', 'position: fixed; bottom: 0; right: 0; background: black; color: deeppink; font-weight: bold; padding: 10px 20px');
-        growl.innerText = message;
-        document.body.appendChild(growl);
-        window.setTimeout(function () {
-            document.body.removeChild(growl);
-        }, 5000);
+        return;
+        // var growl = document.createElement('div');
+        // growl.setAttribute('style', 'position: fixed; bottom: 0; right: 0; background: black; color: deeppink; font-weight: bold; padding: 10px 20px');
+        // growl.innerText = message;
+        // document.body.appendChild(growl);
+        // window.setTimeout(function () {
+        //     document.body.removeChild(growl);
+        // }, 5000);
     },
 
     fetchProducts: function (callback) {
