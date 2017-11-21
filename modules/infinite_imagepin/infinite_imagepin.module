@@ -51,9 +51,3 @@ function infinite_imagepin_field_widget_form_alter(&$element, FormStateInterface
   }
   return;
 }
-
-function imagepin_widgets_form_alter(&$form, FormStateInterface $form_state) {
-	echo $swag;
-	var_dump($form);
-}
-
