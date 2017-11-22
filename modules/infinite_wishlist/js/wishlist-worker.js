@@ -1,7 +1,19 @@
+
 onmessage = function (e) {
     var storedWishlist = e.data;
-    var data = new FormData();
+    var data,
+        formDataBuilderUsed = false;
+    try {
+        data = new FormData();
+    } catch (e) {
+        importScripts('form-data-builder.js');
+        data = new FormDataBuilder();
+        formDataBuilderUsed = true;
+    }
+
     data.append('wishlist', JSON.stringify(storedWishlist));
+
+
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/wishlist/fetch-products');
@@ -25,5 +37,8 @@ onmessage = function (e) {
         }
     };
 
-    xhr.send(data);
+    if (data.type) {
+        xhr.setRequestHeader('Content-Type', data.type);
+    }
+    xhr.send(data.getBlob ? data.getBlob() : data);
 };
