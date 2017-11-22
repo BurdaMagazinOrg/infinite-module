@@ -46,21 +46,21 @@ Drupal.behaviors.infiniteWishlist = {
         var originalRect = originalImage.getBoundingClientRect();
         var button = document.getElementById('wishlist__toggle');
         var buttonRect = button.getBoundingClientRect();
-        var buttonTop = buttonRect.y;
-        var buttonLeft = buttonRect.x;
+        var buttonTop = buttonRect.top;
+        var buttonLeft = buttonRect.left;
         var duplicate = document.createElement('img');
         duplicate.setAttribute('src', originalImage.getAttribute('src'));
         duplicate.classList.add('wishlist__store-duplicate');
         duplicate.style.position = 'fixed';
-        duplicate.style.top = originalRect.y + 'px';
-        duplicate.style.left = originalRect.x + 'px';
+        duplicate.style.top = originalRect.top + 'px';
+        duplicate.style.left = originalRect.left + 'px';
         duplicate.style.width = originalRect.width + 'px';
         duplicate.style.height = originalRect.height + 'px';
         duplicate.style.transformOrigin = 'top left';
         document.body.appendChild(duplicate);
         window.setTimeout(function () {
-            var newLeft = buttonLeft - originalRect.x;
-            var newTop = buttonTop - originalRect.y;
+            var newTop = buttonTop - originalRect.top;
+            var newLeft = buttonLeft - originalRect.left;
             duplicate.style.transform = 'translate(' + newLeft + 'px, ' + newTop + 'px) scale(0.3)';
             duplicate.style.opacity = 0;
         }, 0);
