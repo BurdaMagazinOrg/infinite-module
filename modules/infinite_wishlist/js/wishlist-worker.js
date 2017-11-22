@@ -1,19 +1,14 @@
 
 onmessage = function (e) {
     var storedWishlist = e.data;
-    var data,
-        formDataBuilderUsed = false;
+    var data;
     try {
         data = new FormData();
     } catch (e) {
         importScripts('form-data-builder.js');
         data = new FormDataBuilder();
-        formDataBuilderUsed = true;
     }
-
     data.append('wishlist', JSON.stringify(storedWishlist));
-
-
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/wishlist/fetch-products');
