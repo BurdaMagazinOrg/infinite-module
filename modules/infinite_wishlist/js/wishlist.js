@@ -277,30 +277,58 @@ Drupal.behaviors.infiniteWishlist = {
         this.setCount();
     },
 
+    onFocus: function () {
+        Drupal.behaviors.infiniteWishlist.fetchProducts();
+        Drupal.behaviors.infiniteWishlist.setCount();
+        // handle already injected icons
+        var injectedIcons = document.querySelectorAll('.wishlist__icon--add');
+        var storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
+        for (var i = 0; i < injectedIcons.length; i++) {
+            var icon = injectedIcons[i];
+            icon.classList.toggle('in-wishlist', storedProductIds.indexOf(icon.productId) > -1);
+        }
+    },
+
     attach: function () {
         try {
             var test = 'local_storage_availability_test';
             localStorage.setItem(test, test);
             localStorage.removeItem(test);
 
-            this.injectHeaderIcon();
-            this.injectIcons();
-            this.setCount();
+            if (window.Worker) {
+                this.injectHeaderIcon();
+                this.injectIcons();
+                this.setCount();
 
-            window.addEventListener('focus', function () {
-                Drupal.behaviors.infiniteWishlist.fetchProducts();
-                Drupal.behaviors.infiniteWishlist.setCount();
-                // handle already injected icons
-                var injectedIcons = document.querySelectorAll('.wishlist__icon--add');
-                var storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
-                for (var i = 0; i < injectedIcons.length; i++) {
-                    var icon = injectedIcons[i];
-                    icon.classList.toggle('in-wishlist', storedProductIds.indexOf(icon.productId) > -1);
-                }
-            });
+                window.addEventListener('focus', this.onFocus);
+            } else {
+                // TODO: handle
+                // window worker is not available
+            }
         } catch (e) { // local storage is unavailable
             // TODO: handle
             return false;
         }
+    },
+
+    detach: function () {
+        window.removeEventListener('focus', this.onFocus);
+
+        var buttons = document.getElementsByClassName('wishlist__icon--add');
+        for (var i = 0; i < buttons.length; i++) {
+            var button = buttons[i];
+            if (button.parentNode) {
+                button.parentNode.removeChild(button);
+            }
+        }
+
+        var headerIcon = document.getElementById('wishlist__toggle');
+        var clone = headerIcon.cloneNode();
+        // move all child elements from the original to the clone
+        while (headerIcon.firstChild) {
+            clone.appendChild(headerIcon.lastChild);
+        }
+
+        headerIcon.parentNode.replaceChild(clone, headerIcon);
     }
 };
