@@ -126,8 +126,26 @@ Drupal.behaviors.infiniteWishlist = {
     },
 
     renderList: function (container) {
-        container.innerHTML = '';
         var items = this.getWishlist();
+        var currentlyRenderedProductIds = [];
+        for (var i = 0; i < container.children.length; i++) {
+            currentlyRenderedProductIds.push(container.children[i].getAttribute('data-product-id'));
+        }
+        // check if all product ids are already rendered, if so do nothing
+        var allItemsAlreadyRendered = true;
+        if (items.length === currentlyRenderedProductIds.length) {
+            for (var i = 0; i < items.length; i++) {
+                if (currentlyRenderedProductIds.indexOf(items[i].productId) === -1) {
+                    allItemsAlreadyRendered = false;
+                    break;
+                }
+            }
+        }
+        if (currentlyRenderedProductIds.length > 1 && allItemsAlreadyRendered) {
+            return;
+        }
+
+        container.innerHTML = '';
         if (0 === items.length) {
             var li = document.createElement('li');
             li.classList.add('wishlist__item--empty');
@@ -138,6 +156,7 @@ Drupal.behaviors.infiniteWishlist = {
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 var li = document.createElement('li');
+                li.setAttribute('data-product-id', item.productId);
                 li.innerHTML = item.markup;
                 container.appendChild(li);
             }
