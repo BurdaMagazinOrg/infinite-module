@@ -125,6 +125,15 @@ function infinite_odoscope_entity_delete(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function infinite_odoscope_preprocess_html(&$variables) {
+  $config = Drupal::config('infinite_odoscope.settings');
+  $variables['odoscope_enabled'] = $config->get('odoscope_enabled');
+  return;
+}
+
+/**
  * Implements hook_cron().
  */
 function infinite_odoscope_cron() {
