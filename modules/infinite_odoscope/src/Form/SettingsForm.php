@@ -116,7 +116,7 @@ class SettingsForm extends ConfigFormBase {
 
         if($response->getStatusCode() == 200) {
           $response_body = $response->getBody()->getContents();
-          $form_state->setValue('library_source', $response_body);
+          $form_state->setValue('library_source_code', $response_body);
         }
         else {
           $form_state->setError($form['library_source'], $this->t('The odoscope library could not be updated. Response status code: %code for URL %url', [
@@ -165,7 +165,7 @@ class SettingsForm extends ConfigFormBase {
       ->save();
 
     if($form_state->getValue('library_update')) {
-      infinite_odoscope_update_library_source($form_state->getValue('library_source'), 'public://odoscope/odoscope.main.js');
+      infinite_odoscope_update_library_source($form_state->getValue('library_source_code'), 'public://odoscope/odoscope.main.js');
       drupal_set_message($this->t('The odoscope library was updated successfully.'));
     }
 
