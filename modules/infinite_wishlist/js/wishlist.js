@@ -214,6 +214,10 @@ Drupal.behaviors.infiniteWishlist = {
 
     injectHeaderIcon: function () {
         var button = document.getElementById('wishlist__toggle');
+        if (button.injectedHeaderIcon) {
+            return;
+        }
+
         var wishlist = document.getElementById('wishlist');
         button.addEventListener('click', function () {
             wishlist.classList.toggle('open');
@@ -224,6 +228,7 @@ Drupal.behaviors.infiniteWishlist = {
                 Drupal.behaviors.infiniteWishlist.fetchProducts();
             }
         });
+        button.injectedHeaderIcon = true;
     },
 
     initRemoveButtons: function (container) {
