@@ -30,27 +30,11 @@ function infinite_odoscope_views_data_alter(array &$data) {
 }
 
 /**
- * Implements hook_library_info_alter().
- */
-function infinite_odoscope_library_info_alter(&$libraries, $extension) {
-//  if($extension == 'infinite_odoscope') {
-//    $cdn = Drupal::config('odoscope')->get('cdn');
-//    if($cdn) {
-//      $data = reset($libraries['odoscope.cdn']['js']);
-//      $libraries['odoscope.cdn']['js'] = [
-//        $cdn => $data
-//      ];
-//    }
-//  }
-}
-
-/**
  * Implements hook_views_pre_render().
  */
 function infinite_odoscope_views_pre_render(ViewExecutable $view) {
   if (isset($view) && ($view->id() == 'infinite_taxonomy_term') && $view->current_display == 'front') {
     $view->element['#attached']['library'][] = 'infinite_odoscope/odoscope.head';
-//    $view->element['#attached']['library'][] = 'infinite_odoscope/odoscope.cdn';
     $view->element['#attached']['library'][] = 'infinite_odoscope/odoscope.manager';
   }
 }
@@ -59,9 +43,8 @@ function infinite_odoscope_views_pre_render(ViewExecutable $view) {
  * Implements hook_ENTITY_TYPE_view_alter().
  */
 function infinite_odoscope_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-  if($entity->bundle() == 'article' && $build['#view_mode'] == 'full') {
+  if ($entity->bundle() == 'article' && $build['#view_mode'] == 'full') {
     $build['#attached']['library'][] = 'infinite_odoscope/odoscope.head';
-//    $build['#attached']['library'][] = 'infinite_odoscope/odoscope.cdn';
     $build['#attached']['library'][] = 'infinite_odoscope/odoscope.manager';
     $build['#attached']['library'][] = 'infinite_odoscope/odoscope.article';
   }
@@ -130,7 +113,45 @@ function infinite_odoscope_entity_delete(EntityInterface $entity) {
 function infinite_odoscope_preprocess_html(&$variables) {
   $config = Drupal::config('infinite_odoscope.settings');
   $variables['odoscope_enabled'] = $config->get('odoscope_enabled');
-  return;
+
+  $module_handler = \Drupal::service('module_handler');
+  $moduel_path = $module_handler->getModule('infinite_odoscope')->getPath();
+
+  $library_source_path = str_replace(file_create_url(''), '/', file_create_url('public://odoscope/odoscope.main.js'));
+  $loader_js = file_get_contents($moduel_path . '/js/utils/loader.js');
+  $loader_js = strtr($loader_js, ['%TARGET_SCRIPT_PATH%' => $library_source_path]);
+  $variables['odoscope_loader'] = $loader_js;
+
+}
+
+/**
+ * @param string $source
+ *  the URL of the odoscope library. If source starts with http://
+ *   a http call is made and the response body is written to target
+ *   otherwise the source will be written to target as is.
+ * @param string $target
+ *  the URI of the file where to store the source code e.g.
+ *   public://odoscope/odoscope.main.js
+ *
+ * @return bool
+ *  true on success otherwise false or exception
+ */
+function infinite_odoscope_update_library_source($source, $target){
+
+  if(preg_match('/^https?:\/\//', $source)) {
+    $client = Drupal::httpClient();
+    $response = $client->get($source);
+    if($response->getStatusCode() != 200) {
+      return FALSE;
+    }
+    $response_body = $response->getBody()->getContents();
+  }
+  else {
+    $response_body = $source;
+  }
+
+  file_put_contents($target, $response_body);
+  return TRUE;
 }
 
 /**
@@ -141,10 +162,10 @@ function infinite_odoscope_cron() {
   $database = \Drupal::database();
   $query = $database->select('file_managed', 'f');
   $cond1 = $query->condition('uri', db_like('private://odoscope-archive/') . '%', 'LIKE');
-  $cond2 = $query->condition('created', REQUEST_TIME - 30*24*60*60, '<');
-  $query->fields('f', array('fid'));
+  $cond2 = $query->condition('created', REQUEST_TIME - 30 * 24 * 60 * 60, '<');
+  $query->fields('f', ['fid']);
   $results = $query->execute()->fetchAll();
-  foreach($results as $result) {
+  foreach ($results as $result) {
     file_delete($result->fid);
   }
 }

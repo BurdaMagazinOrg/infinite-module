@@ -4,15 +4,13 @@ odoscope.head:
   js:
     js/utils/head-utils.js: { }
 
-odoscope.cdn:
+odoscope.main:
   version: 1
   header: true
   js:
-    https://cdn.odoscope.cloud/instyle/main.js:
-      type: external
+    /sites/default/files/odoscope/odoscope.main.js:
       minified: true
       attributes:
-        async: true
 #        defer: ""
 
 odoscope.manager:
