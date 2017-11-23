@@ -126,8 +126,26 @@ Drupal.behaviors.infiniteWishlist = {
     },
 
     renderList: function (container) {
-        container.innerHTML = '';
         var items = this.getWishlist();
+        var currentlyRenderedProductIds = [];
+        for (var i = 0; i < container.children.length; i++) {
+            currentlyRenderedProductIds.push(container.children[i].getAttribute('data-product-id'));
+        }
+        // check if all product ids are already rendered, if so do nothing
+        var allItemsAlreadyRendered = true;
+        if (items.length === currentlyRenderedProductIds.length) {
+            for (var i = 0; i < items.length; i++) {
+                if (currentlyRenderedProductIds.indexOf(items[i].productId) === -1) {
+                    allItemsAlreadyRendered = false;
+                    break;
+                }
+            }
+        }
+        if (currentlyRenderedProductIds.length > 1 && allItemsAlreadyRendered) {
+            return;
+        }
+
+        container.innerHTML = '';
         if (0 === items.length) {
             var li = document.createElement('li');
             li.classList.add('wishlist__item--empty');
@@ -138,6 +156,7 @@ Drupal.behaviors.infiniteWishlist = {
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 var li = document.createElement('li');
+                li.setAttribute('data-product-id', item.productId);
                 li.innerHTML = item.markup;
                 container.appendChild(li);
             }
@@ -195,6 +214,10 @@ Drupal.behaviors.infiniteWishlist = {
 
     injectHeaderIcon: function () {
         var button = document.getElementById('wishlist__toggle');
+        if (button.injectedHeaderIcon) {
+            return;
+        }
+
         var wishlist = document.getElementById('wishlist');
         button.addEventListener('click', function () {
             wishlist.classList.toggle('open');
@@ -205,6 +228,7 @@ Drupal.behaviors.infiniteWishlist = {
                 Drupal.behaviors.infiniteWishlist.fetchProducts();
             }
         });
+        button.injectedHeaderIcon = true;
     },
 
     initRemoveButtons: function (container) {
@@ -258,30 +282,62 @@ Drupal.behaviors.infiniteWishlist = {
         this.setCount();
     },
 
+    onFocus: function () {
+        Drupal.behaviors.infiniteWishlist.fetchProducts();
+        Drupal.behaviors.infiniteWishlist.setCount();
+        // handle already injected icons
+        var injectedIcons = document.querySelectorAll('.wishlist__icon--add');
+        var storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
+        for (var i = 0; i < injectedIcons.length; i++) {
+            var icon = injectedIcons[i];
+            if (storedProductIds.indexOf(icon.productId) > -1) {
+                icon.classList.add('in-wishlist');
+            } else {
+                icon.classList.remove('in-wishlist');
+            }
+        }
+    },
+
     attach: function () {
         try {
             var test = 'local_storage_availability_test';
             localStorage.setItem(test, test);
             localStorage.removeItem(test);
 
-            this.injectHeaderIcon();
-            this.injectIcons();
-            this.setCount();
+            if (window.Worker) {
+                this.injectHeaderIcon();
+                this.injectIcons();
+                this.setCount();
 
-            window.addEventListener('focus', function () {
-                Drupal.behaviors.infiniteWishlist.fetchProducts();
-                Drupal.behaviors.infiniteWishlist.setCount();
-                // handle already injected icons
-                var injectedIcons = document.querySelectorAll('.wishlist__icon--add');
-                var storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
-                for (var i = 0; i < injectedIcons.length; i++) {
-                    var icon = injectedIcons[i];
-                    icon.classList.toggle('in-wishlist', storedProductIds.indexOf(icon.productId) > -1);
-                }
-            });
+                window.addEventListener('focus', this.onFocus);
+            } else {
+                // TODO: handle
+                // window worker is not available
+            }
         } catch (e) { // local storage is unavailable
             // TODO: handle
             return false;
         }
+    },
+
+    detach: function () {
+        window.removeEventListener('focus', this.onFocus);
+
+        var buttons = document.getElementsByClassName('wishlist__icon--add');
+        for (var i = 0; i < buttons.length; i++) {
+            var button = buttons[i];
+            if (button.parentNode) {
+                button.parentNode.removeChild(button);
+            }
+        }
+
+        var headerIcon = document.getElementById('wishlist__toggle');
+        var clone = headerIcon.cloneNode();
+        // move all child elements from the original to the clone
+        while (headerIcon.firstChild) {
+            clone.appendChild(headerIcon.lastChild);
+        }
+
+        headerIcon.parentNode.replaceChild(clone, headerIcon);
     }
 };
