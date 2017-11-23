@@ -290,7 +290,11 @@ Drupal.behaviors.infiniteWishlist = {
         var storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
         for (var i = 0; i < injectedIcons.length; i++) {
             var icon = injectedIcons[i];
-            icon.classList.toggle('in-wishlist', storedProductIds.indexOf(icon.productId) > -1);
+            if (storedProductIds.indexOf(icon.productId) > -1) {
+                icon.classList.add('in-wishlist');
+            } else {
+                icon.classList.remove('in-wishlist');
+            }
         }
     },
 
