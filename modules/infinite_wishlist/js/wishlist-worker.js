@@ -22,7 +22,7 @@ onmessage = function (e) {
                 for (var j = 0; j < result.products.length; j++) {
                     var resultItem = result.products[j];
                     if (resultItem.productId === itemProductId) {
-                        storedWishlist[i].markup = resultItem.markup;
+                        storedWishlist[i] = resultItem;
                         storedWishlist[i].expires = Date.now() + (60 * 60 * 1000);
                     }
                 }

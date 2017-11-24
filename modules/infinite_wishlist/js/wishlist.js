@@ -27,7 +27,7 @@ Drupal.behaviors.infiniteWishlist = {
             return;
         }
         if (null === productId) {
-            this.growl('Unalbe to retrieve product id');
+            this.growl('Unable to retrieve product id');
             return;
         }
         wishlist.push({
@@ -37,9 +37,66 @@ Drupal.behaviors.infiniteWishlist = {
         });
         localStorage.setItem('infinite_wishlist', JSON.stringify(wishlist));
 
-        this.fetchProducts();
+        this.fetchProducts(function () {
+            Drupal.behaviors.infiniteWishlist.renderList(document.getElementById('wishlist__list'));
+            Drupal.behaviors.infiniteWishlist.track('stored', productId);
+        });
 
         this.growl('added item ' + productId + ' to wishlist');
+    },
+
+    track: function(type, productId) {
+        var items = this.getWishlist();
+        var item = null;
+        for (var i = 0; i < items.length; i++) {
+            if (productId === items[i].productId) {
+                item = items[i];
+                break;
+            }
+        }
+
+        if (null === item) {
+            throw new Error('product with id ' + productId + ' not found in wishlist storage');
+        }
+        console.log('DEBUG', item);
+        switch (type) {
+            case 'stored':
+                dataLayer.push({
+                    'event': 'addToCart',
+                    'ecommerce': {
+                        'currencyCode': item.currency,
+                        'add': {
+                            'products': [{
+                                'name': item.name,
+                                'id': item.productId,
+                                'price': item.price,
+                                'brand': item.brand,
+                                'category': item.category,
+                                'quantity': 1
+                            }]
+                        }
+                    }
+                });
+                break;
+            case 'removed':
+                dataLayer.push({
+                    'event': 'removeFromCart',
+                    'ecommerce': {
+                        'currencyCode': item.currency,
+                        'remove': {
+                            'products': [{
+                                'name': item.name,
+                                'id': item.productId,
+                                'price': item.price,
+                                'brand': item.brand,
+                                'category': item.category,
+                                'quantity': 1
+                            }]
+                        }
+                    }
+                });
+                break;
+        }
     },
 
     animateStore: function (originalImage) {
@@ -116,7 +173,6 @@ Drupal.behaviors.infiniteWishlist = {
             worker.onmessage = function (e) {
                 storedWishlist = e.data;
                 localStorage.setItem('infinite_wishlist', JSON.stringify(storedWishlist));
-
                 callback(storedWishlist);
             };
             worker.postMessage(storedWishlist);
@@ -257,7 +313,9 @@ Drupal.behaviors.infiniteWishlist = {
 
         this.growl('Removed item with productId' + productId);
 
+        this.track('removed', productId);
         localStorage.setItem('infinite_wishlist', JSON.stringify(wishlist));
+
 
         // remove from dom
         function firstParentThatMatches(selector, childElement) {

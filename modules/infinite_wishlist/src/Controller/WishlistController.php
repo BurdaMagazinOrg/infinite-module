@@ -32,9 +32,11 @@ class WishlistController extends ControllerBase
 
     if (false === empty($productIds)) {
       $query = Database::getConnection()
-        ->select('advertising_product')
-        ->fields('advertising_product')
-        ->condition('product_id', $productIds, 'IN')
+        ->select('advertising_product');
+      $query->leftJoin('advertising_product__field_product_category_txt', null, 'advertising_product__field_product_category_txt.entity_id=advertising_product.id');
+      $query = $query->fields('advertising_product');
+      $query = $query->fields('advertising_product__field_product_category_txt');
+      $query = $query->condition('product_id', $productIds, 'IN')
         ->execute();
 
       foreach ($query->fetchAll() as $product) {
@@ -68,6 +70,11 @@ class WishlistController extends ControllerBase
         ];
         $products[] = [
           'productId' => $product->product_id,
+          'name' => $product->product_name,
+          'price' => $product->product_price,
+          'currency' => $product->product_currency,
+          'brand' => $product->product_brand,
+          'category' => $product->field_product_category_txt_value,
           'markup' => \Drupal::service('renderer')->renderPlain($build),
         ];
       }
