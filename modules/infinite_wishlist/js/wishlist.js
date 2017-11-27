@@ -61,40 +61,26 @@ Drupal.behaviors.infiniteWishlist = {
         console.log('DEBUG', item);
         switch (type) {
             case 'stored':
-                dataLayer.push({
-                    'event': 'addToCart',
-                    'ecommerce': {
-                        'currencyCode': item.currency,
-                        'add': {
-                            'products': [{
-                                'name': item.name,
-                                'id': item.productId,
-                                'price': item.price,
-                                'brand': item.brand,
-                                'category': item.category,
-                                'quantity': 1
-                            }]
-                        }
-                    }
-                });
+                TrackingManager.ecommerce({
+                    'name': item.name,
+                    'id': item.productId,
+                    'price': item.price,
+                    'brand': item.brand,
+                    'category': item.category,
+                    'quantity': 1,
+                    'currencyCode': item.currency
+                }, 'addToCart');
                 break;
             case 'removed':
-                dataLayer.push({
-                    'event': 'removeFromCart',
-                    'ecommerce': {
-                        'currencyCode': item.currency,
-                        'remove': {
-                            'products': [{
-                                'name': item.name,
-                                'id': item.productId,
-                                'price': item.price,
-                                'brand': item.brand,
-                                'category': item.category,
-                                'quantity': 1
-                            }]
-                        }
-                    }
-                });
+                TrackingManager.ecommerce({
+                    'name': item.name,
+                    'id': item.productId,
+                    'price': item.price,
+                    'brand': item.brand,
+                    'category': item.category,
+                    'quantity': 1,
+                    'currencyCode': item.currency
+                }, 'removeFromCart');
                 break;
         }
     },
