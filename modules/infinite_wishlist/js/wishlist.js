@@ -58,7 +58,7 @@ Drupal.behaviors.infiniteWishlist = {
         if (null === item) {
             throw new Error('product with id ' + productId + ' not found in wishlist storage');
         }
-        console.log('DEBUG', item);
+
         switch (type) {
             case 'stored':
                 TrackingManager.ecommerce({
