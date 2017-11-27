@@ -61,7 +61,7 @@ Drupal.behaviors.infiniteWishlist = {
 
         switch (type) {
             case 'stored':
-                TrackingManager.ecommerce({
+                TrackingManager.trackEcommerce({
                     'name': item.name,
                     'id': item.productId,
                     'price': item.price,
@@ -72,7 +72,7 @@ Drupal.behaviors.infiniteWishlist = {
                 }, 'addToCart');
                 break;
             case 'removed':
-                TrackingManager.ecommerce({
+                TrackingManager.trackEcommerce({
                     'name': item.name,
                     'id': item.productId,
                     'price': item.price,
