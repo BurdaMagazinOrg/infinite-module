@@ -202,6 +202,13 @@ Drupal.behaviors.infiniteWishlist = {
                 li.setAttribute('data-uuid', item.uuid);
                 li.innerHTML = item.markup;
                 container.appendChild(li);
+                li.querySelector('a').addEventListener('click', function (e) {
+                    TrackingManager.trackEvent({
+                        category: 'click',
+                        action: 'wishlist--click-item-in-wishlist',
+                        location: window.location.pathname
+                    });
+                });
             }
 
             this.initRemoveButtons(container);
