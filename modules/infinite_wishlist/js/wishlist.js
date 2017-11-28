@@ -271,6 +271,13 @@ Drupal.behaviors.infiniteWishlist = {
         var wishlist = document.getElementById('wishlist');
         button.addEventListener('click', function () {
             wishlist.classList.toggle('open');
+            if (wishlist.classList.contains('open')) {
+                TrackingManager.trackEvent({
+                    category: 'click',
+                    action: 'wishlist--click-wishlist-icon',
+                    location: window.location.pathname
+                });
+            }
         });
         button.addEventListener('mouseover', function () {
             // only prefetch if overlay is not currently open
