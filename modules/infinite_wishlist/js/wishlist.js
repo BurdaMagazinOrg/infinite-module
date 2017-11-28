@@ -1,6 +1,6 @@
 Drupal.behaviors.infiniteWishlist = {
     getWishlist: function () {
-        var wishlist = localStorage.getItem('infinite_wishlist');
+        var wishlist = localStorage.getItem('infinite__wishlist');
         if (null === wishlist) {
             return [];
         } else {
@@ -12,51 +12,51 @@ Drupal.behaviors.infiniteWishlist = {
         document.getElementById('wishlist__toggle__count').innerText = this.getWishlist().length;
     },
 
-    storeItem: function (productId) {
+    storeItem: function (uuid) {
         var wishlist = this.getWishlist();
 
         var alreadyPresent = false;
         for (var i = 0; i < wishlist.length; i++) {
-            if (productId === wishlist[i].productId) {
+            if (uuid === wishlist[i].uuid) {
                 alreadyPresent = true;
                 break;
             }
         }
         if (alreadyPresent) {
-            this.growl('item ' + productId + ' is already present in wishlist');
+            this.growl('item ' + uuid + ' is already present in wishlist');
             return;
         }
-        if (null === productId) {
+        if (null === uuid) {
             this.growl('Unable to retrieve product id');
             return;
         }
         wishlist.push({
-            productId: productId,
+            uuid: uuid,
             expires: 0,
             markup: ''
         });
-        localStorage.setItem('infinite_wishlist', JSON.stringify(wishlist));
+        localStorage.setItem('infinite__wishlist', JSON.stringify(wishlist));
 
         this.fetchProducts(function () {
             Drupal.behaviors.infiniteWishlist.renderList(document.getElementById('wishlist__list'));
-            Drupal.behaviors.infiniteWishlist.track('stored', productId);
+            Drupal.behaviors.infiniteWishlist.track('stored', uuid);
         });
 
-        this.growl('added item ' + productId + ' to wishlist');
+        this.growl('added item ' + uuid + ' to wishlist');
     },
 
-    track: function(type, productId) {
+    track: function(type, uuid) {
         var items = this.getWishlist();
         var item = null;
         for (var i = 0; i < items.length; i++) {
-            if (productId === items[i].productId) {
+            if (uuid === items[i].uuid) {
                 item = items[i];
                 break;
             }
         }
 
         if (null === item) {
-            throw new Error('product with id ' + productId + ' not found in wishlist storage');
+            throw new Error('product with id ' + uuid + ' not found in wishlist storage');
         }
 
         switch (type) {
@@ -158,7 +158,7 @@ Drupal.behaviors.infiniteWishlist = {
             var worker = new Worker('/modules/contrib/infinite_base/modules/infinite_wishlist/js/wishlist-worker.js');
             worker.onmessage = function (e) {
                 storedWishlist = e.data;
-                localStorage.setItem('infinite_wishlist', JSON.stringify(storedWishlist));
+                localStorage.setItem('infinite__wishlist', JSON.stringify(storedWishlist));
                 callback(storedWishlist);
             };
             worker.postMessage(storedWishlist);
@@ -169,21 +169,22 @@ Drupal.behaviors.infiniteWishlist = {
 
     renderList: function (container) {
         var items = this.getWishlist();
-        var currentlyRenderedProductIds = [];
+        var currentlyRenderedUuids = [];
         for (var i = 0; i < container.children.length; i++) {
-            currentlyRenderedProductIds.push(container.children[i].getAttribute('data-product-id'));
+            currentlyRenderedUuids.push(container.children[i].getAttribute('data-uuid'));
         }
         // check if all product ids are already rendered, if so do nothing
-        var allItemsAlreadyRendered = true;
-        if (items.length === currentlyRenderedProductIds.length) {
+        var allItemsAlreadyRendered = false;
+        if (items.length === currentlyRenderedUuids.length) {
+            allItemsAlreadyRendered = true;
             for (var i = 0; i < items.length; i++) {
-                if (currentlyRenderedProductIds.indexOf(items[i].productId) === -1) {
+                if (currentlyRenderedUuids.indexOf(items[i].uuid) === -1) {
                     allItemsAlreadyRendered = false;
                     break;
                 }
             }
         }
-        if (currentlyRenderedProductIds.length > 1 && allItemsAlreadyRendered) {
+        if (currentlyRenderedUuids.length > 1 && allItemsAlreadyRendered) {
             return;
         }
 
@@ -198,7 +199,7 @@ Drupal.behaviors.infiniteWishlist = {
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 var li = document.createElement('li');
-                li.setAttribute('data-product-id', item.productId);
+                li.setAttribute('data-uuid', item.uuid);
                 li.innerHTML = item.markup;
                 container.appendChild(li);
             }
@@ -211,7 +212,7 @@ Drupal.behaviors.infiniteWishlist = {
         var storedProductIds = [];
         var wishlistItems = this.getWishlist();
         for (var i = 0; i < wishlistItems.length; i++) {
-            storedProductIds.push(wishlistItems[i].productId);
+            storedProductIds.push(wishlistItems[i].uuid);
         }
         return storedProductIds;
     },
@@ -228,19 +229,19 @@ Drupal.behaviors.infiniteWishlist = {
                 '        <path d="M28.989,14.042C28.989,14.41 28.961,14.782 28.907,15.157C28.507,17.921 26.713,20.753 23.985,23.579C22.491,25.12 20.868,26.532 19.134,27.798C18.774,28.051 18.299,28.068 17.922,27.841C17.837,27.791 17.688,27.697 17.484,27.564C15.896,26.524 14.407,25.341 13.034,24.03C9.903,21.028 8,17.836 8,14.523C8,7.698 15.499,6.09 18.502,10.547C21.512,6.152 28.989,7.525 28.989,14.042Z"/>' +
                 '    </g>' +
                 '</svg>';
-            icon.productId = item.getAttribute('data-product-id');
+            icon.uuid = item.getAttribute('data-uuid');
             icon.classList.add('wishlist__icon--add');
-            if (storedProductIds.indexOf(icon.productId) > -1) {
+            if (storedProductIds.indexOf(icon.uuid) > -1) {
                 icon.classList.add('in-wishlist');
             }
             icon.addEventListener('click', function (e) {
                 e.stopPropagation();
                 if (e.currentTarget.classList.contains('in-wishlist')) {
                     e.currentTarget.classList.remove('in-wishlist');
-                    Drupal.behaviors.infiniteWishlist.removeFromWishlist(e.currentTarget.productId);
+                    Drupal.behaviors.infiniteWishlist.removeFromWishlist(e.currentTarget.uuid);
                 } else {
                     e.currentTarget.classList.add('in-wishlist');
-                    Drupal.behaviors.infiniteWishlist.storeItem(e.currentTarget.productId);
+                    Drupal.behaviors.infiniteWishlist.storeItem(e.currentTarget.uuid);
                     Drupal.behaviors.infiniteWishlist.animateStore(
                         e.currentTarget.parentNode.querySelector('img')
                     );
@@ -287,20 +288,20 @@ Drupal.behaviors.infiniteWishlist = {
         }
     },
 
-    removeFromWishlist: function (productId) {
+    removeFromWishlist: function (uuid) {
         var wishlist = this.getWishlist();
         for (var i = 0; i < wishlist.length; i++) {
             var item = wishlist[i];
-            if (productId === item.productId) {
+            if (uuid === item.uuid) {
                 wishlist.splice(i, 1);
                 break;
             }
         }
 
-        this.growl('Removed item with productId' + productId);
+        this.growl('Removed item with uuid' + uuid);
 
-        this.track('removed', productId);
-        localStorage.setItem('infinite_wishlist', JSON.stringify(wishlist));
+        this.track('removed', uuid);
+        localStorage.setItem('infinite__wishlist', JSON.stringify(wishlist));
 
 
         // remove from dom
@@ -316,7 +317,7 @@ Drupal.behaviors.infiniteWishlist = {
             return typeof parent.matches === 'function' &&
             parent.matches(selector) ? parent : null;
         }
-        var items = document.querySelectorAll('[data-wishlist-remove="' + productId + '"]');
+        var items = document.querySelectorAll('[data-wishlist-remove="' + uuid + '"]');
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var li = firstParentThatMatches('li', item);
@@ -334,7 +335,7 @@ Drupal.behaviors.infiniteWishlist = {
         var storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
         for (var i = 0; i < injectedIcons.length; i++) {
             var icon = injectedIcons[i];
-            if (storedProductIds.indexOf(icon.productId) > -1) {
+            if (storedProductIds.indexOf(icon.uuid) > -1) {
                 icon.classList.add('in-wishlist');
             } else {
                 icon.classList.remove('in-wishlist');

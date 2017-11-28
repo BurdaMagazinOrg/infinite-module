@@ -18,10 +18,10 @@ onmessage = function (e) {
             var result = JSON.parse(xhr.responseText);
             for (var i = 0; i < Object.keys(storedWishlist).length; i++) {
                 var storedItem = storedWishlist[Object.keys(storedWishlist)[i]];
-                var itemProductId = storedItem.productId;
+                var itemUuid = storedItem.uuid;
                 for (var j = 0; j < result.products.length; j++) {
                     var resultItem = result.products[j];
-                    if (resultItem.productId === itemProductId) {
+                    if (resultItem.uuid === itemUuid) {
                         storedWishlist[i] = resultItem;
                         storedWishlist[i].expires = Date.now() + (60 * 60 * 1000);
                     }

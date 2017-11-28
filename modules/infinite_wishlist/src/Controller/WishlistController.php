@@ -23,20 +23,20 @@ class WishlistController extends ControllerBase
 
   public function loadProducts(Request $request)
   {
-    $productIds = [];
+    $uuids = [];
     $products = [];
     $wishlist = json_decode($request->get('wishlist'), true);
     foreach ($wishlist as $wishlistItem) {
-      $productIds[] = $wishlistItem['productId'];
+      $uuids[] = $wishlistItem['uuid'];
     }
 
-    if (false === empty($productIds)) {
+    if (false === empty($uuids)) {
       $query = Database::getConnection()
         ->select('advertising_product');
       $query->leftJoin('advertising_product__field_product_category_txt', null, 'advertising_product__field_product_category_txt.entity_id=advertising_product.id');
       $query = $query->fields('advertising_product');
       $query = $query->fields('advertising_product__field_product_category_txt');
-      $query = $query->condition('product_id', $productIds, 'IN')
+      $query = $query->condition('uuid', $uuids, 'IN')
         ->execute();
 
       foreach ($query->fetchAll() as $product) {
@@ -70,6 +70,7 @@ class WishlistController extends ControllerBase
         ];
         $products[] = [
           'productId' => $product->product_id,
+          'uuid' => $product->uuid,
           'name' => $product->product_name,
           'price' => $product->product_price,
           'currency' => $product->product_currency,
