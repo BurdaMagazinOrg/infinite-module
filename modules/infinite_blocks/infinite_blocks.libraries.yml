@@ -1,9 +1,9 @@
 outbrain_js:
-  remote: https://widgets.outbrain.com/outbrain.js
+  remote: //widgets.outbrain.com/outbrain.js
   version: 1.0.0
   license:
     name: GPL
-    url: //www.gnu.org/licenses/gpl-3.0.txt
+    url: http://www.gnu.org/licenses/gpl-3.0.txt
     gpl-compatible: true
   js:
     //widgets.outbrain.com/outbrain.js: { type: external }
