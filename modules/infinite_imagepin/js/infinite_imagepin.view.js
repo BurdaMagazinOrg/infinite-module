@@ -103,7 +103,7 @@
     pin.before(overlay);
     pin.trigger('overlay:show', [overlay]);
 
-    $widget_content = overlay.children().wrapAll('<div class="imagepin-widget-content"></div>');
+    // $widget_content = overlay.children().wrapAll('<div class="imagepin-widget-content"></div>');
     $arrow = $('<span class="arrow"></span>').appendTo(overlay.find('.imagepin-widget-content'));
 
     overlay.attr('class', widget.attr('data-imagepin-overlay-class'));
