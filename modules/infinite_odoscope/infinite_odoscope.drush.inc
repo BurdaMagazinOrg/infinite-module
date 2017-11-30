@@ -64,7 +64,7 @@ function drush_infinite_odoscope_odoscope_queue() {
       }
     }
     // hardcoded headers from the view
-    $csv_data[] = explode(',', "ID,Published,Title,Channel,Channel-ID,Author-ID,Author-Name,Created,Image,Thumbnail,Image-Text,Tag-IDs,Tag-Names,URL,Base64");
+    $csv_data[] = explode(',', "ID,Published,Promoted to home,Promoted to channel,Title,Channel,Channel-ID,Author-ID,Author-Name,Created,Image,Thumbnail,Image-Text,Tag-IDs,Tag-Names,URL,Base64");
     if (count($claims_delete)) {
       foreach ($args_delete as $nid) {
         $row = [];
