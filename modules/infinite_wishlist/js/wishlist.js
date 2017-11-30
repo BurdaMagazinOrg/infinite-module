@@ -33,7 +33,8 @@ Drupal.behaviors.infiniteWishlist = {
         wishlist.push({
             uuid: uuid,
             expires: 0,
-            markup: ''
+            markup: '',
+            addedToWishlistTimestamp: Date.now()
         });
         localStorage.setItem('infinite__wishlist', JSON.stringify(wishlist));
 
