@@ -62,26 +62,21 @@ Drupal.behaviors.infiniteWishlist = {
 
         switch (type) {
             case 'stored':
-                TrackingManager.trackEcommerce({
-                    'name': item.name,
-                    'id': item.productId,
-                    'price': item.price,
-                    'brand': item.brand,
-                    'category': item.category,
-                    'quantity': 1,
-                    'currencyCode': item.currency
-                }, 'addToCart');
+                TrackingManager.trackEvent({
+                    category: 'click',
+                    action: 'wishlist--add-to-wishlist',
+                    label: item.name + ' | ' + item.productId,
+                    location: window.location.pathname
+                });
                 break;
             case 'removed':
-                TrackingManager.trackEcommerce({
-                    'name': item.name,
-                    'id': item.productId,
-                    'price': item.price,
-                    'brand': item.brand,
-                    'category': item.category,
-                    'quantity': 1,
-                    'currencyCode': item.currency
-                }, 'removeFromCart');
+                TrackingManager.trackEvent({
+                    category: 'click',
+                    action: 'wishlist--remove-wishlist',
+                    label: item.name + ' | ' + item.productId,
+                    location: window.location.pathname,
+                    productExtraInformation: Drupal.behaviors.infiniteWishlist.getDurationInWishlist(item)
+                });
                 break;
         }
     },
@@ -205,18 +200,37 @@ Drupal.behaviors.infiniteWishlist = {
                 container.appendChild(li);
                 var link = li.querySelector('a');
                 link.setAttribute('data-tracking-label', item.name + ' | ' + item.productId);
+                link.setAttribute('data-product-extra-information', Drupal.behaviors.infiniteWishlist.getDurationInWishlist(item));
                 link.addEventListener('click', function (e) {
                     TrackingManager.trackEvent({
                         category: 'click',
                         action: 'wishlist--click-item-in-wishlist',
                         label: e.currentTarget.getAttribute('data-tracking-label'),
-                        location: window.location.pathname
+                        location: window.location.pathname,
+                        productExtraInformation: e.currentTarget.getAttribute('data-product-extra-information')
                     });
                 });
             }
 
             this.initRemoveButtons(container);
         }
+    },
+
+    getDurationInWishlist: function(item) {
+        function convertMS(ms) {
+            var d, h, m, s;
+            s = Math.floor(ms / 1000);
+            m = Math.floor(s / 60);
+            s = s % 60;
+            h = Math.floor(m / 60);
+            m = m % 60;
+            d = Math.floor(h / 24);
+            h = h % 24;
+            return { d: d, h: h, m: m, s: s };
+        }
+
+        var dateData = convertMS(Date.now() - item.addedToWishlistTimestamp);
+        return dateData.d + 'd:' + dateData.h + 'h:' + dateData.m + 'm:' + dateData.s + 's';
     },
 
     getStoredProductIds: function () {
