@@ -203,10 +203,13 @@ Drupal.behaviors.infiniteWishlist = {
                 li.setAttribute('data-uuid', item.uuid);
                 li.innerHTML = item.markup;
                 container.appendChild(li);
-                li.querySelector('a').addEventListener('click', function (e) {
+                var link = li.querySelector('a');
+                link.setAttribute('data-tracking-label', item.name + ' | ' + item.productId);
+                link.addEventListener('click', function (e) {
                     TrackingManager.trackEvent({
                         category: 'click',
                         action: 'wishlist--click-item-in-wishlist',
+                        label: e.currentTarget.getAttribute('data-tracking-label'),
                         location: window.location.pathname
                     });
                 });
