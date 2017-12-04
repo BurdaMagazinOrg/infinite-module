@@ -1,0 +1,5 @@
+name: Infinite Lexicon
+type: module
+description: Lexicon related logic
+core: 8.x
+package: Infinite
