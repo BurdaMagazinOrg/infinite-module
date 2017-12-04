@@ -57,7 +57,8 @@ Drupal.behaviors.infiniteWishlist = {
         }
 
         if (null === item) {
-            throw new Error('product with id ' + uuid + ' not found in wishlist storage');
+            console.error('product with id ' + uuid + ' not found in wishlist storage');
+            return;
         }
 
         switch (type) {
