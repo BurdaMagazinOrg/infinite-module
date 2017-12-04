@@ -134,7 +134,7 @@ Drupal.behaviors.infiniteWishlist = {
 
         // set to true for debugging purposes
         // fetch = true;
-        
+
         for (var i = 0; i < storedWishlist.length; i++) {
             var item = storedWishlist[i];
 
@@ -358,12 +358,10 @@ Drupal.behaviors.infiniteWishlist = {
         }
 
         this.setCount();
+        this.toggleIconsAccordingToWishlistStatus();
     },
 
-    onFocus: function () {
-        Drupal.behaviors.infiniteWishlist.fetchProducts();
-        Drupal.behaviors.infiniteWishlist.setCount();
-        // handle already injected icons
+    toggleIconsAccordingToWishlistStatus: function () {
         var injectedIcons = document.querySelectorAll('.wishlist__icon--add');
         var storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
         for (var i = 0; i < injectedIcons.length; i++) {
@@ -374,6 +372,13 @@ Drupal.behaviors.infiniteWishlist = {
                 icon.classList.remove('in-wishlist');
             }
         }
+    },
+
+    onFocus: function () {
+        this.fetchProducts();
+        this.setCount();
+        // handle already injected icons
+        this.toggleIconsAccordingToWishlistStatus();
     },
 
     attach: function () {
