@@ -277,7 +277,7 @@ Drupal.behaviors.infiniteWishlist = {
                 }
             });
 
-            item.insertBefore(icon, item.firstChild);
+            item.appendChild(icon);
         }
     },
 
