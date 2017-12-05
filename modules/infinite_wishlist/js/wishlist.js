@@ -375,10 +375,10 @@ Drupal.behaviors.infiniteWishlist = {
     },
 
     onFocus: function () {
-        this.fetchProducts();
-        this.setCount();
+        Drupal.behaviors.infiniteWishlist.fetchProducts();
+        Drupal.behaviors.infiniteWishlist.setCount();
         // handle already injected icons
-        this.toggleIconsAccordingToWishlistStatus();
+        Drupal.behaviors.infiniteWishlist.toggleIconsAccordingToWishlistStatus();
     },
 
     attach: function () {
