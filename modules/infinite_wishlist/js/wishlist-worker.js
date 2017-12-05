@@ -23,6 +23,7 @@ onmessage = function (e) {
                     var resultItem = result.products[j];
                     if (resultItem.uuid === itemUuid) {
                         storedWishlist[i] = resultItem;
+                        storedWishlist[i].addedToWishlistTimestamp = storedItem.addedToWishlistTimestamp;
                         storedWishlist[i].expires = Date.now() + (60 * 60 * 1000);
                     }
                 }

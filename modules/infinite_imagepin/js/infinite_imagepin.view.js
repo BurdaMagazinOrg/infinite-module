@@ -73,8 +73,7 @@
       }
     }
 
-
-    var overlay = widget.clone(true),
+    var overlay = widget,
       $img = pin.parent().find('img').not('.imagepin-widget img'),
       $arrow = [],
       $widget_content = [],
@@ -104,7 +103,7 @@
     pin.before(overlay);
     pin.trigger('overlay:show', [overlay]);
 
-    $widget_content = overlay.children().wrapAll('<div class="imagepin-widget-content"></div>');
+    // $widget_content = overlay.children().wrapAll('<div class="imagepin-widget-content"></div>');
     $arrow = $('<span class="arrow"></span>').appendTo(overlay.find('.imagepin-widget-content'));
 
     overlay.attr('class', widget.attr('data-imagepin-overlay-class'));
@@ -147,7 +146,14 @@
     overlay.fadeIn('fast');
 
     pin.addClass('imagepin--active');
-    widget.addClass('imagepin--active');
+    widget.off('click').on('click', function () {
+        var link = document.createElement('a');
+        link.href = widget.find('[data-external-url]').data('external-url');
+        link.setAttribute('target', '_blank');
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+    });
 
     if (!isTouchDevice) {
       overlay.mouseleave(function () {

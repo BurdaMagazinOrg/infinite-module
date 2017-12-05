@@ -33,7 +33,8 @@ Drupal.behaviors.infiniteWishlist = {
         wishlist.push({
             uuid: uuid,
             expires: 0,
-            markup: ''
+            markup: '',
+            addedToWishlistTimestamp: Date.now()
         });
         localStorage.setItem('infinite__wishlist', JSON.stringify(wishlist));
 
@@ -56,31 +57,27 @@ Drupal.behaviors.infiniteWishlist = {
         }
 
         if (null === item) {
-            throw new Error('product with id ' + uuid + ' not found in wishlist storage');
+            console.error('product with id ' + uuid + ' not found in wishlist storage');
+            return;
         }
 
         switch (type) {
             case 'stored':
-                TrackingManager.trackEcommerce({
-                    'name': item.name,
-                    'id': item.productId,
-                    'price': item.price,
-                    'brand': item.brand,
-                    'category': item.category,
-                    'quantity': 1,
-                    'currencyCode': item.currency
-                }, 'addToCart');
+                TrackingManager.trackEvent({
+                    category: 'click',
+                    action: 'wishlist--add-to-wishlist',
+                    label: item.name + ' | ' + item.productId,
+                    location: window.location.pathname
+                });
                 break;
             case 'removed':
-                TrackingManager.trackEcommerce({
-                    'name': item.name,
-                    'id': item.productId,
-                    'price': item.price,
-                    'brand': item.brand,
-                    'category': item.category,
-                    'quantity': 1,
-                    'currencyCode': item.currency
-                }, 'removeFromCart');
+                TrackingManager.trackEvent({
+                    category: 'click',
+                    action: 'wishlist--remove-wishlist',
+                    label: item.name + ' | ' + item.productId,
+                    location: window.location.pathname,
+                    productExtraInformation: Drupal.behaviors.infiniteWishlist.getDurationInWishlist(item)
+                });
                 break;
         }
     },
@@ -137,7 +134,7 @@ Drupal.behaviors.infiniteWishlist = {
 
         // set to true for debugging purposes
         // fetch = true;
-        
+
         for (var i = 0; i < storedWishlist.length; i++) {
             var item = storedWishlist[i];
 
@@ -202,17 +199,39 @@ Drupal.behaviors.infiniteWishlist = {
                 li.setAttribute('data-uuid', item.uuid);
                 li.innerHTML = item.markup;
                 container.appendChild(li);
-                li.querySelector('a').addEventListener('click', function (e) {
+                var link = li.querySelector('a');
+                link.setAttribute('data-tracking-label', item.name + ' | ' + item.productId);
+                link.setAttribute('data-product-extra-information', Drupal.behaviors.infiniteWishlist.getDurationInWishlist(item));
+                link.addEventListener('click', function (e) {
                     TrackingManager.trackEvent({
                         category: 'click',
                         action: 'wishlist--click-item-in-wishlist',
-                        location: window.location.pathname
+                        label: e.currentTarget.getAttribute('data-tracking-label'),
+                        location: window.location.pathname,
+                        productExtraInformation: e.currentTarget.getAttribute('data-product-extra-information')
                     });
                 });
             }
 
             this.initRemoveButtons(container);
         }
+    },
+
+    getDurationInWishlist: function(item) {
+        function convertMS(ms) {
+            var d, h, m, s;
+            s = Math.floor(ms / 1000);
+            m = Math.floor(s / 60);
+            s = s % 60;
+            h = Math.floor(m / 60);
+            m = m % 60;
+            d = Math.floor(h / 24);
+            h = h % 24;
+            return { d: d, h: h, m: m, s: s };
+        }
+
+        var dateData = convertMS(Date.now() - item.addedToWishlistTimestamp);
+        return dateData.d + 'd:' + dateData.h + 'h:' + dateData.m + 'm:' + dateData.s + 's';
     },
 
     getStoredProductIds: function () {
@@ -258,7 +277,7 @@ Drupal.behaviors.infiniteWishlist = {
                 }
             });
 
-            item.insertBefore(icon, item.firstChild);
+            item.appendChild(icon);
         }
     },
 
@@ -339,12 +358,10 @@ Drupal.behaviors.infiniteWishlist = {
         }
 
         this.setCount();
+        this.toggleIconsAccordingToWishlistStatus();
     },
 
-    onFocus: function () {
-        Drupal.behaviors.infiniteWishlist.fetchProducts();
-        Drupal.behaviors.infiniteWishlist.setCount();
-        // handle already injected icons
+    toggleIconsAccordingToWishlistStatus: function () {
         var injectedIcons = document.querySelectorAll('.wishlist__icon--add');
         var storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
         for (var i = 0; i < injectedIcons.length; i++) {
@@ -355,6 +372,13 @@ Drupal.behaviors.infiniteWishlist = {
                 icon.classList.remove('in-wishlist');
             }
         }
+    },
+
+    onFocus: function () {
+        Drupal.behaviors.infiniteWishlist.fetchProducts();
+        Drupal.behaviors.infiniteWishlist.setCount();
+        // handle already injected icons
+        Drupal.behaviors.infiniteWishlist.toggleIconsAccordingToWishlistStatus();
     },
 
     attach: function () {
