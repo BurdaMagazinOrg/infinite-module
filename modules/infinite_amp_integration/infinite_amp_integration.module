@@ -1,0 +1,121 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+
+define("GA_CD_SYSTEM_TYPE",          "cd7");
+define("GA_CD_LOGGED_IN",            "cd8");
+define("GA_CD_ARTICLE_NAME",         "cd9");
+define("GA_CD_CONTENT_TYPE",         "cd10");
+define("GA_CD_CONTENT_SUB_TYPE",     "cd11");
+define("GA_CD_ARTICLE_PUBLISH_DATE", "cd12");
+define("GA_CD_AUTHOR_NAME",          "cd13");
+define("GA_CD_CHANNEL_CHANNEL",      "cd14");
+define("GA_CD_SUB_CATEGORY",         "cd15");
+define("GA_CD_OUTBRAIN_USAGE",       "cd16");
+define("GA_CD_ODOSCOPE_GROUP",       "cd17");
+define("GA_CD_ODOSCOPE_TYPE",        "cd18");
+define("GA_CD_PRODUCT_CATEGORY",     "cd19");
+define("GA_CD_ENTITY_TYPE",          "cd20");
+define("GA_CD_ENTITY_ID",            "cd21");
+define("GA_CD_ENVIRONMENT",          "cd22");
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function infinite_amp_integration_theme_registry_alter(&$theme_registry) {
+  if(isset($theme_registry['amp_analytics'])) {
+    $theme_registry['amp_analytics']['variables']['data_array'] = [];
+  }
+}
+
+
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function infinite_amp_integration_theme_suggestions_amp_analytics_alter(array &$suggestions, array $variables, $hook) {
+
+  if(isset($variables['attributes']['type'])) {
+    $suggestions[] = $hook . '__' . $variables['attributes']['type'];
+  }
+
+  return;
+}
+
+/**
+ * Implements hook_page_bottom().
+ */
+function infinite_amp_integration_page_bottom(array &$page_bottom) {
+
+  $amp_context = \Drupal::service('router.amp_context');
+  if ($amp_context->isAmpRoute()) {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    $term = \Drupal::routeMatch()->getParameter('taxonomy_term');
+    $user = \Drupal::routeMatch()->getParameter('user');
+
+    $google_analytics_id = \Drupal::config('amp.settings')->get('google_analytics_id');
+    if (!empty($google_analytics_id)) {
+      if(isset($node)) {
+        $data = infinite_amp_integration_get_amp_analytics_data_entity($node, $google_analytics_id);
+      }
+      elseif(isset($term)) {
+        $data = infinite_amp_integration_get_amp_analytics_data_entity($term, $google_analytics_id);
+      }
+      elseif(isset($user)) {
+        $data = infinite_amp_integration_get_amp_analytics_data_entity($user, $google_analytics_id);
+      }
+
+      if(isset($data)) {
+        $amp_analytics = [
+          '#type' => 'amp_analytics',
+          '#account' => 'UA-98765-4',
+          '#data_array' => $data,
+          '#attributes' => [
+            'type' => 'googleanalytics'
+          ]
+        ];
+        $page_bottom['amp_analytics'] = $amp_analytics;
+      }
+
+    }
+  }
+
+  return;
+}
+
+function infinite_amp_integration_get_amp_analytics_data_entity(EntityInterface $entity, $google_analytics_id){
+  $datalayer_variables = infinite_datalayer_get_variables($entity, 'full');
+
+  $data = [
+    'vars' => [
+      'account' => $google_analytics_id,
+    ],
+    'extraUrlParams' => [
+      GA_CD_SYSTEM_TYPE => $datalayer_variables['environment']['systemType'],
+      GA_CD_LOGGED_IN => $datalayer_variables['environment']['isLoggedIn'],
+      GA_CD_ARTICLE_NAME => $datalayer_variables['page']['name'],
+      GA_CD_CONTENT_TYPE => $datalayer_variables['page']['contentType'],
+      GA_CD_CONTENT_SUB_TYPE => $datalayer_variables['page']['content'],
+      GA_CD_ARTICLE_PUBLISH_DATE => $datalayer_variables['page']['articlePublishDate'],
+      GA_CD_AUTHOR_NAME => $datalayer_variables['page']['authorName'],
+      GA_CD_CHANNEL_CHANNEL => $datalayer_variables['page']['category'],
+      GA_CD_SUB_CATEGORY => $datalayer_variables['page']['subCategory'],
+      GA_CD_OUTBRAIN_USAGE => '',
+      GA_CD_ODOSCOPE_GROUP => '',
+      GA_CD_ODOSCOPE_TYPE => '',
+      GA_CD_PRODUCT_CATEGORY => $datalayer_variables['page'][''],
+      GA_CD_ENTITY_TYPE => $datalayer_variables['page']['entityType'],
+      GA_CD_ENTITY_ID => $datalayer_variables['page']['entityID'],
+      GA_CD_ENVIRONMENT => 'AMP',
+    ],
+    'dataLayer' => $datalayer_variables,
+    'triggers' => [
+      'trackAmpview' => [
+        'on' => 'visable',
+        'request' => 'pageview'
+      ]
+    ]
+  ];
+
+  return $data;
+}
