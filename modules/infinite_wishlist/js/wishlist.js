@@ -9,7 +9,13 @@ Drupal.behaviors.infiniteWishlist = {
     },
 
     setCount: function() {
-        document.getElementById('wishlist__toggle__count').innerText = this.getWishlist().length;
+        var count = this.getWishlist().length;
+        document.getElementById('wishlist__toggle__count').innerText = count;
+        if (count) {
+            document.getElementById('wishlist__toggle').classList.remove('wishlist--empty');
+        } else {
+            document.getElementById('wishlist__toggle').classList.add('wishlist--empty');
+        }
     },
 
     storeItem: function (uuid) {
@@ -281,7 +287,7 @@ Drupal.behaviors.infiniteWishlist = {
         }
     },
 
-    injectHeaderIcon: function () {
+    enableHeaderIcon: function () {
         var button = document.getElementById('wishlist__toggle');
         if (button.injectedHeaderIcon) {
             return;
@@ -304,7 +310,30 @@ Drupal.behaviors.infiniteWishlist = {
                 Drupal.behaviors.infiniteWishlist.fetchProducts();
             }
         });
+
         button.injectedHeaderIcon = true;
+
+        // on front page handle movement of icon on scroll
+        if (document.body.classList.contains('page-front')) {
+            var mainNav = document.getElementById('menu-main-navigation');
+            var icon = mainNav
+                .querySelector('.flyout--wishlist');
+            icon.parentNode.removeChild(icon);
+
+            var moveIcon = function () {
+                if (mainNav.classList.contains('stuck')) {
+                    if (null === mainNav.querySelector('#wishlist__toggle')) { // button is in social bar
+                        mainNav.insertBefore(button.parentNode, mainNav.querySelector('.icon-search'));
+                    }
+                } else {
+                    if (mainNav.querySelector('#wishlist__toggle')) { // button is in main nav
+                        document.querySelector('.socials-bar').appendChild(button.parentNode);
+                    }
+                }
+            };
+            window.addEventListener('scroll', moveIcon);
+            window.addEventListener('load', moveIcon);
+        }
     },
 
     initRemoveButtons: function (container) {
@@ -388,7 +417,7 @@ Drupal.behaviors.infiniteWishlist = {
             localStorage.removeItem(test);
 
             if (window.Worker) {
-                this.injectHeaderIcon();
+                this.enableHeaderIcon();
                 this.injectIcons();
                 this.setCount();
 
