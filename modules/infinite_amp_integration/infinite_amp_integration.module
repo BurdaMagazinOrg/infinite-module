@@ -24,7 +24,7 @@ define("GA_CD_ENVIRONMENT",          "cd22");
  */
 function infinite_amp_integration_theme_registry_alter(&$theme_registry) {
   if(isset($theme_registry['amp_analytics'])) {
-    $theme_registry['amp_analytics']['variables']['data_array'] = [];
+    $theme_registry['amp_analytics']['variables']['data'] = [];
   }
 }
 
@@ -69,7 +69,7 @@ function infinite_amp_integration_page_bottom(array &$page_bottom) {
         $amp_analytics = [
           '#type' => 'amp_analytics',
           '#account' => 'UA-98765-4',
-          '#data_array' => $data,
+          '#data' => $data,
           '#attributes' => [
             'type' => 'googleanalytics'
           ]
@@ -95,7 +95,7 @@ function infinite_amp_integration_get_amp_analytics_data_entity(EntityInterface 
       GA_CD_LOGGED_IN => $datalayer_variables['environment']['isLoggedIn'],
       GA_CD_ARTICLE_NAME => $datalayer_variables['page']['name'],
       GA_CD_CONTENT_TYPE => $datalayer_variables['page']['contentType'],
-      GA_CD_CONTENT_SUB_TYPE => $datalayer_variables['page']['content'],
+      GA_CD_CONTENT_SUB_TYPE => $datalayer_variables['page']['contentSubType'],
       GA_CD_ARTICLE_PUBLISH_DATE => $datalayer_variables['page']['articlePublishDate'],
       GA_CD_AUTHOR_NAME => $datalayer_variables['page']['authorName'],
       GA_CD_CHANNEL_CHANNEL => $datalayer_variables['page']['category'],
@@ -103,12 +103,12 @@ function infinite_amp_integration_get_amp_analytics_data_entity(EntityInterface 
       GA_CD_OUTBRAIN_USAGE => '',
       GA_CD_ODOSCOPE_GROUP => '',
       GA_CD_ODOSCOPE_TYPE => '',
-      GA_CD_PRODUCT_CATEGORY => $datalayer_variables['page'][''],
+      GA_CD_PRODUCT_CATEGORY => '',
       GA_CD_ENTITY_TYPE => $datalayer_variables['page']['entityType'],
       GA_CD_ENTITY_ID => $datalayer_variables['page']['entityID'],
       GA_CD_ENVIRONMENT => 'AMP',
     ],
-    'dataLayer' => $datalayer_variables,
+//    'dataLayer' => $datalayer_variables,
     'triggers' => [
       'trackAmpview' => [
         'on' => 'visable',
