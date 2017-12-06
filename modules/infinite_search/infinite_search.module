@@ -45,7 +45,7 @@ function infinite_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryI
       $fields = $index->getServerInstance()->getBackend()->getSolrFieldNames($index);
       $solr_field = !empty($fields['created_1']) ? $fields['created_1'] : '';
       if ($solr_field) {
-        $solarium_query->addParam('bf', 'recip(ms(NOW,ds_created_1),3.16e-11,1,.1)');
+        $solarium_query->addParam('bf', 'recip(abs(ms(NOW/HOUR,ds_created_1)),3.16e-11,1,.1)');
       }
     }
   }
