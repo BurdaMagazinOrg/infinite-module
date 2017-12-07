@@ -63,8 +63,7 @@ function drush_infinite_odoscope_odoscope_queue() {
           break;
       }
     }
-    // hardcoded headers from the view
-    $csv_data[] = explode(',', "ID,Published,Promoted to home,Promoted to channel,Title,Channel,Channel-ID,Author-ID,Author-Name,Created,Image,Thumbnail,Image-Text,Tag-IDs,Tag-Names,URL,Base64");
+    $csv_data = $csv_header = [];
     if (count($claims_delete)) {
       foreach ($args_delete as $nid) {
         $row = [];
@@ -72,7 +71,7 @@ function drush_infinite_odoscope_odoscope_queue() {
         $row[] = $nid;
         $row[] = 0;
         // Fill the rest with empty columns.
-        $csv_data[] = $row + array_fill(2, 13,'');
+        $csv_data[] = $row + array_fill(2, 15,'');
       }
     }
     if (count($claims_create)) {
@@ -110,7 +109,10 @@ function drush_infinite_odoscope_odoscope_queue() {
       $rowcount = 0;
       if ($handle) {
         while (($data = fgetcsv($handle)) !== FALSE) {
-          if ($rowcount > 0) {
+          if ($row_count == 0) {
+            $csv_header[] = $data;
+          }
+          else {
             $csv_data[] = $data;
           }
           $rowcount++;
@@ -120,8 +122,16 @@ function drush_infinite_odoscope_odoscope_queue() {
     }
 
     // Combine both sets of data into a new csv file.
-    if (count($csv_data) > 1) {
+    if (count($csv_data)) {
+      // in case the header wasn't read from the view above
+      if (!$csv_header) {
+        // hardcoded headers from the view
+        $csv_header[] = explode(',', "ID,Published,Promoted_to_home,Promoted_to_channel,Title,Channel,Channel-ID,Author-ID,Author-Name,Created,Image,Thumbnail,Image-Text,Tag-IDs,Tag-Names,URL,Base64");
+      }
       $handle = fopen('compress.zlib://temporary://odoscope_update.csv.gz', 'w');
+      foreach ($csv_header as $fields) {
+        fputcsv($handle, $fields);
+      }
       foreach ($csv_data as $fields) {
         fputcsv($handle, $fields);
       }
