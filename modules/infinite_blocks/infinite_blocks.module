@@ -73,6 +73,7 @@ function infinite_blocks_theme() {
       'variables' => array(
         'use_parent_container' => NULL,
         'follow' => NULL,
+        'include_wishlist_icon' => null,
       )
     ),
   ];
@@ -156,7 +157,7 @@ function infinite_blocks_preprocess_block(&$variables) {
     if ('infinite_blocks_socials' === $variables['base_plugin_id']) {
       if (\Drupal::moduleHandler()->moduleExists('infinite_wishlist')) {
         if ('header_large' === $block->getRegion()) {
-          $variables['include_wishlist_icon'] = true;
+          $variables['content']['#include_wishlist_icon'] = true;
         }
       }
     }
