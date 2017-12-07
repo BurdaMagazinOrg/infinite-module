@@ -18,7 +18,9 @@
         <a class="item-social icon-email" href="/newsletter" data-social-type="email"></a>
     </div>
 
-    {% include '@infinite_wishlist/infinite-wishlist-flyout.html.twig' %}
+    {% if include_wishlist_icon %}
+        {% include '@infinite_wishlist/infinite-wishlist-flyout.html.twig' %}
+    {% endif %}
 
 {% if not use_parent_container %}
 </div>
