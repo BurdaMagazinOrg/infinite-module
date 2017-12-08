@@ -388,6 +388,7 @@ Drupal.behaviors.infiniteWishlist = {
 
         this.setCount();
         this.toggleIconsAccordingToWishlistStatus();
+        this.fetchProducts();
     },
 
     toggleIconsAccordingToWishlistStatus: function () {
