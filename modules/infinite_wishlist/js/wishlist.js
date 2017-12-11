@@ -295,6 +295,9 @@ Drupal.behaviors.infiniteWishlist = {
 
         var wishlist = document.getElementById('wishlist');
         button.addEventListener('click', function () {
+            if (false === wishlist.classList.contains('open')) {
+                Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
+            }
             wishlist.classList.toggle('open');
             if (wishlist.classList.contains('open')) {
                 TrackingManager.trackEvent({
@@ -333,6 +336,22 @@ Drupal.behaviors.infiniteWishlist = {
             };
             window.addEventListener('scroll', moveIcon);
             window.addEventListener('load', moveIcon);
+        }
+    },
+
+    resizeWishlistFlyout: function () {
+        var offsetBottom = 70;
+
+        var wl = document.getElementById('wishlist');
+        wl.style.maxHeight = '1000000px';
+        var list = document.getElementById('wishlist__list');
+        var height = 180 + wl.offsetTop;
+        for (var i = 0; i < list.children.length; i++) {
+            height += list.children[i].clientHeight;
+        }
+
+        if (height + offsetBottom > window.innerHeight) {
+            wl.style.height = String(window.innerHeight - offsetBottom - wl.offsetTop) + 'px';
         }
     },
 
