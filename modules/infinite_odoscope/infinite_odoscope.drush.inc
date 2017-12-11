@@ -87,7 +87,6 @@ function drush_infinite_odoscope_odoscope_queue() {
         ->sort('created', 'DESC')
         ->range(0, 1)
         ->execute();
-      var_dump($fids);
       $files = entity_load_multiple('file', $fids);
       $filecount = count($files);
       switch ($filecount) {
@@ -96,18 +95,14 @@ function drush_infinite_odoscope_odoscope_queue() {
           $ah_env = isset($_ENV['AH_SITE_ENVIRONMENT']) ? $_ENV['AH_SITE_ENVIRONMENT'] : '';
           $message = t('No file created by odoscope view or file not found on @env.', ['@env' => $ah_env]);
           Drupal::service('slack.slack_service')->sendMessage($message);
-          var_dump('slack');
           break;
         case 1:
           $file = reset($files);
-          var_dump('file found');
           break;
         default:
-          var_dump('cant happen');
           // can't happen
           break;
       }
-      var_dump($file->getFileUri());
       $handle = fopen($file->getFileUri(), 'r');
       $rowcount = 0;
       if ($handle) {
@@ -123,12 +118,8 @@ function drush_infinite_odoscope_odoscope_queue() {
         fclose($handle);
       }
     }
-    var_dump($csv_header);
-    var_dump($csv_data);
-    var_dump(count($csv_data));
     // Combine both sets of data into a new csv file.
     if (count($csv_data)) {
-      var_dump('saving csv data');
       // in case the header wasn't read from the view above
       if (!$csv_header) {
         // hardcoded headers from the view
