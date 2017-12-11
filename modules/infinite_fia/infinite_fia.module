@@ -113,11 +113,14 @@ function infinite_fia_theme() {
   ];
 
   $theme['infinite_fia_google_analytics_ua'] = [
-    'template' => 'infinite_fia_google_analytics_ua',
     'variables' => [
+      'account' => NULL,
+      'campaign' => [],
+      'title' => NULL,
       'data' => []
-    ]
-  ] + $theme['infinite_fia_google_analytics_gtm'];
+    ],
+    'template' => 'infinite_fia_google_analytics_ua',
+  ];
 
   return $theme;
 
