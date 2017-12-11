@@ -163,6 +163,7 @@ Drupal.behaviors.infiniteWishlist = {
                 storedWishlist = e.data;
                 localStorage.setItem('infinite__wishlist', JSON.stringify(storedWishlist));
                 callback(storedWishlist);
+                Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
             };
             worker.postMessage(storedWishlist);
         } else {
@@ -295,9 +296,7 @@ Drupal.behaviors.infiniteWishlist = {
 
         var wishlist = document.getElementById('wishlist');
         button.addEventListener('click', function () {
-            if (false === wishlist.classList.contains('open')) {
-                Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
-            }
+            Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
             wishlist.classList.toggle('open');
             if (wishlist.classList.contains('open')) {
                 TrackingManager.trackEvent({
@@ -345,7 +344,7 @@ Drupal.behaviors.infiniteWishlist = {
         var wl = document.getElementById('wishlist');
         wl.style.maxHeight = '1000000px';
         var list = document.getElementById('wishlist__list');
-        var height = 180 + wl.offsetTop;
+        var height = 180 + wl.getBoundingClientRect().top;
         for (var i = 0; i < list.children.length; i++) {
             height += list.children[i].clientHeight;
         }
