@@ -5,18 +5,19 @@
     <div class="wishlist__item__details" data-text-action="text-overflow" data-text-action-target="wishlist__item__name">
         <span class="wishlist__item__name" >{{ product.product_name }}</span>
         <div class="wishlist__item__prices">
-
-            {% if product.product_original_price %}
-            <span class="wishlist__item__price has-original-price">
-                {{ product.product_original_price }} {{ product.product_currency }}
-            </span>
-            <span class="wishlist__item__original-price">
-                {{ product.product_price }} {{ product.product_currency }}
-            </span>
-            {% else %}
-            <span class="wishlist__item__price">
-                {{ product.product_price }} {{ product.product_currency }}
-            </span>
+            {% if product.product_price != '0.00' %}
+                {% if product.product_original_price %}
+                <span class="wishlist__item__price has-original-price">
+                    {{ product.product_original_price|replace({'.': ","}) }} {{ product.product_currency }}
+                </span>
+                <span class="wishlist__item__original-price">
+                    {{ product.product_price|replace({'.': ","}) }} {{ product.product_currency }}
+                </span>
+                {% else %}
+                <span class="wishlist__item__price">
+                    {{ product.product_price|replace({'.': ","}) }} {{ product.product_currency }}
+                </span>
+                {% endif %}
             {% endif %}
 
             {% if product.product_sold_out %}
