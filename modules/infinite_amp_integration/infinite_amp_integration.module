@@ -110,8 +110,8 @@ function infinite_amp_integration_get_amp_analytics_data_entity(EntityInterface 
     ],
 //    'dataLayer' => $datalayer_variables,
     'triggers' => [
-      'trackAmpview' => [
-        'on' => 'visable',
+      'trackPageviewWithCustomData' => [
+        'on' => 'visible',
         'request' => 'pageview'
       ]
     ]
