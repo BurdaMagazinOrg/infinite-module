@@ -251,7 +251,7 @@ Drupal.behaviors.infiniteWishlist = {
     },
 
     injectIcons: function () {
-        var storedProductIds = this.getStoredProductIds();
+        var storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
         var items = document.getElementsByClassName('item-ecommerce');
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
@@ -269,6 +269,7 @@ Drupal.behaviors.infiniteWishlist = {
                 '    </g>' +
                 '</svg>';
             icon.uuid = item.getAttribute('data-uuid');
+
             icon.classList.add('wishlist__icon--add');
             if (storedProductIds.indexOf(icon.uuid) > -1) {
                 icon.classList.add('in-wishlist');
@@ -461,6 +462,7 @@ Drupal.behaviors.infiniteWishlist = {
 
                 window.removeEventListener('focus', this.onFocus);
                 window.addEventListener('focus', this.onFocus);
+                window.addEventListener('infinite-wishlist--update-icons', this.injectIcons)
             } else {
                 // TODO: handle
                 // window worker is not available
