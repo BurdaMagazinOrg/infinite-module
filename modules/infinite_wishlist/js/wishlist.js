@@ -357,7 +357,7 @@ Drupal.behaviors.infiniteWishlist = {
         var list = document.getElementById('wishlist__list');
         var height = 180 + wl.getBoundingClientRect().top;
         for (var i = 0; i < list.children.length; i++) {
-            height += list.children[i].clientHeight;
+            height += jQuery(list.children[i]).outerHeight(true);
         }
 
         if (height + offsetBottom > window.innerHeight) {
