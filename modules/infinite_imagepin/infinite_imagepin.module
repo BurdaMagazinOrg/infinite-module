@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 
 /**
  * Alter the list of allowed widget plugins per view mode and entity type.
