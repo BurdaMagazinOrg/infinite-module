@@ -200,7 +200,7 @@ Drupal.behaviors.infiniteWishlist = {
                 '<div><img src="/modules/contrib/infinite_base/modules/infinite_wishlist/icons/wishlist--empty.svg" /></div>';
             container.appendChild(li);
         } else {
-            for (var i = 0; i < items.length; i++) {
+            for (var i = items.length - 1; i >= 0; i--) {
                 var item = items[i];
                 var li = document.createElement('li');
                 li.setAttribute('data-uuid', item.uuid);
