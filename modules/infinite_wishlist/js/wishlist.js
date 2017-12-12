@@ -355,16 +355,13 @@ Drupal.behaviors.infiniteWishlist = {
 
         var wl = document.getElementById('wishlist');
         var list = document.getElementById('wishlist__list');
-        var height = 180 + wl.getBoundingClientRect().top;
-        for (var i = 0; i < list.children.length; i++) {
-            height += list.children[i].clientHeight;
-        }
+        var totalHeight = 0;
 
-        if (height + offsetBottom > window.innerHeight) {
-            wl.style.height = String(window.innerHeight - offsetBottom - wl.getBoundingClientRect().top) + 'px';
-        } else {
-            wl.style.height = 'auto';
-        }
+        jQuery(list).children().each(function(){
+            totalHeight = totalHeight + jQuery(this).outerHeight(true);
+        });
+
+        jQuery(list).height(totalHeight);
     },
 
     initRemoveButtons: function (container) {
