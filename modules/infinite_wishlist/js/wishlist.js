@@ -256,6 +256,12 @@ Drupal.behaviors.infiniteWishlist = {
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
 
+            // check if icon is already present
+            if (item.querySelector('.wishlist__icon--add')) {
+                var oldIcon = item.querySelector('.wishlist__icon--add');
+                oldIcon.parentNode.removeChild(oldIcon);
+            }
+
             var icon = document.createElement('button');
             icon.innerHTML = '<svg width="100%" height="100%" viewBox="-1 -1 23 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" >' +
                 '    <g transform="matrix(1,0,0,1,-8,-7.99976)">' +
@@ -453,6 +459,7 @@ Drupal.behaviors.infiniteWishlist = {
                 this.injectIcons();
                 this.setCount();
 
+                window.removeEventListener('focus', this.onFocus);
                 window.addEventListener('focus', this.onFocus);
             } else {
                 // TODO: handle
