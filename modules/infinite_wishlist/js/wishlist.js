@@ -326,15 +326,22 @@ Drupal.behaviors.infiniteWishlist = {
                 if (mainNav.classList.contains('stuck')) {
                     if (null === mainNav.querySelector('#wishlist__toggle')) { // button is in social bar
                         mainNav.insertBefore(button.parentNode, mainNav.querySelector('.icon-search'));
+                        Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
                     }
                 } else {
                     if (mainNav.querySelector('#wishlist__toggle')) { // button is in main nav
                         document.querySelector('.socials-bar').appendChild(button.parentNode);
+                        Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
                     }
                 }
             };
             window.addEventListener('scroll', moveIcon);
             window.addEventListener('load', moveIcon);
+            window.addEventListener('scroll', function () {
+                if(document.querySelector('#wishlist.open')) {
+                    Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
+                }
+            });
         }
     },
 
@@ -342,7 +349,7 @@ Drupal.behaviors.infiniteWishlist = {
         var offsetBottom = 70;
 
         var wl = document.getElementById('wishlist');
-        wl.style.maxHeight = '1000000px';
+        wl.style.maxHeight = '10000px';
         var list = document.getElementById('wishlist__list');
         var height = 180 + wl.getBoundingClientRect().top;
         for (var i = 0; i < list.children.length; i++) {
@@ -350,7 +357,7 @@ Drupal.behaviors.infiniteWishlist = {
         }
 
         if (height + offsetBottom > window.innerHeight) {
-            wl.style.height = String(window.innerHeight - offsetBottom - wl.offsetTop) + 'px';
+            wl.style.height = String(window.innerHeight - offsetBottom - wl.getBoundingClientRect().top) + 'px';
         }
     },
 
