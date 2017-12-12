@@ -342,6 +342,11 @@ Drupal.behaviors.infiniteWishlist = {
                     Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
                 }
             });
+            window.addEventListener('resize', function () {
+                if(document.querySelector('#wishlist.open')) {
+                    Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
+                }
+            });
         }
     },
 
