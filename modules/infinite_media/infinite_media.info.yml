@@ -12,7 +12,7 @@ dependencies:
   - image
   - inline_entity_form
   - link
-  - media_entity
+  - media
   - responsive_image
   - thunder_media
 config_devel:
@@ -95,9 +95,9 @@ config_devel:
   - image.style.square_m
   - image.style.square_s
   - image.style.square_xxs
-  - media_entity.bundle.gallery
-  - media_entity.bundle.image
-  - media_entity.bundle.video
+  - media.type.gallery
+  - media.type.image
+  - media.type.video
   - responsive_image.styles.gallery
   - responsive_image.styles.header
   - responsive_image.styles.inline
