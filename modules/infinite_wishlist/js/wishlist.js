@@ -9,7 +9,13 @@ Drupal.behaviors.infiniteWishlist = {
     },
 
     setCount: function() {
-        document.getElementById('wishlist__toggle__count').innerText = this.getWishlist().length;
+        var count = this.getWishlist().length;
+        document.getElementById('wishlist__toggle__count').innerText = count;
+        if (count) {
+            document.getElementById('wishlist__toggle').classList.remove('wishlist--empty');
+        } else {
+            document.getElementById('wishlist__toggle').classList.add('wishlist--empty');
+        }
     },
 
     storeItem: function (uuid) {
@@ -157,6 +163,7 @@ Drupal.behaviors.infiniteWishlist = {
                 storedWishlist = e.data;
                 localStorage.setItem('infinite__wishlist', JSON.stringify(storedWishlist));
                 callback(storedWishlist);
+                Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
             };
             worker.postMessage(storedWishlist);
         } else {
@@ -193,7 +200,7 @@ Drupal.behaviors.infiniteWishlist = {
                 '<div><img src="/modules/contrib/infinite_base/modules/infinite_wishlist/icons/wishlist--empty.svg" /></div>';
             container.appendChild(li);
         } else {
-            for (var i = 0; i < items.length; i++) {
+            for (var i = items.length - 1; i >= 0; i--) {
                 var item = items[i];
                 var li = document.createElement('li');
                 li.setAttribute('data-uuid', item.uuid);
@@ -215,6 +222,8 @@ Drupal.behaviors.infiniteWishlist = {
 
             this.initRemoveButtons(container);
         }
+
+        this.resizeWishlistFlyout();
     },
 
     getDurationInWishlist: function(item) {
@@ -244,10 +253,16 @@ Drupal.behaviors.infiniteWishlist = {
     },
 
     injectIcons: function () {
-        var storedProductIds = this.getStoredProductIds();
+        var storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
         var items = document.getElementsByClassName('item-ecommerce');
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
+
+            // check if icon is already present
+            if (item.querySelector('.wishlist__icon--add')) {
+                var oldIcon = item.querySelector('.wishlist__icon--add');
+                oldIcon.parentNode.removeChild(oldIcon);
+            }
 
             var icon = document.createElement('button');
             icon.innerHTML = '<svg width="100%" height="100%" viewBox="-1 -1 23 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" >' +
@@ -256,6 +271,7 @@ Drupal.behaviors.infiniteWishlist = {
                 '    </g>' +
                 '</svg>';
             icon.uuid = item.getAttribute('data-uuid');
+
             icon.classList.add('wishlist__icon--add');
             if (storedProductIds.indexOf(icon.uuid) > -1) {
                 icon.classList.add('in-wishlist');
@@ -281,7 +297,7 @@ Drupal.behaviors.infiniteWishlist = {
         }
     },
 
-    injectHeaderIcon: function () {
+    enableHeaderIcon: function () {
         var button = document.getElementById('wishlist__toggle');
         if (button.injectedHeaderIcon) {
             return;
@@ -289,6 +305,7 @@ Drupal.behaviors.infiniteWishlist = {
 
         var wishlist = document.getElementById('wishlist');
         button.addEventListener('click', function () {
+            Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
             wishlist.classList.toggle('open');
             if (wishlist.classList.contains('open')) {
                 TrackingManager.trackEvent({
@@ -304,7 +321,60 @@ Drupal.behaviors.infiniteWishlist = {
                 Drupal.behaviors.infiniteWishlist.fetchProducts();
             }
         });
+
         button.injectedHeaderIcon = true;
+
+        // on front page handle movement of icon on scroll
+        if (document.body.classList.contains('page-front')) {
+            var mainNav = document.getElementById('menu-main-navigation');
+            var icon = mainNav
+                .querySelector('.flyout--wishlist');
+            icon.parentNode.removeChild(icon);
+
+            var moveIcon = function () {
+                if (mainNav.classList.contains('stuck')) {
+                    if (null === mainNav.querySelector('#wishlist__toggle')) { // button is in social bar
+                        mainNav.insertBefore(button.parentNode, mainNav.querySelector('.icon-search'));
+                        Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
+                    }
+                } else {
+                    if (mainNav.querySelector('#wishlist__toggle')) { // button is in main nav
+                        document.querySelector('.socials-bar').appendChild(button.parentNode);
+                        Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
+                    }
+                }
+            };
+            window.addEventListener('scroll', moveIcon);
+            window.addEventListener('load', moveIcon);
+            window.addEventListener('scroll', function () {
+                if(document.querySelector('#wishlist.open')) {
+                    Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
+                }
+            });
+            window.addEventListener('resize', function () {
+                if(document.querySelector('#wishlist.open')) {
+                    Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
+                }
+            });
+        }
+    },
+
+    resizeWishlistFlyout: function () {
+        var offsetBottom = 70;
+
+        var wl = document.getElementById('wishlist');
+        var list = document.getElementById('wishlist__list');
+        var height = 110 + wl.getBoundingClientRect().top;
+        height = height - Number(document.body.style.paddingTop.replace('px', '')); // make up for logged in menu bar
+        for (var i = 0; i < list.children.length; i++) {
+            height += jQuery(list.children[i]).outerHeight(true);
+        }
+
+        if (height + offsetBottom > window.innerHeight) {
+            wl.style.height = String(window.innerHeight - offsetBottom - wl.getBoundingClientRect().top) + 'px';
+        } else {
+            wl.style.height = height + 'px';
+        }
     },
 
     initRemoveButtons: function (container) {
@@ -359,6 +429,7 @@ Drupal.behaviors.infiniteWishlist = {
 
         this.setCount();
         this.toggleIconsAccordingToWishlistStatus();
+        this.fetchProducts();
     },
 
     toggleIconsAccordingToWishlistStatus: function () {
@@ -388,11 +459,13 @@ Drupal.behaviors.infiniteWishlist = {
             localStorage.removeItem(test);
 
             if (window.Worker) {
-                this.injectHeaderIcon();
+                this.enableHeaderIcon();
                 this.injectIcons();
                 this.setCount();
 
+                window.removeEventListener('focus', this.onFocus);
                 window.addEventListener('focus', this.onFocus);
+                window.addEventListener('infinite-wishlist--update-icons', this.injectIcons)
             } else {
                 // TODO: handle
                 // window worker is not available

@@ -1,7 +1,7 @@
 infinite_wishlist:
   path: '/wunschliste'
   defaults:
-    _title: ''
+    _title: 'Wunschliste'
     _controller: '\Drupal\infinite_wishlist\Controller\WishlistController::show'
   requirements:
     _permission: 'access content'
