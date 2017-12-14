@@ -2,7 +2,7 @@ langcode: de
 status: true
 dependencies:
   module:
-    - media_entity
+    - media
 id: media.square_m
 label: 'Square M'
 targetEntityType: media
