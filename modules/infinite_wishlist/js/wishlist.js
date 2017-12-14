@@ -222,6 +222,8 @@ Drupal.behaviors.infiniteWishlist = {
 
             this.initRemoveButtons(container);
         }
+
+        this.resizeWishlistFlyout();
     },
 
     getDurationInWishlist: function(item) {
@@ -362,7 +364,8 @@ Drupal.behaviors.infiniteWishlist = {
 
         var wl = document.getElementById('wishlist');
         var list = document.getElementById('wishlist__list');
-        var height = 180 + wl.getBoundingClientRect().top;
+        var height = 110 + wl.getBoundingClientRect().top;
+        height = height - Number(document.body.style.paddingTop.replace('px', '')); // make up for logged in menu bar
         for (var i = 0; i < list.children.length; i++) {
             height += jQuery(list.children[i]).outerHeight(true);
         }
@@ -370,7 +373,7 @@ Drupal.behaviors.infiniteWishlist = {
         if (height + offsetBottom > window.innerHeight) {
             wl.style.height = String(window.innerHeight - offsetBottom - wl.getBoundingClientRect().top) + 'px';
         } else {
-            wl.style.height = 'auto';
+            wl.style.height = height + 'px';
         }
     },
 
