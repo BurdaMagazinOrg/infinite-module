@@ -1,0 +1,14 @@
+infinite_wishlist:
+  path: '/wunschliste'
+  defaults:
+    _title: 'Wunschliste'
+    _controller: '\Drupal\infinite_wishlist\Controller\WishlistController::show'
+  requirements:
+    _permission: 'access content'
+infinite_wishlist.fetch-products:
+  path: '/wishlist/fetch-products'
+  defaults:
+    _title: ''
+    _controller: '\Drupal\infinite_wishlist\Controller\WishlistController::loadProducts'
+  requirements:
+    _permission: 'access content'

@@ -1,0 +1,4 @@
+basic:
+  js:
+    js/wishlist.js: {}
+    js/wishlist-page.js: {}

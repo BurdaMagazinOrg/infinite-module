@@ -63,8 +63,7 @@ function drush_infinite_odoscope_odoscope_queue() {
           break;
       }
     }
-    // hardcoded headers from the view
-    $csv_data[] = explode(',', "ID,Published,Title,Channel,Channel-ID,Author-ID,Author-Name,Created,Image,Thumbnail,Image-Text,Tag-IDs,Tag-Names,URL,Base64");
+    $csv_data = $csv_header = [];
     if (count($claims_delete)) {
       foreach ($args_delete as $nid) {
         $row = [];
@@ -72,7 +71,7 @@ function drush_infinite_odoscope_odoscope_queue() {
         $row[] = $nid;
         $row[] = 0;
         // Fill the rest with empty columns.
-        $csv_data[] = $row + array_fill(2, 13,'');
+        $csv_data[] = $row + array_fill(2, 15,'');
       }
     }
     if (count($claims_create)) {
@@ -80,11 +79,38 @@ function drush_infinite_odoscope_odoscope_queue() {
       _odoscope_infinite_execute_view($args_create);
       // open the generated file. This sadly depends on executing drush with
       // -u 1 because the filename starts with the user ID.
-      $handle = fopen('private://1article-update.csv', 'r');
+      $fids = Drupal::entityQuery('file')
+        ->condition('status', FILE_STATUS_PERMANENT, '<>')
+        ->condition('created', REQUEST_TIME - 120, '>')
+        ->condition('filemime', 'text/csv')
+        ->condition('uri', db_like('private://') . '%' . db_like('article-update.csv'), 'LIKE')
+        ->sort('created', 'DESC')
+        ->range(0, 1)
+        ->execute();
+      $files = entity_load_multiple('file', $fids);
+      $filecount = count($files);
+      switch ($filecount) {
+        case 0:
+          // No file found, alert slack
+          $ah_env = isset($_ENV['AH_SITE_ENVIRONMENT']) ? $_ENV['AH_SITE_ENVIRONMENT'] : '';
+          $message = t('No file created by odoscope view or file not found on @env.', ['@env' => $ah_env]);
+          Drupal::service('slack.slack_service')->sendMessage($message);
+          break;
+        case 1:
+          $file = reset($files);
+          break;
+        default:
+          // can't happen
+          break;
+      }
+      $handle = fopen($file->getFileUri(), 'r');
       $rowcount = 0;
       if ($handle) {
         while (($data = fgetcsv($handle)) !== FALSE) {
-          if ($rowcount > 0) {
+          if ($rowcount == 0) {
+            $csv_header[] = $data;
+          }
+          else {
             $csv_data[] = $data;
           }
           $rowcount++;
@@ -92,15 +118,31 @@ function drush_infinite_odoscope_odoscope_queue() {
         fclose($handle);
       }
     }
-
     // Combine both sets of data into a new csv file.
-    if (count($csv_data) > 1) {
-      $handle = fopen('compress.zlib://temporary://odoscope_update.csv.gz', 'w');
-      foreach ($csv_data as $fields) {
-        fputcsv($handle, $fields);
+    if (count($csv_data)) {
+      // in case the header wasn't read from the view above
+      if (!$csv_header) {
+        // hardcoded headers from the view
+        $csv_header[] = explode(',', "ID,Published,Promoted_to_home,Promoted_to_channel,Title,Channel,Channel-ID,Author-ID,Author-Name,Created,Image,Thumbnail,Image-Text,Tag-IDs,Tag-Names,URL,Base64");
       }
-      fclose($handle);
+      // We save the data to a tmp csv file so we do not need to to csv stuff ourselves
+      $handle = fopen('compress.zlib://temporary://odoscope_update.csv.gz', 'w');
+      if ($handle) {
+        foreach ($csv_header as $fields) {
+          fputcsv($handle, $fields);
+        }
+        foreach ($csv_data as $fields) {
+          fputcsv($handle, $fields);
+        }
+        fclose($handle);
+      }
+      else {
+        watchdog_exception('infinite_odoscope', 'Could not open temporary file');
+      }
       $contents = file_get_contents('temporary://odoscope_update.csv.gz');
+      if (!$contents) {
+        watchdog_exception('infinite_odoscope', 'Empty temporary file');
+      }
       $client = \Drupal::httpClient();
       $date_format = 'Y-m-d\TH-i-s';
       try {

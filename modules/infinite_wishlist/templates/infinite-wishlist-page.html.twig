@@ -1,0 +1,20 @@
+<div class="region-full-content page--wishlist">
+
+    <article class="region-full-content item-content--article">
+        {% block content_header_container %}
+            <div class="item-content__header">
+                {% block content_header %}
+                    <h1 class="title--article">Wunschliste</h1>
+                {% endblock %}
+            </div>
+        {% endblock %}
+        <div class="item-content__content item-content__content--wishlist">
+            {% block content_body %}
+            <div class="item-content__block item-group--outer-wrapper">
+                <ul id="wishlist-page"></ul>
+            </div>
+            {% endblock %}
+        </div>
+    </article>
+
+</div>
