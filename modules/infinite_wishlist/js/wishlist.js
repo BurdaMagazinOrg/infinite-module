@@ -70,7 +70,7 @@ Drupal.behaviors.infiniteWishlist = {
         switch (type) {
             case 'stored':
                 TrackingManager.trackEvent({
-                    category: 'click',
+                    category: 'wishlist',
                     action: 'wishlist--add-to-wishlist',
                     label: item.name + ' | ' + item.productId,
                     location: window.location.pathname
@@ -78,7 +78,7 @@ Drupal.behaviors.infiniteWishlist = {
                 break;
             case 'removed':
                 TrackingManager.trackEvent({
-                    category: 'click',
+                    category: 'wishlist',
                     action: 'wishlist--remove-wishlist',
                     label: item.name + ' | ' + item.productId,
                     location: window.location.pathname,
@@ -211,7 +211,7 @@ Drupal.behaviors.infiniteWishlist = {
                 link.setAttribute('data-product-extra-information', Drupal.behaviors.infiniteWishlist.getDurationInWishlist(item));
                 link.addEventListener('click', function (e) {
                     TrackingManager.trackEvent({
-                        category: 'click',
+                        category: 'wishlist',
                         action: 'wishlist--click-item-in-wishlist',
                         label: e.currentTarget.getAttribute('data-tracking-label'),
                         location: window.location.pathname,
@@ -309,7 +309,7 @@ Drupal.behaviors.infiniteWishlist = {
             wishlist.classList.toggle('open');
             if (wishlist.classList.contains('open')) {
                 TrackingManager.trackEvent({
-                    category: 'click',
+                    category: 'wishlist',
                     action: 'wishlist--click-wishlist-icon',
                     location: window.location.pathname
                 });
