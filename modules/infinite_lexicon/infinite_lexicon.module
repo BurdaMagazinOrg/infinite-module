@@ -1,0 +1,25 @@
+<?php
+
+use Drupal\Core\Render\Markup;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implementatyion of hook_views_post_render().
+ */
+function infinite_lexicon_views_post_render(ViewExecutable $view, array &$cache) {
+
+  /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase $display */
+  $display = $view->getDisplay();
+
+  if($view->id() == 'lexicon_overview' && $display->display['id'] == 'page_1') {
+    $groups = &$cache['#rows'];
+    foreach ($groups as $i => &$group) {
+      $first_key = key($group['#rows']);
+      $first_row = &$group['#rows'][$first_key];
+      $entity = $first_row['#row']->_entity;
+      $first_label = $entity->label();
+      $group['#title'] = Markup::create($group['#title'] . ' wie ' . $first_label);
+    }
+  }
+
+}
