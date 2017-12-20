@@ -157,9 +157,15 @@
 
     if (!isTouchDevice) {
       overlay.mouseleave(function () {
-        Drupal.imagepin.removeOverlays(pin);
+        // Drupal.imagepin.removeOverlays(pin);
       });
     }
+
+    // handle overflow in parent container
+    overlay.parents('.item-content__row-col').each(function () {
+      $(this).data('previous-overflow-value', $(this).css('overflow'));
+      this.style.overflow = 'visible';
+    });
   };
 
   Drupal.imagepin.removeOverlays = function ($element) {
@@ -173,6 +179,13 @@
 
     $parent.find('.imagepin--active').trigger('overlay:hide').removeClass('imagepin--active');
 
+    // reset overflow in parent container
+      $element.parents('.item-content__row-col').each(function () {
+      if (typeof $(this).data('previous-overflow-value') !== 'undefined') {
+        this.style.overflow = $(this).data('previous-overflow-value');
+        this.removeAttribute('previous-overflow-value');
+      }
+    });
   }
 
   $(window).resize(function () {
