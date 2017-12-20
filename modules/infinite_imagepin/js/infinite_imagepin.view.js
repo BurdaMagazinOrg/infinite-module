@@ -157,7 +157,7 @@
 
     if (!isTouchDevice) {
       overlay.mouseleave(function () {
-        // Drupal.imagepin.removeOverlays(pin);
+        Drupal.imagepin.removeOverlays(pin);
       });
     }
 
