@@ -1,0 +1,50 @@
+<?php
+
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_tokens_alter().
+ */
+function infinite_recipe_tokens_alter(array &$replacements, array $context, BubbleableMetadata $bubbleable_metadata) {
+	if ($context['type'] == 'node' && !empty($context['data']['node'])) {
+
+		/* @var $node NodeInterface */
+		$node = $context['data']['node'];
+
+		// Adjust tokens for recipe nodes.
+		if ($node->bundle() == 'recipe' &&
+			isset($context['tokens']['recipe_ingredient']) &&
+			!$node->get('recipe_ingredient')->isEmpty()) {
+
+			// Get all 'Title' ingredients.
+			$query = \Drupal::entityQuery('ingredient');
+			$query->condition('name', t('Title'));
+			$titleIngredients = $query->execute();
+
+			// Filter 'Title' ingredients from [node:recipe_ingredient] token.
+			if (!empty($titleIngredients)) {
+				$titleIngredients = array_keys($titleIngredients);
+
+				$ingredients = $node->get('recipe_ingredient')->getValue();
+				foreach ($ingredients as $key => $ingredient) {
+					if (in_array($ingredient['target_id'], $titleIngredients)) {
+						unset($ingredients[$key]);
+					}
+				}
+				$node->set('recipe_ingredient', $ingredients);
+
+				// Render filtered ingredients.
+				$elements = [];
+				$renderer = \Drupal::service('renderer');
+				$ingredients = $node->get('recipe_ingredient')->getValue();
+				foreach ($ingredients as $iid => $ingredient) {
+					$elements[] = trim(strip_tags($renderer->renderPlain($node->recipe_ingredient->view('token')[$iid])));
+				}
+				$ingredients = implode(', ', $elements);
+
+				$replacements[$context['tokens']['recipe_ingredient']] = $ingredients;
+			}
+		}
+	}
+}

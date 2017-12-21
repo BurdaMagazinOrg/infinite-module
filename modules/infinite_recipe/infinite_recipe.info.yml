@@ -1,0 +1,5 @@
+name: Infinite Recipe
+type: module
+description: Recipe related logic
+core: 8.x
+package: Infinite
