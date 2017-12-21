@@ -11,6 +11,23 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Cache\Cache;
 
+define("GA_CD_FIA_SYSTEM_TYPE",          "dimension7");
+define("GA_CD_FIA_LOGGED_IN",            "dimension8");
+define("GA_CD_FIA_ARTICLE_NAME",         "dimension9");
+define("GA_CD_FIA_CONTENT_TYPE",         "dimension10");
+define("GA_CD_FIA_CONTENT_SUB_TYPE",     "dimension11");
+define("GA_CD_FIA_ARTICLE_PUBLISH_DATE", "dimension12");
+define("GA_CD_FIA_AUTHOR_NAME",          "dimension13");
+define("GA_CD_FIA_CHANNEL_CHANNEL",      "dimension14");
+define("GA_CD_FIA_SUB_CATEGORY",         "dimension15");
+define("GA_CD_FIA_OUTBRAIN_USAGE",       "dimension16");
+define("GA_CD_FIA_ODOSCOPE_GROUP",       "dimension17");
+define("GA_CD_FIA_ODOSCOPE_TYPE",        "dimension18");
+define("GA_CD_FIA_PRODUCT_CATEGORY",     "dimension19");
+define("GA_CD_FIA_ENTITY_TYPE",          "dimension20");
+define("GA_CD_FIA_ENTITY_ID",            "dimension21");
+define("GA_CD_FIA_ENVIRONMENT",          "dimension22");
+
 /**
  * Implements hook_entity_extra_field_info().
  */
@@ -47,6 +64,8 @@ function infinite_fia_node_view(array &$build, EntityInterface $entity, EntityVi
     // implicitly select integration variant by account id format
     $variant = strtolower($matches[1]);
 
+    $datalayer_variables = infinite_datalayer_get_variables($entity, 'full');
+
     $build['infinite_fia_google_analytics'] = [
       '#theme' => 'infinite_fia_google_analytics_' . $variant,
       '#account' => $fiaConfig->get('account'),
@@ -56,6 +75,24 @@ function infinite_fia_node_view(array &$build, EntityInterface $entity, EntityVi
         'medium' => $fiaConfig->get('campaign.medium'),
       ],
       '#title' => (string) $entity->field_seo_title->value,
+      '#data' => [
+        GA_CD_FIA_SYSTEM_TYPE => $datalayer_variables['environment']['systemType'] ?: '',
+        GA_CD_FIA_LOGGED_IN => $datalayer_variables['environment']['isLoggedIn'] ?: '',
+        GA_CD_FIA_ARTICLE_NAME => $datalayer_variables['page']['name'] ?: '',
+        GA_CD_FIA_CONTENT_TYPE => $datalayer_variables['page']['contentType'] ?: '',
+        GA_CD_FIA_CONTENT_SUB_TYPE => $datalayer_variables['page']['contentSubType'] ?: '',
+        GA_CD_FIA_ARTICLE_PUBLISH_DATE => $datalayer_variables['page']['articlePublishDate'] ?: '',
+        GA_CD_FIA_AUTHOR_NAME => $datalayer_variables['page']['authorName'] ?: '',
+        GA_CD_FIA_CHANNEL_CHANNEL => $datalayer_variables['page']['category'] ?: '',
+        GA_CD_FIA_SUB_CATEGORY => $datalayer_variables['page']['subCategory'] ?: '',
+        GA_CD_FIA_OUTBRAIN_USAGE => '',
+        GA_CD_FIA_ODOSCOPE_GROUP => '',
+        GA_CD_FIA_ODOSCOPE_TYPE => '',
+        GA_CD_FIA_PRODUCT_CATEGORY => '',
+        GA_CD_FIA_ENTITY_TYPE => $datalayer_variables['page']['entityType'] ?: '',
+        GA_CD_FIA_ENTITY_ID => $datalayer_variables['page']['entityID'] ?: '',
+        GA_CD_FIA_ENVIRONMENT => 'Instant Articles',
+      ],
       // TODO is there a scenario where the entity cache tags are useful here?
       '#cache' => [
         'tags' => Cache::mergeTags($entity->getCacheTags(), $fiaConfig->getCacheTags()),
@@ -75,7 +112,15 @@ function infinite_fia_theme() {
     'template' => 'infinite_fia_google_analytics',
   ];
 
-  $theme['infinite_fia_google_analytics_ua'] = ['template' => 'infinite_fia_google_analytics_ua'] + $theme['infinite_fia_google_analytics_gtm'];
+  $theme['infinite_fia_google_analytics_ua'] = [
+    'variables' => [
+      'account' => NULL,
+      'campaign' => [],
+      'title' => NULL,
+      'data' => []
+    ],
+    'template' => 'infinite_fia_google_analytics_ua',
+  ];
 
   return $theme;
 
