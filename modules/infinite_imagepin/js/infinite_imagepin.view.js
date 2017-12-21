@@ -131,7 +131,6 @@
       left_position = (img_width / 2) - (overlay_width / 2);
     } else {
       left_position = Math.max(horizontal_diff, pin_left_position - (overlay_width / 2));
-      left_position = Math.max(horizontal_diff, Math.min(left_position, pin_left_position - overlay_width - horizontal_diff));
     }
 
     /**
