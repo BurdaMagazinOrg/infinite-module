@@ -75,18 +75,15 @@
 
     var overlay = widget,
       $img = pin.parent().find('img').not('.imagepin-widget img'),
-      $arrow = [],
-      $widget_content = [],
+      $arrow,
       img_width = $img.width(),
-      img_height = $img.height(),
       overlay_width,
       overlay_height,
       top_position,
       left_position,
-      img_overlay_diff = 0,
-      pin_width = pin.width(),
+      img_overlay_diff,
       pin_height = pin.height(),
-      horizontal_diff = 0,
+      horizontal_diff,
       pin_top_position = parseInt(pin.css('top')),
       pin_left_position = parseInt(pin.css('left')),
       direction = 'down';
@@ -103,7 +100,7 @@
     pin.before(overlay);
     pin.trigger('overlay:show', [overlay]);
 
-    $widget_content = overlay.children().wrapAll('<div class="imagepin-widget-content"></div>');
+    overlay.children().wrapAll('<div class="imagepin-widget-content"></div>');
     $arrow = $('<span class="arrow"></span>').appendTo(overlay.find('.imagepin-widget-content'));
 
     overlay.attr('class', widget.attr('data-imagepin-overlay-class'));
@@ -167,7 +164,7 @@
       this.style.overflow = 'visible';
     });
 
-      Drupal.behaviors.infiniteWishlist.toggleIconsAccordingToWishlistStatus();
+    Drupal.behaviors.infiniteWishlist.toggleIconsAccordingToWishlistStatus();
   };
 
   Drupal.imagepin.removeOverlays = function ($element) {
