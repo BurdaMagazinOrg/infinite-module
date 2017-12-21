@@ -119,7 +119,7 @@
      * @type {number}
      */
     if ((pin_top_position - overlay_height) < 0) {
-      top_position = pin_top_position + 40;
+      top_position = pin_top_position;
     } else {
       direction = 'up';
       top_position = pin_top_position + pin_height - overlay_height - 40;
