@@ -100,7 +100,9 @@
     pin.before(overlay);
     pin.trigger('overlay:show', [overlay]);
 
-    overlay.children().wrapAll('<div class="imagepin-widget-content"></div>');
+    if (overlay.children('.imagepin-widget-content').length === 0) {
+      overlay.children().wrapAll('<div class="imagepin-widget-content"></div>');
+    }
     $arrow = overlay.find('.imagepin-widget-content .arrow');
     if ($arrow.length === 0) {
       $arrow = $('<span class="arrow"></span>').appendTo(overlay.find('.imagepin-widget-content'));
@@ -108,19 +110,19 @@
 
     overlay.attr('class', widget.attr('data-imagepin-overlay-class'));
     overlay.css('position', 'absolute');
-
-    overlay_width = overlay.outerWidth();
-    overlay_height = overlay.outerHeight();
+    //
+    overlay_width = overlay.find('.product-widgets').outerWidth();
+    overlay_height = overlay.find('.product-widgets').outerHeight();
 
     /**
      * pos overlay
      * @type {number}
      */
     if ((pin_top_position - overlay_height) < 0) {
-      top_position = pin_top_position;
+      top_position = pin_top_position + 40;
     } else {
       direction = 'up';
-      top_position = pin_top_position + pin_height - overlay_height;
+      top_position = pin_top_position + pin_height - overlay_height - 40;
     }
 
     overlay.addClass(direction);
