@@ -1,0 +1,7 @@
+name: Infinite AMP Integration
+type: module
+description: Accelerated Mobile Pages Integration for Infinite.
+core: 8.x
+package: Infinite
+dependencies:
+  - infinite_datalayer

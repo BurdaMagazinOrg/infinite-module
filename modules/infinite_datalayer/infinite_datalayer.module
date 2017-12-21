@@ -15,6 +15,13 @@ use Drupal\taxonomy\Entity\Term;
  * Implements hook_entity_view().
  */
 function infinite_datalayer_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $datalayer_variables = infinite_datalayer_get_variables($entity, $view_mode);
+  if($datalayer_variables){
+    infinite_datalayer_add($build, $context['key'], $datalayer_variables);
+  }
+}
+
+function infinite_datalayer_get_variables(EntityInterface $entity, $view_mode) {
   $entity_type = $entity->getEntityTypeId();
 
   if(!in_array($entity_type, ['taxonomy_term', 'user', 'node'])) {
@@ -46,18 +53,15 @@ function infinite_datalayer_entity_view(array &$build, EntityInterface $entity, 
     'entity' => $entity,
     'view_mode' => $view_mode,
   ];
-  \Drupal::moduleHandler()->alter($alter_hooks, $build, $datalayer_variables, $context);
+  \Drupal::moduleHandler()->alter($alter_hooks, $datalayer_variables, $context);
 
-  if($datalayer_variables){
-    infinite_datalayer_add($build, $context['key'], $datalayer_variables);
-  }
-
+  return $datalayer_variables;
 }
 
 /**
  * Implements hook_infinite_datalayer_TYPE_alter().
  */
-function infinite_datalayer_infinite_datalayer_node_alter(&$build, &$datalayer_variables, $context) {
+function infinite_datalayer_infinite_datalayer_node_alter(&$datalayer_variables, $context) {
   /** @var \Drupal\node\Entity\Node $node */
   $node = $context['entity'];
   $datalayer_variables_page = &$datalayer_variables['page'];
@@ -97,7 +101,7 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$build, &$datalayer_v
 /**
  * Implements hook_infinite_datalayer_TYPE_alter().
  */
-function infinite_datalayer_infinite_datalayer_taxonomy_term_alter(&$build, &$datalayer_variables, $context) {
+function infinite_datalayer_infinite_datalayer_taxonomy_term_alter(&$datalayer_variables, $context) {
   /** @var \Drupal\taxonomy\Entity\Term $term */
   $term = $context['entity'];
   if (strpos($context['view_mode'], 'amp') === 0 || !taxonomy_term_is_page($term) && $context['view_mode'] != 'paragraphs_only') {
@@ -114,7 +118,7 @@ function infinite_datalayer_infinite_datalayer_taxonomy_term_alter(&$build, &$da
 /**
  * Implements hook_infinite_datalayer_TYPE_alter().
  */
-function infinite_datalayer_infinite_datalayer_user_alter(&$build, &$datalayer_variables, $context) {
+function infinite_datalayer_infinite_datalayer_user_alter(&$datalayer_variables, $context) {
   /** @var \Drupal\user\Entity\User $user */
   $user = $context['entity'];
   if (strpos($context['view_mode'], 'amp') === 0 ||

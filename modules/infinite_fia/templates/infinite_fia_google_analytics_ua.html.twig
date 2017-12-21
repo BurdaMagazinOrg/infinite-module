@@ -13,7 +13,7 @@
             ga('set', 'campaignSource', {{ campaign.source|json_encode }});
             ga('set', 'campaignMedium', {{ campaign.medium|json_encode }});
             ga('set', 'campaignName', {{ campaign.name|json_encode }});
-            ga('send', 'pageview', {title: {{ title|json_encode }} });
+            ga('send', 'pageview', {{ data|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }});
 
             {% endautoescape %}
         </script>
