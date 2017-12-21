@@ -166,6 +166,8 @@
       $(this).data('previous-overflow-value', $(this).css('overflow'));
       this.style.overflow = 'visible';
     });
+
+      Drupal.behaviors.infiniteWishlist.toggleIconsAccordingToWishlistStatus();
   };
 
   Drupal.imagepin.removeOverlays = function ($element) {
