@@ -46,7 +46,7 @@ class AdsTxtSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $settings = $this->config('adstxt.settings');
+    $settings = $this->config('infinite_adstxt.settings');
 
     $form['adstxt_content'] = array(
       '#type' => 'textarea',
@@ -63,7 +63,7 @@ class AdsTxtSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     $values = $form_state->getValues();
-    $config = $this->configFactory()->getEditable('adstxt.settings');
+    $config = $this->configFactory()->getEditable('infinite_adstxt.settings');
     $config->set('adstxt_content', $values['adstxt_content'])->save();
   }
 
@@ -72,7 +72,7 @@ class AdsTxtSettingsForm extends ConfigFormBase {
    */
   protected function getEditableConfigNames() {
     return [
-      'adstxt.settings',
+      'infinite_adstxt.settings',
     ];
   }
 

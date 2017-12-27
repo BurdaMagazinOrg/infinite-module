@@ -12,9 +12,9 @@ use Zend\Diactoros\Response\TextResponse;
 class AdsTxtController extends ControllerBase {
 
   public function render(){
-    $settings = \Drupal::config('adstxt.settings');
+    $settings = \Drupal::config('infinite_adstxt.settings');
     $content = $settings->get('adstxt_content');
-    $response = new TextResponse($content);
+    $response = new TextResponse($content ?: '');
     return $response;
   }
 
