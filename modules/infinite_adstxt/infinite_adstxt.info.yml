@@ -1,0 +1,6 @@
+name: Infinite ads.txt
+type: module
+description: Provide a configurable ads.txt route
+package: Infinite
+core: 8.x
+version: 8.x-1.x-dev

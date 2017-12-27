@@ -1,0 +1,14 @@
+infinite_adstxt.admin_adstxt:
+  path: '/admin/config/system/adstxt'
+  defaults:
+    _form: '\Drupal\infinite_adstxt\Form\AdsTxtSettingsForm'
+    _title: 'Ads.txt settings'
+  requirements:
+    _permission: 'administer site configuration'
+
+infinite_adstxt.adstxt:
+  path: /ads.txt
+  defaults:
+    _controller: '\Drupal\infinite_adstxt\Controller\AdsTxtController:render'
+  requirements:
+    _custom_access: '\Drupal\infinite_adstxt\Controller\AdsTxtController::access'
