@@ -1,0 +1,5 @@
+infinite_adstxt.admin_adstxt:
+  title: 'Ads.txt settings'
+  description: 'Ads.txt content settings.'
+  route_name: infinite_adstxt.admin_adstxt
+  parent: system.admin_config_system
