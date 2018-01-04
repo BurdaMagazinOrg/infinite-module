@@ -110,14 +110,26 @@
 
     window.oscTeaserElementReplaced = function (pElement) {
         // apply social icon code and timeago
+        jQuery(pElement).attr('data-view-type', 'teaserFeedView');
     };
 
     window.oscInfiniteBlockViewUpdated = function (pElement) {
+        var tmpInfiniteBlockViewModel = jQuery(pElement).data('infiniteModel'),
+            tmpTeaserListModel = tmpInfiniteBlockViewModel.findByViewType('teaserFeedView'),
+            tmpTeaserModel;
+
         Drupal.behaviors.blazy.attach(pElement);
-        jQuery(pElement).data('infiniteModel').refresh();
+        //tmpInfiniteBlockViewModel.refresh();
 
         jQuery('[data-view-type="teaserFeedView"]', pElement).each(function (pIndex, pTeaserElement) {
-            jQuery(pTeaserElement).data('infiniteModel').refresh();
+
+            tmpTeaserModel = tmpTeaserListModel[pIndex];
+
+            if(tmpTeaserModel) {
+                jQuery(pTeaserElement).data('infiniteModel', tmpTeaserModel);
+                tmpTeaserModel.set('el', pTeaserElement);
+                //tmpTeaserModel.refresh();
+            }
         });
 
         // update waypoints
