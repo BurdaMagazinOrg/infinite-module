@@ -127,7 +127,7 @@
 
             if(tmpTeaserModel) {
                 jQuery(pTeaserElement).data('infiniteModel', tmpTeaserModel);
-                tmpTeaserModel.set('el', pTeaserElement);
+                tmpTeaserModel.setElement(pTeaserElement);
                 //tmpTeaserModel.refresh();
             }
         });
