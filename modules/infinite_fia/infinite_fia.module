@@ -74,8 +74,8 @@ function infinite_fia_node_view(array &$build, EntityInterface $entity, EntityVi
         'name' => $fiaConfig->get('campaign.name'),
         'medium' => $fiaConfig->get('campaign.medium'),
       ],
-      '#title' => (string) $entity->field_seo_title->value,
       '#data' => [
+        'title' => (string) $entity->field_seo_title->value,
         GA_CD_FIA_SYSTEM_TYPE => $datalayer_variables['environment']['systemType'] ?: '',
         GA_CD_FIA_LOGGED_IN => $datalayer_variables['environment']['isLoggedIn'] ?: '',
         GA_CD_FIA_ARTICLE_NAME => $datalayer_variables['page']['name'] ?: '',
@@ -107,7 +107,6 @@ function infinite_fia_theme() {
     'variables' => [
       'account' => NULL,
       'campaign' => [],
-      'title' => NULL,
     ],
     'template' => 'infinite_fia_google_analytics',
   ];
@@ -116,7 +115,6 @@ function infinite_fia_theme() {
     'variables' => [
       'account' => NULL,
       'campaign' => [],
-      'title' => NULL,
       'data' => []
     ],
     'template' => 'infinite_fia_google_analytics_ua',
