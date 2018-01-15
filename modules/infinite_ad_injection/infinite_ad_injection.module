@@ -3,7 +3,7 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Render\Markup;
-use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\DomCrawler\Crawler;
 
 function infinite_ad_injection_entity_display_build_alter(&$build, $context) {
@@ -84,6 +84,10 @@ function infinite_ad_injection_taxonomy_term_view_alter(array &$build, EntityInt
  * @return \Drupal\Component\Render\MarkupInterface|string
  */
 function infinite_ad_injection_term_inject_content($children, $elements){
+
+  // TODO: Remove when AdInjection works again.
+  return $children;
+
   $contents = infinite_ad_injection_get_content(['dyn_blocks_taxonomy_term_page']);
 //  $contents = infinite_ad_injection_get_content__dummy();
   if(empty($contents)) {
@@ -105,15 +109,23 @@ function infinite_ad_injection_term_inject_content($children, $elements){
  * @return \Drupal\Component\Render\MarkupInterface|string
  */
 function infinite_ad_injection_article_inject_content($children, $elements){
+
+  // TODO: Remove when AdInjection works again.
+  return $children;
+
   $contents = infinite_ad_injection_get_content(['dyn_blocks_node']);
   if(empty($contents)) {
     return $children;
   }
 
   $selectors = [];
-  $selectors[] = CssSelector::toXPath('div.item-paragraph:not(.item-paragraph--text)');
-  $selectors[] = CssSelector::toXPath('div.item-paragraph--text p');
-  return infinite_ad_injection_inject_content($children, $contents, $selectors, 1, 6);
+  $cssSelector = new CssSelectorConverter();
+  $selectors[] = $cssSelector->toXPath('div.item-paragraph:not(.item-paragraph--text)');
+  $selectors[] = $cssSelector->toXPath('div.item-paragraph--text p');
+  if (!empty($selectors)) {
+    return infinite_ad_injection_inject_content($children, $contents, $selectors, 1, 6);
+  }
+  return $children;
 }
 
 /**
@@ -125,15 +137,20 @@ function infinite_ad_injection_article_inject_content($children, $elements){
  * @return \Drupal\Component\Render\MarkupInterface|string
  */
 function infinite_ad_injection_viversum_horoscope_inject_content($children, $elements){
+
+  // TODO: Remove when AdInjection works again.
+  return $children;
+
   $contents = infinite_ad_injection_get_content(['dyn_blocks_node']);
 //  $contents = infinite_ad_injection_get_content__dummy();
   if(empty($contents)) {
     return $children;
   }
   $selectors = [];
-  $selectors[] = CssSelector::toXPath('div.item-paragraph:not(.item-paragraph--text):not(.item-paragraph--viversum-zodiac)');
-  $selectors[] = CssSelector::toXPath('div.item-paragraph--text p');
-  $selectors[] = CssSelector::toXPath('div.item-paragraph--viversum-zodiac p');
+  $cssSelector = new CssSelectorConverter();
+  $selectors[] = $cssSelector->toXPath('div.item-paragraph:not(.item-paragraph--text):not(.item-paragraph--viversum-zodiac)');
+  $selectors[] = $cssSelector->toXPath('div.item-paragraph--text p');
+  $selectors[] = $cssSelector->toXPath('div.item-paragraph--viversum-zodiac p');
   return infinite_ad_injection_inject_content($children, $contents, $selectors, 0, 6, 'after');
 }
 
