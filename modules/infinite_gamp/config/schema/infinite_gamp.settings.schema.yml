@@ -1,0 +1,7 @@
+infinite_gamp.settings:
+  type: config_object
+  label: Infinite gamp content types
+  mapping:
+    content_types:
+      type: string
+      label: 'Content types'

@@ -1,0 +1,7 @@
+infinite_gamp.settings:
+  path: '/admin/config/content/amp/infinite-gamp'
+  defaults:
+    _form: '\Drupal\infinite_gamp\Form\InfiniteGampSettingsForm'
+    _title: 'Configure the infinite gamp module'
+  requirements:
+    _permission: 'administer site configuration'
