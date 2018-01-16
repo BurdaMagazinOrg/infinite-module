@@ -110,6 +110,14 @@
 
     overlay.attr('class', widget.attr('data-imagepin-overlay-class'));
     overlay.css('position', 'absolute');
+    // For default direction = 'down' set margin on TouchDevices and padding on nonTouchDevices
+    // This is necessary because clicking on another pin while overlay is opened triggers an URL-Opening from overlay
+    if (isTouchDevice) {
+      overlay.css('margin-top', '40px');
+    }
+    else {
+      overlay.css('padding-top', '40px');
+    }
     //
     overlay_width = overlay.find('.product-widgets').outerWidth();
     overlay_height = overlay.find('.product-widgets').outerHeight();
@@ -122,6 +130,16 @@
       top_position = pin_top_position;
     } else {
       direction = 'up';
+      // If direction = 'up' reset margin-bottom on TouchDevices and padding-bottom on nonTouchDevices
+      // set margin-bottom on TouchDevices and padding-bottom on nonTouchDevices
+      if (isTouchDevice) {
+        overlay.css('margin-top', '0');
+        overlay.css('margin-bottom', '40px');
+      }
+      else {
+        overlay.css('padding-top', '0');
+        overlay.css('padding-bottom', '40px');
+      }
       top_position = pin_top_position + pin_height - overlay_height - 40;
     }
 
@@ -175,10 +193,8 @@
   Drupal.imagepin.removeOverlays = function ($element) {
     var $parent = $element.parent();
 
-    $.each($parent.find('.imagepin-widget'), function (pIndex, pItem) {
-      $(pItem).fadeOut('slow', function () {
+    $.each($parent.find('.imagepin-widget'), function () {
         $(this).remove();
-      });
     });
 
     $parent.find('.imagepin--active').trigger('overlay:hide').removeClass('imagepin--active');
