@@ -194,7 +194,7 @@
     var $parent = $element.parent();
 
     $.each($parent.find('.imagepin-widget'), function () {
-        $(this).remove();
+        $(this).detach();
     });
 
     $parent.find('.imagepin--active').trigger('overlay:hide').removeClass('imagepin--active');
