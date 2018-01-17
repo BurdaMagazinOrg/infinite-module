@@ -166,14 +166,6 @@
     overlay.fadeIn('fast');
 
     pin.addClass('imagepin--active');
-    widget.off('click').on('click', function () {
-        var link = document.createElement('a');
-        link.href = widget.find('[data-external-url]').data('external-url');
-        link.setAttribute('target', '_blank');
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-    });
 
     if (!isTouchDevice) {
       overlay.mouseleave(function () {
