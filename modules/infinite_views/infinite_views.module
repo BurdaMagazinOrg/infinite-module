@@ -254,22 +254,17 @@ function infinite_views_page_attachments_alter(array &$attachments) {
 
     foreach ($attached['html_head_link'] as $key => &$item) {
       if($item[0]['rel'] == 'canonical'){
+        unset($query['amp']);
+        if($current_page){
+          $query['page'] = $current_page;
+        }
+        elseif(isset($query['page'])) {
+          unset($query['page']);
+        }
 
-        if(\Drupal::moduleHandler()->moduleExists('amp')
-          && \Drupal::service('router.amp_context')->isAmpRoute()){
-
-          unset($query['amp']);
-          if($current_page){
-            $query['page'] = $current_page;
-          }
-          elseif(isset($query['page'])) {
-            unset($query['page']);
-          }
-
-          $current_path->setOption('absolute', TRUE);
-          $current_path->setOption('query', $query);
-
-          $attached['html_head'][] = [[
+        $current_path->setOption('absolute', TRUE);
+        $current_path->setOption('query', $query);
+        $attached['html_head'][] = [[
             '#type' => 'html_tag',
             '#tag' => 'link',
             '#attributes' => [
@@ -277,9 +272,6 @@ function infinite_views_page_attachments_alter(array &$attachments) {
               'href' => $current_path->toString(),
             ],
           ], 'rel_canonical'];
-
-        }
-
         unset($attached['html_head_link'][$key]);
       }
     }
