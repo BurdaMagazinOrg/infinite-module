@@ -1,0 +1,4 @@
+infinite_gamp.settings:
+  route_name: 'infinite_gamp.settings'
+  base_route: 'amp.settings'
+  title: 'Infinite gamp'

@@ -17,7 +17,7 @@ use Drupal\taxonomy\Entity\Term;
 function infinite_datalayer_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   $datalayer_variables = infinite_datalayer_get_variables($entity, $view_mode);
   if($datalayer_variables){
-    infinite_datalayer_add($build, $context['key'], $datalayer_variables);
+    infinite_datalayer_add($build, $entity->uuid(), $datalayer_variables);
   }
 }
 
