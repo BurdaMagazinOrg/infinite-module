@@ -255,27 +255,30 @@ function infinite_views_page_attachments_alter(array &$attachments) {
       ], 'rel_next'];
     }
 
-    foreach ($attached['html_head_link'] as $key => &$item) {
-      if($item[0]['rel'] == 'canonical'){
-        unset($query['amp']);
-        if($current_page){
-          $query['page'] = $current_page;
+    // If there is no previous page we are at the first page. Only here we add
+    // a canonical link
+    if (!$has_prev) {
+      foreach ($attached['html_head_link'] as $key => &$item) {
+        if($item[0]['rel'] == 'canonical'){
+          unset($query['amp']);
+          if($current_page){
+            $query['page'] = $current_page;
+          }
+          elseif(isset($query['page'])) {
+            unset($query['page']);
+          }
+          $current_path->setOption('absolute', TRUE);
+          $current_path->setOption('query', $query);
+          $attached['html_head'][] = [[
+              '#type' => 'html_tag',
+              '#tag' => 'link',
+              '#attributes' => [
+                'rel' => 'canonical',
+                'href' => $current_path->toString(),
+              ],
+            ], 'rel_canonical'];
+          unset($attached['html_head_link'][$key]);
         }
-        elseif(isset($query['page'])) {
-          unset($query['page']);
-        }
-
-        $current_path->setOption('absolute', TRUE);
-        $current_path->setOption('query', $query);
-        $attached['html_head'][] = [[
-            '#type' => 'html_tag',
-            '#tag' => 'link',
-            '#attributes' => [
-              'rel' => 'canonical',
-              'href' => $current_path->toString(),
-            ],
-          ], 'rel_canonical'];
-        unset($attached['html_head_link'][$key]);
       }
     }
     // If our page index is >= 1, ie if there is a "prev" page,
