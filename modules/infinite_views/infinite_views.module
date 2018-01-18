@@ -255,11 +255,14 @@ function infinite_views_page_attachments_alter(array &$attachments) {
       ], 'rel_next'];
     }
 
-    // If there is no previous page we are at the first page. Only here we add
-    // a canonical link
-    if (!$has_prev) {
-      foreach ($attached['html_head_link'] as $key => &$item) {
-        if($item[0]['rel'] == 'canonical'){
+    foreach ($attached['html_head_link'] as $key => &$item) {
+      if($item[0]['rel'] == 'canonical'){
+        // If there is no previous page we are at the first page. Only here
+        // we add a canonical link, otherwise we unset.
+        if ($has_prev) {
+          unset($attached['html_head_link'][$key]);
+        }
+        else {
           unset($query['amp']);
           if($current_page){
             $query['page'] = $current_page;
