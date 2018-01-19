@@ -211,6 +211,7 @@ function infinite_views_page_attachments_alter(array &$attachments) {
       $query  = ['amp' => ''] + $query;
     }
 
+    $has_prev = FALSE;
     if($pager_page_array[0] > 1){
       $query['page'] = ($pager_page_array[0] - 1);
       $href = $current_path->setOption('query', $query)->toString();
@@ -223,6 +224,7 @@ function infinite_views_page_attachments_alter(array &$attachments) {
           'href' => $href,
         ],
       ], 'rel_prev'];
+      $has_prev = TRUE;
     }
     elseif($pager_page_array[0] == 1) {
       unset($query['page']);
@@ -236,6 +238,7 @@ function infinite_views_page_attachments_alter(array &$attachments) {
           'href' => $href,
         ],
       ], 'rel_prev'];
+      $has_prev = TRUE;
     }
 
     if($pager_page_array[0] < $pager_total[0] - 1){
@@ -254,10 +257,12 @@ function infinite_views_page_attachments_alter(array &$attachments) {
 
     foreach ($attached['html_head_link'] as $key => &$item) {
       if($item[0]['rel'] == 'canonical'){
-
-        if(\Drupal::moduleHandler()->moduleExists('amp')
-          && \Drupal::service('router.amp_context')->isAmpRoute()){
-
+        // If there is no previous page we are at the first page. Only here
+        // we add a canonical link, otherwise we unset.
+        if ($has_prev) {
+          unset($attached['html_head_link'][$key]);
+        }
+        else {
           unset($query['amp']);
           if($current_page){
             $query['page'] = $current_page;
@@ -265,23 +270,37 @@ function infinite_views_page_attachments_alter(array &$attachments) {
           elseif(isset($query['page'])) {
             unset($query['page']);
           }
-
           $current_path->setOption('absolute', TRUE);
           $current_path->setOption('query', $query);
-
           $attached['html_head'][] = [[
-            '#type' => 'html_tag',
-            '#tag' => 'link',
-            '#attributes' => [
-              'rel' => 'canonical',
-              'href' => $current_path->toString(),
-            ],
-          ], 'rel_canonical'];
-
+              '#type' => 'html_tag',
+              '#tag' => 'link',
+              '#attributes' => [
+                'rel' => 'canonical',
+                'href' => $current_path->toString(),
+              ],
+            ], 'rel_canonical'];
+          unset($attached['html_head_link'][$key]);
         }
-
-        unset($attached['html_head_link'][$key]);
       }
+    }
+    // If our page index is >= 1, ie if there is a "prev" page,
+    // we do not want this page to be indexed, but still searched.
+    if ($has_prev) {
+      // unset any other robots directive
+      foreach ($attached['html_head'] as $key => &$item) {
+        if($item[0]['#attributes']['name'] == 'robots'){
+          unset($attached['html_head'][$key]);
+        }
+      }
+      $attached['html_head'][] = [[
+          '#type' => 'html_tag',
+          '#tag' => 'meta',
+          '#attributes' => [
+            'name' => 'robots',
+            'content' => 'noindex, follow',
+          ],
+        ], 'meta_noindex'];
     }
   }
 }
