@@ -226,8 +226,12 @@ function _infinite_datalayer_content_sub_types(Node $node) {
                 $look_files = $widget_repository->loadForEntityFieldView($look_media, 'field_image', 'look');
                 foreach ($look_files as $fid => $look_file) {
                   foreach ($look_file as $widget_key => $widget_data) {
-                    $product = $product_storage->load($widget_data['value']['product']);
-                    _infinite_datalayer_advertising_products_sup_types_helper($content_sub_types, $product);
+                    foreach (['product', 'product2'] as $product_variant) {
+                      if(isset($widget_data['value'][$product_variant])) {
+                        $product = $product_storage->load($widget_data['value'][$product_variant]);
+                        _infinite_datalayer_advertising_products_sup_types_helper($content_sub_types, $product);
+                      }
+                    }
                   }
                 }
               }

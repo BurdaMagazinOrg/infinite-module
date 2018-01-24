@@ -75,18 +75,15 @@
 
     var overlay = widget,
       $img = pin.parent().find('img').not('.imagepin-widget img'),
-      $arrow = [],
-      $widget_content = [],
+      $arrow,
       img_width = $img.width(),
-      img_height = $img.height(),
       overlay_width,
       overlay_height,
       top_position,
       left_position,
-      img_overlay_diff = 0,
-      pin_width = pin.width(),
+      img_overlay_diff,
       pin_height = pin.height(),
-      horizontal_diff = 0,
+      horizontal_diff,
       pin_top_position = parseInt(pin.css('top')),
       pin_left_position = parseInt(pin.css('left')),
       direction = 'down';
@@ -103,24 +100,47 @@
     pin.before(overlay);
     pin.trigger('overlay:show', [overlay]);
 
-    // $widget_content = overlay.children().wrapAll('<div class="imagepin-widget-content"></div>');
-    $arrow = $('<span class="arrow"></span>').appendTo(overlay.find('.imagepin-widget-content'));
+    if (overlay.children('.imagepin-widget-content').length === 0) {
+      overlay.children().wrapAll('<div class="imagepin-widget-content"></div>');
+    }
+    $arrow = overlay.find('.imagepin-widget-content .arrow');
+    if ($arrow.length === 0) {
+      $arrow = $('<span class="arrow"></span>').appendTo(overlay.find('.imagepin-widget-content'));
+    }
 
     overlay.attr('class', widget.attr('data-imagepin-overlay-class'));
     overlay.css('position', 'absolute');
-
-    overlay_width = overlay.outerWidth();
-    overlay_height = overlay.outerHeight();
+    // For default direction = 'down' set margin on TouchDevices and padding on nonTouchDevices
+    // This is necessary because clicking on another pin while overlay is opened triggers an URL-Opening from overlay
+    if (isTouchDevice) {
+      overlay.css('margin-top', '40px');
+    }
+    else {
+      overlay.css('padding-top', '40px');
+    }
+    //
+    overlay_width = overlay.find('.product-widgets').outerWidth();
+    overlay_height = overlay.find('.product-widgets').outerHeight();
 
     /**
      * pos overlay
      * @type {number}
      */
-    if ((pin_top_position + overlay_height) > img_height) {
-      direction = 'up';
-      top_position = pin_top_position + pin_height - overlay_height;
-    } else {
+    if ((pin_top_position - overlay_height) < 0) {
       top_position = pin_top_position;
+    } else {
+      direction = 'up';
+      // If direction = 'up' reset margin-bottom on TouchDevices and padding-bottom on nonTouchDevices
+      // set margin-bottom on TouchDevices and padding-bottom on nonTouchDevices
+      if (isTouchDevice) {
+        overlay.css('margin-top', '0');
+        overlay.css('margin-bottom', '40px');
+      }
+      else {
+        overlay.css('padding-top', '0');
+        overlay.css('padding-bottom', '40px');
+      }
+      top_position = pin_top_position + pin_height - overlay_height - 40;
     }
 
     overlay.addClass(direction);
@@ -146,33 +166,38 @@
     overlay.fadeIn('fast');
 
     pin.addClass('imagepin--active');
-    widget.off('click').on('click', function () {
-        var link = document.createElement('a');
-        link.href = widget.find('[data-external-url]').data('external-url');
-        link.setAttribute('target', '_blank');
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-    });
 
     if (!isTouchDevice) {
       overlay.mouseleave(function () {
         Drupal.imagepin.removeOverlays(pin);
       });
     }
+
+    // handle overflow in parent container
+    overlay.parents('.item-content__row-col').each(function () {
+      $(this).data('previous-overflow-value', $(this).css('overflow'));
+      this.style.overflow = 'visible';
+    });
+
+    Drupal.behaviors.infiniteWishlist.toggleIconsAccordingToWishlistStatus();
   };
 
   Drupal.imagepin.removeOverlays = function ($element) {
     var $parent = $element.parent();
 
-    $.each($parent.find('.imagepin-widget'), function (pIndex, pItem) {
-      $(pItem).fadeOut('slow', function () {
-        $(this).remove();
-      });
+    $.each($parent.find('.imagepin-widget'), function () {
+        $(this).detach();
     });
 
     $parent.find('.imagepin--active').trigger('overlay:hide').removeClass('imagepin--active');
 
+    // reset overflow in parent container
+      $element.parents('.item-content__row-col').each(function () {
+      if (typeof $(this).data('previous-overflow-value') !== 'undefined') {
+        this.style.overflow = $(this).data('previous-overflow-value');
+        this.removeAttribute('previous-overflow-value');
+      }
+    });
   }
 
   $(window).resize(function () {
