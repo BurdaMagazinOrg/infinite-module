@@ -24,7 +24,8 @@
                 event: AppConfig.gtmEventName,
                 category: OdoscopeManager.GTM_EVENT_CATEGORY,
                 action: 'pageview',
-                label: this.get('group')
+                label: this.get('group'),
+                eventNonInteraction: 'true'
             });
         },
         createModels: function () {
@@ -84,7 +85,8 @@
                 event: AppConfig.gtmEventName,
                 category: OdoscopeManager.GTM_EVENT_CATEGORY,
                 action: 'oscSaveTracking',
-                label: pGroup + '/' + pData
+                label: pGroup + '/' + pData,
+                eventNonInteraction: 'true'
             });
         }
 
@@ -139,7 +141,8 @@
             TrackingManager.trackEvent({
                 event: AppConfig.gtmEventName,
                 category: OdoscopeManager.GTM_EVENT_CATEGORY,
-                action: 'feedInfiniteBlockRendered'
+                action: 'feedInfiniteBlockRendered',
+                eventNonInteraction: 'true'
             });
         }
     };
