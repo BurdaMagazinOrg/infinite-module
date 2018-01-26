@@ -28,8 +28,6 @@ function infinite_amp_integration_theme_registry_alter(&$theme_registry) {
   }
 }
 
-
-
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
