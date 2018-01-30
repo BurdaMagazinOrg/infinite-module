@@ -1,0 +1,5 @@
+services:
+  infinite_amp_integration_event_subscriber:
+    class: Drupal\infinite_amp_integration\EventSubscriber\InfiniteAmpIntegrationEventSubscriber
+    tags:
+      - {name: event_subscriber}
