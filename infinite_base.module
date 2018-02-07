@@ -296,6 +296,11 @@ function infinite_base_get_all_parents($term) {
 }
 
 function infinite_base_page_attachments(array &$attachments) {
+  /** Attaches the jquery3 migrate prod plugin on every page as workaround to compat jquery3 changes.
+   * TODO: This should be removed, when migration is completed
+   */
+  $attachments['#attached']['library'][] = 'infinite_base/jquery-migrate';
+
   /** Attaches the Harbourmaster ClientID, if module hm_newsletter is enabled */
   if (\Drupal::moduleHandler()->moduleExists('hm_newsletter')) {
     $configFactory = \Drupal::configFactory()->get('hm_newsletter.settings');
