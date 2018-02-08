@@ -6,13 +6,13 @@ use Drupal\views\ViewExecutable;
 /**
  * Implementatyion of hook_views_post_render().
  */
-function infinite_lexicon_views_post_render(ViewExecutable $view, array &$cache) {
+function infinite_lexicon_views_post_render(ViewExecutable $view, &$output, $cache) {
 
   /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase $display */
   $display = $view->getDisplay();
 
   if($view->id() == 'lexicon_overview' && $display->display['id'] == 'page_1') {
-    $groups = &$cache['#rows'];
+    $groups = &$output['#rows'];
     foreach ($groups as $i => &$group) {
       $first_key = key($group['#rows']);
       $first_row = &$group['#rows'][$first_key];
