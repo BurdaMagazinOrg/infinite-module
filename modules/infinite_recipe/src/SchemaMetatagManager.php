@@ -23,6 +23,9 @@ class SchemaMetatagManager extends \Drupal\schema_metatag\SchemaMetatagManager {
         $ingredient = str_replace('&nbsp;', ' ', $ingredient);
         $ingredient = trim($ingredient, " \t\n\r\0\x0B\xC2\xA0");
       }
+      if (isset($items['image']) && is_array($items['image'])) {
+        $items['image'] = $items['image']['url'];
+      }
     }
 
     return $items;
