@@ -97,7 +97,7 @@ class WishlistController extends ControllerBase
       $name = trim(substr($name, strlen($brand)));
     }
     if ($brandRemoved && 0 === strpos($name, '-')) {
-      $name = trim(substr($name, 1));
+      $name = ltrim($name, " \t\n\r\0\x0B-:;");
     }
     return $name;
   }
