@@ -91,6 +91,9 @@ class WishlistController extends ControllerBase
 
   protected function removeLeadingBrandFromProductName($name, $brand)
   {
+    if (empty($brand)) {
+      return $name;
+    }
     $brandRemoved = false;
     if (0 === strpos(strtolower($name), strtolower($brand))) {
       $brandRemoved = true;
