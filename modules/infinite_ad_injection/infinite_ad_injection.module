@@ -3,7 +3,7 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Render\Markup;
-use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\DomCrawler\Crawler;
 
 function infinite_ad_injection_entity_display_build_alter(&$build, $context) {
@@ -90,9 +90,10 @@ function infinite_ad_injection_term_inject_content($children, $elements){
     return $children;
   }
 
+  $cssSelector = new CssSelectorConverter();
   $selectors = [];
-  $selectors[] = CssSelector::toXPath('div.item-paragraph:not(.item-paragraph--text):not(#steckbrief):not(.item-paragraph--spotlight)');
-  $selectors[] = CssSelector::toXPath('div.item-paragraph--text p');
+  $selectors[] = $cssSelector->toXPath('div.item-paragraph:not(.item-paragraph--text):not(#steckbrief):not(.item-paragraph--spotlight)');
+  $selectors[] = $cssSelector->toXPath('div.item-paragraph--text p');
   return infinite_ad_injection_inject_content($children, $contents, $selectors, 0, 6);
 }
 
@@ -110,10 +111,14 @@ function infinite_ad_injection_article_inject_content($children, $elements){
     return $children;
   }
 
+  $cssSelector = new CssSelectorConverter();
   $selectors = [];
-  $selectors[] = CssSelector::toXPath('div.item-paragraph:not(.item-paragraph--text)');
-  $selectors[] = CssSelector::toXPath('div.item-paragraph--text p');
-  return infinite_ad_injection_inject_content($children, $contents, $selectors, 1, 6);
+  $selectors[] = $cssSelector->toXPath('div.item-paragraph:not(.item-paragraph--text)');
+  $selectors[] = $cssSelector->toXPath('div.item-paragraph--text p');
+  if (!empty($selectors)) {
+    return infinite_ad_injection_inject_content($children, $contents, $selectors, 1, 6);
+  }
+  return $children;
 }
 
 /**
@@ -130,10 +135,11 @@ function infinite_ad_injection_viversum_horoscope_inject_content($children, $ele
   if(empty($contents)) {
     return $children;
   }
+  $cssSelector = new CssSelectorConverter();
   $selectors = [];
-  $selectors[] = CssSelector::toXPath('div.item-paragraph:not(.item-paragraph--text):not(.item-paragraph--viversum-zodiac)');
-  $selectors[] = CssSelector::toXPath('div.item-paragraph--text p');
-  $selectors[] = CssSelector::toXPath('div.item-paragraph--viversum-zodiac p');
+  $selectors[] = $cssSelector->toXPath('div.item-paragraph:not(.item-paragraph--text):not(.item-paragraph--viversum-zodiac)');
+  $selectors[] = $cssSelector->toXPath('div.item-paragraph--text p');
+  $selectors[] = $cssSelector->toXPath('div.item-paragraph--viversum-zodiac p');
   return infinite_ad_injection_inject_content($children, $contents, $selectors, 0, 6, 'after');
 }
 

@@ -1,0 +1,5 @@
+jquery-migrate:
+  js:
+    js/jquery-migrate-3.0.1.min.js: {}
+  dependencies:
+    - core/jquery
