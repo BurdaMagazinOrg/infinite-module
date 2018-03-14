@@ -60,6 +60,7 @@ class WishlistController extends ControllerBase
         $build = [
           '#theme' => 'infinite_wishlist_item',
           '#product' => $product,
+          '#product_name_without_brand' => $this->removeLeadingBrandFromProductName($product->product_name, $product->product_brand),
           '#image' => [
             '#theme' => 'responsive_image',
             '#width' => $variables['width'],
@@ -86,5 +87,21 @@ class WishlistController extends ControllerBase
     return new JsonResponse([
       'products' => $products,
     ]);
+  }
+
+  protected function removeLeadingBrandFromProductName($name, $brand)
+  {
+    if (empty($brand)) {
+      return $name;
+    }
+    $brandRemoved = false;
+    if (0 === strpos(strtolower($name), strtolower($brand))) {
+      $brandRemoved = true;
+      $name = trim(substr($name, strlen($brand)));
+    }
+    if ($brandRemoved) {
+      $name = ltrim($name, " \t\n\r\0\x0B-:;®");
+    }
+    return $name;
   }
 }
