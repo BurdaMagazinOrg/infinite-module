@@ -25,7 +25,7 @@
                 category: OdoscopeManager.GTM_EVENT_CATEGORY,
                 action: 'pageview',
                 label: this.get('group'),
-                eventNonInteraction: 'true'
+                eventNonInteraction: true
             });
         },
         createModels: function () {
@@ -86,7 +86,7 @@
                 category: OdoscopeManager.GTM_EVENT_CATEGORY,
                 action: 'oscSaveTracking',
                 label: pGroup + '/' + pData,
-                eventNonInteraction: 'true'
+                eventNonInteraction: true
             });
         }
 
@@ -142,7 +142,7 @@
                 event: AppConfig.gtmEventName,
                 category: OdoscopeManager.GTM_EVENT_CATEGORY,
                 action: 'feedInfiniteBlockRendered',
-                eventNonInteraction: 'true'
+                eventNonInteraction: true
             });
         }
     };
