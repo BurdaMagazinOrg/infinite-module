@@ -260,7 +260,7 @@ Drupal.behaviors.infiniteWishlist = {
 
     injectIcons: function () {
         var storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
-        var items = document.getElementsByClassName('item-ecommerce');
+        var items = document.querySelectorAll('.item-ecommerce .img-container');
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
 
