@@ -21,7 +21,11 @@ function infinite_blocks_theme() {
       'variables' => array('outbrain' => NULL),
     ),
     'logo_header' => array(
-      'variables' => array('logo' => NULL, 'front_page' => NULL)
+      'variables' => array(
+        'logo' => NULL,
+        'front_page' => NULL,
+        'is_front' => null,
+      )
     ),
     'logo' => array(
       'variables' => array('logo' => NULL, 'front_page' => NULL)
@@ -160,6 +164,9 @@ function infinite_blocks_preprocess_block(&$variables) {
           $variables['content']['#include_wishlist_icon'] = true;
         }
       }
+    }
+    if ('infinite_blocks_logo_header' === $variables['base_plugin_id']) {
+      $variables['content']['#is_front'] = \Drupal::service('path.matcher')->isFrontPage();
     }
   }
 }
