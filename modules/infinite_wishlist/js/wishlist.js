@@ -260,9 +260,11 @@ Drupal.behaviors.infiniteWishlist = {
 
     injectIcons: function () {
         var storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
-        var items = document.querySelectorAll('.item-ecommerce .img-container');
+        var items = document.getElementsByClassName('item-ecommerce');
+        //var items = document.querySelectorAll('.item-ecommerce .img-container');
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
+            var itemImgContainer = item.querySelector('.img-container');
 
             // check if icon is already present
             if (item.querySelector('.wishlist__icon--add')) {
@@ -299,7 +301,7 @@ Drupal.behaviors.infiniteWishlist = {
                 }
             });
 
-            item.appendChild(icon);
+            itemImgContainer.appendChild(icon);
         }
     },
 
