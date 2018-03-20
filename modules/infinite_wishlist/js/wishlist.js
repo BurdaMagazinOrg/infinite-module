@@ -73,7 +73,8 @@ Drupal.behaviors.infiniteWishlist = {
                     category: 'wishlist',
                     action: 'wishlist--add-to-wishlist',
                     label: item.name + ' | ' + item.productId,
-                    location: window.location.pathname
+                    location: window.location.pathname,
+                    eventNonInteraction: false
                 });
                 break;
             case 'removed':
@@ -82,7 +83,8 @@ Drupal.behaviors.infiniteWishlist = {
                     action: 'wishlist--remove-wishlist',
                     label: item.name + ' | ' + item.productId,
                     location: window.location.pathname,
-                    productExtraInformation: Drupal.behaviors.infiniteWishlist.getDurationInWishlist(item)
+                    productExtraInformation: Drupal.behaviors.infiniteWishlist.getDurationInWishlist(item),
+                    eventNonInteraction: false
                 });
                 break;
         }
@@ -215,7 +217,8 @@ Drupal.behaviors.infiniteWishlist = {
                         action: 'wishlist--click-item-in-wishlist',
                         label: e.currentTarget.getAttribute('data-tracking-label'),
                         location: window.location.pathname,
-                        productExtraInformation: e.currentTarget.getAttribute('data-product-extra-information')
+                        productExtraInformation: e.currentTarget.getAttribute('data-product-extra-information'),
+                        eventNonInteraction: false
                     });
                 });
             }
@@ -311,7 +314,8 @@ Drupal.behaviors.infiniteWishlist = {
                 TrackingManager.trackEvent({
                     category: 'wishlist',
                     action: 'wishlist--click-wishlist-icon',
-                    location: window.location.pathname
+                    location: window.location.pathname,
+                    eventNonInteraction: false
                 });
             }
         });
