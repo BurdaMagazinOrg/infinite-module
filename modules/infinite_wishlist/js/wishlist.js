@@ -199,7 +199,13 @@ Drupal.behaviors.infiniteWishlist = {
             var li = document.createElement('li');
             li.classList.add('wishlist__item--empty');
             li.innerHTML = '<h4>Deine Wunschliste ist noch leer</h4>' +
-                '<div><img src="/modules/contrib/infinite_base/modules/infinite_wishlist/icons/wishlist--empty.svg" /></div>';
+                '<div>' +
+                '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">\n' +
+                '    <g fill="none" fill-rule="evenodd">\n' +
+                '        <path fill="#fff" d="M25.738 25.862c.48-1.964 1.694-5.415 2.926-9.404l.806-2.662.37-1.25.159-.535.002-.03-.034.006-.645.005-1.198.002a39.43 39.43 0 0 1-1.957-.049c-1.088-.062-1.716-.194-1.716-.452 0-.292.628-.422 1.716-.468a37.89 37.89 0 0 1 1.957-.014l3.119.053-.98 2.977-.846 2.65c-1.73 5.602-2.812 10.334-3.547 10.856l.022.293-18.61-.057H5.482l.017-.222c-.747-.397-1.926-5.167-3.694-10.859L0 11.03l3.176-.013a38.6 38.6 0 0 1 1.964.048c.808.046 1.363.13 1.598.275l.105-1.38 7.295-.004c2.042.007 3.822.024 5.288.057 2.931.066 4.607.195 4.607.432 0 .27-1.676.398-4.607.45a271.07 271.07 0 0 1-5.288.03c-1.912-.013-4.074-.027-6.44-.04L6.323 27.006l.958.001 17.621-.083c-.199-2.369-.38-4.535-.543-6.453a310.477 310.477 0 0 1-.39-5.346c-.184-2.967-.197-4.672.052-4.692.25-.02.515 1.665.815 4.624.15 1.48.308 3.276.476 5.338l.426 5.466zM6.708 11.733c-.25.146-.793.22-1.568.253-.546.022-1.208.024-1.964.014l-1.203-.022-.649-.015-.081-.017.006.071.153.542c.117.41.238.827.36 1.25l.797 2.66c1.278 4.118 2.58 7.65 3.057 9.571l1.092-14.307zM22.35 9.652c-.41.106-.631-.891-1.519-2.141-.455-.614-1.086-1.307-1.97-1.828-.867-.539-1.983-.884-3.171-.896-1.189.012-2.305.354-3.174.892-.886.52-1.52 1.21-1.977 1.825-.894 1.251-1.116 2.251-1.51 2.148-.195-.062-.267-.326-.173-.821.091-.486.352-1.177.88-1.897a7.022 7.022 0 0 1 2.336-2.022c1.019-.567 2.286-.901 3.618-.912 1.332.011 2.598.35 3.613.92a6.99 6.99 0 0 1 2.32 2.028c.523.72.781 1.408.875 1.892.095.492.032.755-.148.812z"/>\n' +
+                '    </g>\n' +
+                '</svg>' +
+                '</div>';
             container.appendChild(li);
         } else {
             for (var i = items.length - 1; i >= 0; i--) {
@@ -258,8 +264,10 @@ Drupal.behaviors.infiniteWishlist = {
     injectIcons: function () {
         var storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
         var items = document.getElementsByClassName('item-ecommerce');
+        //var items = document.querySelectorAll('.item-ecommerce .img-container');
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
+            var itemImgContainer = item.querySelector('.img-container');
 
             // check if icon is already present
             if (item.querySelector('.wishlist__icon--add')) {
@@ -268,11 +276,24 @@ Drupal.behaviors.infiniteWishlist = {
             }
 
             var icon = document.createElement('button');
-            icon.innerHTML = '<svg width="100%" height="100%" viewBox="-1 -1 23 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" >' +
-                '    <g transform="matrix(1,0,0,1,-8,-7.99976)">' +
-                '        <path d="M28.989,14.042C28.989,14.41 28.961,14.782 28.907,15.157C28.507,17.921 26.713,20.753 23.985,23.579C22.491,25.12 20.868,26.532 19.134,27.798C18.774,28.051 18.299,28.068 17.922,27.841C17.837,27.791 17.688,27.697 17.484,27.564C15.896,26.524 14.407,25.341 13.034,24.03C9.903,21.028 8,17.836 8,14.523C8,7.698 15.499,6.09 18.502,10.547C21.512,6.152 28.989,7.525 28.989,14.042Z"/>' +
-                '    </g>' +
-                '</svg>';
+            icon.innerHTML = ' <svg id="svg__wishlist__icon--add" data-name="Wishlist Icon Add" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28.02 24.66">' +
+                '<g id="Symbols">' +
+                    '<g id="icons_32_wishlist" data-name="icons/32/wishlist">' +
+                        '<g id="Group">' +
+                            '<g id="Mask">' +
+                                '<path id="svg__wishlist__icon--add__fill" d="M30,12.2a8.35,8.35,0,0,0-2.2-5.7,7.77,7.77,0,0,0-6-2.4,7.85,7.85,0,0,0-5.7,2.8,7.85,7.85,0,0,0-5.7-2.8A8.45,8.45,0,0,0,4.3,6.6,8,8,0,0,0,2,12.2a6,6,0,0,0,1.7,4.7S15.7,29,16,28.7c.4.2,12.4-11.9,12.4-11.9A6.34,6.34,0,0,0,30,12.2Z" transform="translate(-2 -4.09)"/>' +
+                            '</g>' +
+                        '</g>' +
+                    '</g>' +
+                    '<g id="Symbols-2" data-name="Symbols">' +
+                        '<g id="icons_32_add_to_wishlist" data-name="icons/32/add_to_wishlist">' +
+                            '<g id="Mask-2" data-name="Mask">' +
+                                '<path id="svg__wishlist__icon--add__ouline" data-name="path-1" d="M30,12.24a8,8,0,0,0-8.29-8.08,8,8,0,0,0-3.35.91A7.83,7.83,0,0,0,16,7,7.82,7.82,0,0,0,13.7,5.07,8,8,0,0,0,2,12.24,6.37,6.37,0,0,0,3.71,17S15.7,29,16.05,28.74c.36.25,12.36-11.85,12.36-11.85A6.67,6.67,0,0,0,30,12.24ZM16,28.6c-.33-.85-4.53-5.09-10.86-11.36h0a7,7,0,0,1-2.24-5A7.1,7.1,0,0,1,13.33,5.77,8.24,8.24,0,0,1,16,8.19a7.79,7.79,0,0,1,2.71-2.42,7,7,0,0,1,3-.8,7.09,7.09,0,0,1,7.34,7.26,7.49,7.49,0,0,1-2.34,5.09h0C20.5,23.55,16.34,27.75,16,28.6Z" transform="translate(-2 -4.09)"/>' +
+                            '</g>' +
+                        '</g>' +
+                    '</g>' +
+                '</g>' +
+            '</svg>';
             icon.uuid = item.getAttribute('data-uuid');
 
             icon.classList.add('wishlist__icon--add');
@@ -296,7 +317,7 @@ Drupal.behaviors.infiniteWishlist = {
                 }
             });
 
-            item.appendChild(icon);
+            itemImgContainer.appendChild(icon);
         }
     },
 
