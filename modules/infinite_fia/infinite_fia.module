@@ -137,6 +137,9 @@ function infinite_fia_preprocess_image(&$variables) {
       // prefix with base_url
       $variables['attributes']['src'] = $GLOBALS['base_url'] . $variables['uri'];
     }
+    else if (strpos($variables['uri'], 'data:image') === 0) {
+      $variables['attributes']['data-src'] = $GLOBALS['base_url'] . $variables['attributes']['data-src'];
+    }
     // we'll assume this is already absoulute
     else {
       $variables['attributes']['src'] = $variables['uri'];
