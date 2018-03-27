@@ -133,6 +133,13 @@ function infinite_fia_preprocess_image(&$variables) {
   $current_path = \Drupal::service('path.current')->getPath();
   if ($current_path == '/fia/nodes.xml') {
     // use the absolute url for src
-    $variables['attributes']['src'] = $variables['uri'];
+    if (strpos($variables['uri'], '/') === 0) {
+      // prefix with base_url
+      $variables['attributes']['src'] = $GLOBALS['base_url'] . $variables['uri'];
+    }
+    // we'll assume this is already absoulute
+    else {
+      $variables['attributes']['src'] = $variables['uri'];
+    }
   }
 }
