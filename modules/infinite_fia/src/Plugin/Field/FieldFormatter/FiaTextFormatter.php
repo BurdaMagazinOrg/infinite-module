@@ -35,7 +35,9 @@ class FiaTextFormatter extends TextDefaultFormatter {
     $elements = parent::viewElements($items, $langcode);
 
     foreach ($elements as $delta => $element) {
-      $element['#markup'] = $this->completeURLs($output);
+      if ($element['#type'] == 'processed_text') {
+        $elements[$delta]['#text'] = $this->completeURLs($element['#text']);
+      }
     }
     return $elements;
   }
