@@ -81,29 +81,41 @@ function infinite_ad_entity_theme_suggestions_ad_entity_alter(array &$suggestion
   $suggestions[] = $hook . '__' . $variables['ad_entity']->id();
 }
 
-function infinite_ad_entity_preprocess_adtech_default(&$vars){
+/**
+ * Convert targeting channel from array to string
+ *
+ * @param $vars
+ *   Template variables.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function infinite_ad_entity_preprocess_ad_entity(&$vars){
   /** @var \Drupal\ad_entity\Entity\AdEntity $ad_entity */
   $ad_entity = $vars['ad_entity'];
 
-  /** @var \Drupal\ad_entity\TargetingCollection $targeting_collection */
-  $targeting_collection = $ad_entity->getTargetingFromContextData();
+  // Only convert for adtech ad entities and html containers.
+  if ($ad_entity->get('type_plugin_id') == 'adtech_factory' && $vars['container'] == 'html') {
 
-  if (!$targeting_collection->isEmpty()) {
-    list($entity_type,) = explode('/', $targeting_collection->get('entitytype'));
-    /** @var \Drupal\Core\Entity\EntityRepository $entity_repo */
-    $entity_repo = \Drupal::service('entity.repository');
-    $entity = $entity_repo->loadEntityByUuid($entity_type, $targeting_collection->get('entityuuid'));
+    /** @var \Drupal\ad_entity\TargetingCollection $targeting_collection */
+    $targeting_collection = $ad_entity->getTargetingFromContextData();
 
-    $targeting_channel = $targeting_collection->get('channel');
-    if(isset($targeting_channel) && is_array($targeting_channel) && $entity->hasField('field_channel')) {
-      $channel_term = $entity->get('field_channel')->referencedEntities()[0];
-      $ad_context_item = $channel_term->get('field_ad_context')->first();
-      if(isset($ad_context_item)) {
-        $ad_context = $ad_context_item->getValue();
-        $channel_term_channel = NestedArray::getValue($ad_context, ['context', 'context_settings', 'targeting', 'targeting', 'channel']);
-        if(isset($channel_term_channel)) {
-          $targeting_collection->set('channel', $channel_term_channel);
-          $vars['targeting'] = $targeting_collection->toJson();
+    if (!$targeting_collection->isEmpty()) {
+      list($entity_type,) = explode('/', $targeting_collection->get('entitytype'));
+      /** @var \Drupal\Core\Entity\EntityRepository $entity_repo */
+      $entity_repo = \Drupal::service('entity.repository');
+      $entity = $entity_repo->loadEntityByUuid($entity_type, $targeting_collection->get('entityuuid'));
+
+      $targeting_channel = $targeting_collection->get('channel');
+      if(isset($targeting_channel) && is_array($targeting_channel) && $entity->hasField('field_channel')) {
+        $channel_term = $entity->get('field_channel')->referencedEntities()[0];
+        $ad_context_item = $channel_term->get('field_ad_context')->first();
+        if(isset($ad_context_item)) {
+          $ad_context = $ad_context_item->getValue();
+          $channel_term_channel = NestedArray::getValue($ad_context, ['context', 'context_settings', 'targeting', 'targeting', 'channel']);
+          if(isset($channel_term_channel)) {
+            $targeting_collection->set('channel', $channel_term_channel);
+            $vars['targeting'] = $targeting_collection->toJson();
+          }
         }
       }
     }
