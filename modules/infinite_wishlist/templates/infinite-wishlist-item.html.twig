@@ -26,11 +26,12 @@
                 {% endif %}
             {% endif %}
 
-            {% if product.product_sold_out %}
-                <span class="text-sold-out">Ausverkauft</span>
-            {% endif %}
         </div>
-        <button class="button--to-shop">Zum Shop</button>
+        {% if product.product_sold_out %}
+            <button class="button--sold-out">Ausverkauft</button>
+        {% else %}
+            <button class="button--to-shop">Zum Shop</button>
+        {% endif %}
     </div>
 
     <button class="icon icon-close"
