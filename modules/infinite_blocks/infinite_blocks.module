@@ -74,6 +74,7 @@ function infinite_blocks_theme() {
         'use_parent_container' => NULL,
         'follow' => NULL,
         'include_wishlist_icon' => null,
+        'include_tipser_icon' => null,
       )
     ),
   ];
@@ -158,6 +159,7 @@ function infinite_blocks_preprocess_block(&$variables) {
       if (\Drupal::moduleHandler()->moduleExists('infinite_wishlist')) {
         if ('header_large' === $block->getRegion()) {
           $variables['content']['#include_wishlist_icon'] = true;
+          $variables['content']['#include_tipser_icon'] = true;
         }
       }
     }

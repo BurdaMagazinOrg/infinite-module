@@ -18,6 +18,11 @@
         <a class="item-social icon-email" href="/newsletter" data-social-type="email"></a>
     </div>
 
+    {% if include_tipser_icon %}
+        <div id="tipser__dummy--socials-bar">
+            {% include '@infinite_blocks/tipser-shopping-cart-icon.html.twig' %}
+        </div>
+    {% endif %}
     {% if include_wishlist_icon %}
         {% include '@infinite_wishlist/infinite-wishlist-flyout.html.twig' %}
     {% endif %}
