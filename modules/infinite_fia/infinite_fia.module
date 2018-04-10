@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -172,5 +173,14 @@ function infinite_fia_preprocess_taxonomy_term(&$variables) {
     $url = $variables['term']->toUrl();
     $url->setAbsolute();
     $variables['url'] = $url;
+  }
+}
+
+function infinite_fia_preprocess_username(&$variables) {
+  $current_path = \Drupal::service('path.current')->getPath();
+  if ($current_path == '/fia/nodes.xml') {
+    $variables['attributes']['href'] = Url::fromRoute('entity.user.canonical', [
+      'user' => $variables['uid'],
+    ])->setAbsolute(TRUE)->toString();
   }
 }
