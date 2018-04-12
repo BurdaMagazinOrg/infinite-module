@@ -322,7 +322,7 @@ Drupal.behaviors.infiniteWishlist = {
     },
 
     enableHeaderIcon: function () {
-      let touchOrClickEvent = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click';
+      var touchOrClickEvent = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click';
 
       var button = document.getElementById('wishlist__toggle');
         if (button.injectedHeaderIcon) {
