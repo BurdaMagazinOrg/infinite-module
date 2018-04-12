@@ -322,13 +322,15 @@ Drupal.behaviors.infiniteWishlist = {
     },
 
     enableHeaderIcon: function () {
-        var button = document.getElementById('wishlist__toggle');
+      var touchOrClickEvent = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click';
+
+      var button = document.getElementById('wishlist__toggle');
         if (button.injectedHeaderIcon) {
             return;
         }
 
         var wishlist = document.getElementById('wishlist');
-        button.addEventListener('click', function () {
+        button.addEventListener(touchOrClickEvent, function () {
             Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
             wishlist.classList.toggle('open');
             if (wishlist.classList.contains('open')) {
