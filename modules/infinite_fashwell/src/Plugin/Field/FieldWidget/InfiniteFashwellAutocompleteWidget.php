@@ -47,14 +47,4 @@ class InfiniteFashwellAutocompleteWidget extends EntityReferenceAutocompleteWidg
     }
     return $element;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = parent::viewElements($items, $langcode);
-    foreach ($items as $delta => $item) {
-      $elements[$delta]['#attached']['library'] = 'infinite_fashwell/admin';
-    }
-  )
 }
