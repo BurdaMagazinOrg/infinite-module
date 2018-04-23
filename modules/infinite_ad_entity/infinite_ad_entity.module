@@ -94,6 +94,8 @@ function infinite_ad_entity_preprocess_adtech_iframe(&$vars) {
 
 /**
  * Convert targeting channel from array to string
+ * 
+ * TODO: refactor into a service / field formatter
  *
  * @param $vars
  *   Template variables.
