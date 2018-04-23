@@ -84,12 +84,12 @@ function infinite_ad_entity_theme_suggestions_ad_entity_alter(array &$suggestion
 
 function infinite_ad_entity_preprocess_ad_entity(&$vars){
   if ($vars['container'] == 'html') {
-    _reduceTargetingToOneChannel($vars);
+    _infinite_ad_entity_reduce_to_one_channel($vars);
   }
 }
 
 function infinite_ad_entity_preprocess_adtech_iframe(&$vars) {
-  _reduceTargetingToOneChannel($vars);
+  _infinite_ad_entity_reduce_to_one_channel($vars);
 }
 
 /**
@@ -100,7 +100,7 @@ function infinite_ad_entity_preprocess_adtech_iframe(&$vars) {
  *
  * @throws \Drupal\Core\Entity\EntityStorageException
  */
-function _reduceTargetingToOneChannel(&$vars) {
+function _infinite_ad_entity_reduce_to_one_channel(&$vars) {
   /** @var \Drupal\ad_entity\Entity\AdEntity $ad_entity */
   $ad_entity = $vars['ad_entity'];
 
