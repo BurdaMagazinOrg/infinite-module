@@ -30,7 +30,11 @@
         {% if product.product_sold_out %}
             <button class="button--sold-out">Ausverkauft</button>
         {% else %}
-            <button class="button--to-shop">Zum Shop</button>
+            {% if 'tipser' == provider %}
+                <div class="text-shop btn-buy">Kaufen</div>
+            {% else %}
+                <div class="text-shop">Zum Shop</div>
+            {% endif %}
         {% endif %}
     </div>
 
