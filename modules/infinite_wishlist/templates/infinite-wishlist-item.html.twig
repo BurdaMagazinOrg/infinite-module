@@ -1,4 +1,12 @@
-<a class="wishlist__item" href="{{ product.product_url__uri }}" target="_blank">
+<a class="wishlist__item"
+    {% if 'tipser' == provider %}
+        data-provider="{{ provider }}"
+        data-product-id="58e49e926068934d64064fad"
+    {% else %}
+        href="{{ product.product_url__uri }}"
+        target="_blank"
+    {% endif %}
+>
     <div class="wishlist__item__image-wrapper">
         {{ image }}
     </div>

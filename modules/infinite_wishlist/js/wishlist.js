@@ -215,6 +215,20 @@ Drupal.behaviors.infiniteWishlist = {
                 li.innerHTML = item.markup;
                 container.appendChild(li);
                 var link = li.querySelector('a');
+                if(link.getAttribute('data-provider') === 'tipser') {
+                   link.addEventListener('click', function (e) {
+                       e.preventDefault();
+
+                       var wishlist = document.getElementById('wishlist');
+                       wishlist.classList.remove('open');
+
+                       var productId = e.currentTarget.getAttribute('data-product-id');
+                       Drupal.behaviors.instyleInfiniteTipser.loadTipser(function () {
+                           Drupal.behaviors.instyleInfiniteTipser.hideTipserIcons();
+                           Drupal.behaviors.instyleInfiniteTipser.openTipserProductDetailPage(productId);
+                       });
+                   });
+                }
                 link.setAttribute('data-tracking-label', item.name + ' | ' + item.productId);
                 link.setAttribute('data-product-extra-information', Drupal.behaviors.infiniteWishlist.getDurationInWishlist(item));
                 link.addEventListener('click', function (e) {
