@@ -1,7 +1,7 @@
 <a class="wishlist__item"
     {% if 'tipser' == provider %}
         data-provider="{{ provider }}"
-        data-product-id="58e49e926068934d64064fad"
+        data-product-id="{{ product.product_id }}"
     {% else %}
         href="{{ product.product_url__uri }}"
         target="_blank"
