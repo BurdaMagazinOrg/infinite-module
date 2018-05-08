@@ -172,7 +172,7 @@ function infinite_fia_preprocess_taxonomy_term(&$variables) {
   if ($current_path == '/fia/nodes.xml') {
     $url = $variables['term']->toUrl();
     $url->setAbsolute();
-    $variables['url'] = $url;
+    $variables['url'] = $url->toString();
   }
 }
 
