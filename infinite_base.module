@@ -311,6 +311,17 @@ function infinite_base_page_attachments(array &$attachments) {
 }
 
 /**
+ * Implements hook_user_format_name_alter().
+ */
+function infinite_base_user_format_name_alter(&$name, $account) {
+  /** @var \Drupal\Core\Routing\AdminContext $admin_context */
+  $admin_context = \Drupal::service('router.admin_context');
+  if ($account->id() && !$admin_context->isAdminRoute() && isset($account->field_surname) && isset($account->field_forename)) {
+    $name = $account->get('field_forename')->value . ' ' . $account->get('field_surname')->value;
+  }
+}
+
+/**
  * Replaces meta tag in html head with given content.
  *
  * @param type $name
