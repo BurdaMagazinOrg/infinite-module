@@ -34,3 +34,29 @@ function infinite_taxonomy_entity_base_field_info(EntityTypeInterface $entity_ty
     return $fields;
   }
 }
+
+/**
+ * @param Term $term
+ */
+function infinite_taxonomy_taxonomy_term_update(Term $term) {
+  /** @var HostingInfo $hostingInfo */
+  $hostingInfo = \Drupal::service('acquia_purge.hostinginfo');
+  $site = $hostingInfo->getSiteIdentifier();
+  $url = Url::fromRoute('entity.taxonomy_term.canonical', ['taxonomy_term' => $term->id()])
+    ->setAbsolute(true)
+    ->toString();
+  $command = sprintf(
+    'curl -X PURGE -H "X-Acquia-Purge:%s" -H "Accept-Encoding: gzip" %s',
+    $site,
+    $url
+  );
+  $process = new Process($command);
+  $process->run();
+  if (false === $process->isSuccessful()) {
+    drupal_set_message(sprintf(
+      'Unable to clear varnish cache for url %s on site %s',
+      $url,
+      $site
+    ), 'error');
+  }
+}
