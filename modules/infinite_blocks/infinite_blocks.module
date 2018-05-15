@@ -159,9 +159,9 @@ function infinite_blocks_preprocess_block(&$variables) {
       if (\Drupal::moduleHandler()->moduleExists('infinite_wishlist')) {
         if ('header_large' === $block->getRegion()) {
           $variables['content']['#include_wishlist_icon'] = true;
-          $variables['content']['#include_tipser_icon'] = true;
         }
       }
+      $variables['content']['#include_tipser_icon'] = (bool) \Drupal::config('tipser_client.config')->get('tipser_activated');
     }
   }
 }
