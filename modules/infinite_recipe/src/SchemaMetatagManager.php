@@ -20,7 +20,11 @@ class SchemaMetatagManager extends \Drupal\schema_metatag\SchemaMetatagManager {
     // our recipe indicator and then copy all items from graph so the REWE button
     // can find them.
     foreach ($items['@graph'] as $key => $item) {
-      if ($item['@type'] == 'Recipe') {
+
+      // Find possible recipe in graph structure.
+      if (isset($item['@type']) &&
+        $item['@type'] == 'Recipe' &&
+        isset($item['recipeIngredient'])) {
 
         // Copy all recipe items out of graph structure.
         foreach ($items['@graph'][$key] as $graphKey => $graphItem) {
