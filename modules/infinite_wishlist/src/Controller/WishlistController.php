@@ -68,6 +68,7 @@ class WishlistController extends ControllerBase
             '#responsive_image_style_id' => $variables['style_name'],
             '#uri' => $variables['uri'],
           ],
+          '#provider' => explode("_", $product->product_provider)[0],
         ];
         $products[] = [
           'productId' => $product->product_id,

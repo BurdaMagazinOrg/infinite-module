@@ -22,6 +22,7 @@ function infinite_wishlist_theme() {
         'product' => [],
         'product_name_without_brand' => '',
         'image' => null,
+        'provider' => '',
       ],
     ],
     'infinite_wishlist_page' => [
