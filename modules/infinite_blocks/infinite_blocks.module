@@ -74,6 +74,7 @@ function infinite_blocks_theme() {
         'use_parent_container' => NULL,
         'follow' => NULL,
         'include_wishlist_icon' => null,
+        'include_tipser_icon' => null,
       )
     ),
   ];
@@ -160,6 +161,12 @@ function infinite_blocks_preprocess_block(&$variables) {
           $variables['content']['#include_wishlist_icon'] = true;
         }
       }
+    }
+
+    if (in_array($variables['base_plugin_id'], ['system_menu_block', 'infinite_blocks_socials'])) {
+      $tipserIsActivated = (bool)\Drupal::config('tipser_client.config')->get('tipser_activated');
+      $variables['content']['#include_tipser_icon'] = $tipserIsActivated;
+      $variables['include_tipser_icon'] = $tipserIsActivated;
     }
   }
 }
@@ -253,4 +260,13 @@ function _infinite_blocks_get_dyn_region_blocks($allowed_regions) {
     return $dynBlocks;
   }
   return FALSE;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function infinite_blocks_theme_suggestions_header_media_alter(array &$suggestions, array $variables) {
+  if (\Drupal::service('path.matcher')->isFrontPage()) {
+    $suggestions[] = header_media__front;
+  }
 }

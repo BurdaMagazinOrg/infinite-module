@@ -30,7 +30,7 @@ class MediaHelper {
 
       if ($imageStyle) {
         $imageUri = $entity->get($fieldName)->entity->field_image->entity->getFileUri();
-        $image = ImageStyle::load(theme_get_setting('share_image_style'));
+        $image = ImageStyle::load($imageStyle);
         if (is_object($image)) {
           $url = $image->buildUrl($imageUri);
           return $url;

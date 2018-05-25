@@ -81,20 +81,33 @@ function infinite_ad_entity_theme_suggestions_ad_entity_alter(array &$suggestion
   $suggestions[] = $hook . '__' . $variables['ad_entity']->id();
 }
 
+
+function infinite_ad_entity_preprocess_ad_entity(&$vars){
+  if ($vars['container'] == 'html') {
+    _infinite_ad_entity_filter_main_channel($vars);
+  }
+}
+
+function infinite_ad_entity_preprocess_adtech_iframe(&$vars) {
+  _infinite_ad_entity_filter_main_channel($vars);
+}
+
 /**
  * Convert targeting channel from array to string
+ * 
+ * TODO: refactor into a service / field formatter
  *
  * @param $vars
  *   Template variables.
  *
  * @throws \Drupal\Core\Entity\EntityStorageException
  */
-function infinite_ad_entity_preprocess_ad_entity(&$vars){
+function _infinite_ad_entity_filter_main_channel(&$vars) {
   /** @var \Drupal\ad_entity\Entity\AdEntity $ad_entity */
   $ad_entity = $vars['ad_entity'];
 
   // Only convert for adtech ad entities and html containers.
-  if ($ad_entity->get('type_plugin_id') == 'adtech_factory' && $vars['container'] == 'html') {
+  if ($ad_entity->get('type_plugin_id') == 'adtech_factory') {
 
     /** @var \Drupal\ad_entity\TargetingCollection $targeting_collection */
     $targeting_collection = $ad_entity->getTargetingFromContextData();
