@@ -1,6 +1,5 @@
 <?php
 
-use Drupal\Core\Render\Markup;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -18,7 +17,13 @@ function infinite_lexicon_views_post_render(ViewExecutable $view, &$output, $cac
       $first_row = &$group['#rows'][$first_key];
       $entity = $first_row['#row']->_entity;
       $first_label = $entity->label();
-      $group['#title'] = Markup::create($group['#title'] . ' wie ' . $first_label);
+
+      // Prepare group title with anchor ID.
+      $groupTitle = '<span id="' . strtolower($group['#title']) . '">' . $group['#title'] . ' wie ' . $first_label . '</span>';
+      $group['#title'] = [
+        '#type' => 'markup',
+        '#markup' => $groupTitle,
+      ];
     }
   }
 
