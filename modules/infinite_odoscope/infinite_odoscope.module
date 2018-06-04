@@ -33,7 +33,7 @@ function infinite_odoscope_views_data_alter(array &$data) {
  * Implements hook_views_pre_render().
  */
 function infinite_odoscope_views_pre_render(ViewExecutable $view) {
-  if (isset($view) && ($view->id() == 'infinite_taxonomy_term') && $view->current_display == 'front') {
+  if (isset($view) && ($view->id() == 'infinite_taxonomy_term')) {
     $view->element['#attached']['library'][] = 'infinite_odoscope/odoscope.head';
     $view->element['#attached']['library'][] = 'infinite_odoscope/odoscope.manager';
   }
