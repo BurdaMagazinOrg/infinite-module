@@ -23,6 +23,7 @@ function infinite_wishlist_theme() {
         'product_name_without_brand' => '',
         'image' => null,
         'provider' => '',
+        'tracking_url' => '',
       ],
     ],
     'infinite_wishlist_page' => [

@@ -2,6 +2,8 @@
     {% if 'tipser' == provider %}
         data-provider="{{ provider }}"
         data-product-id="{{ product.product_id }}"
+    {% elseif 'tracdelight' == provider %}
+        href="{{ tracking_url }}"
     {% else %}
         href="{{ product.product_url__uri }}"
         target="_blank"

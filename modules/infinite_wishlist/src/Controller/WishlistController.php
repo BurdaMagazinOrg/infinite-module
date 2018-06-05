@@ -69,6 +69,7 @@ class WishlistController extends ControllerBase
             '#uri' => $variables['uri'],
           ],
           '#provider' => explode("_", $product->product_provider)[0],
+          '#tracking_url' => $product->product_url__uri."&subid=wishlist-".$product->product_id,
         ];
         $products[] = [
           'productId' => $product->product_id,
