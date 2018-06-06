@@ -3,7 +3,7 @@
         data-provider="{{ provider }}"
         data-product-id="{{ product.product_id }}"
     {% elseif 'tracdelight' == provider %}
-        href="{{ tracking_url }}"
+        href="{{ product.product_url__uri }}&subid=wishlist-{{ product.product_id }}"
     {% else %}
         href="{{ product.product_url__uri }}"
         target="_blank"
