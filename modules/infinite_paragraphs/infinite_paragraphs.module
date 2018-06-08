@@ -273,7 +273,7 @@ function _infinite_paragraphs_view_mode_widget_alter(array &$element, $index) {
   }
 }
 
-function _infinite_paragraphs_get_parent_base_data($entity, &$variables) {
+function _infinite_paragraphs_get_parent_base_data(\Drupal\Core\Entity\Entity $entity, &$variables) {
   if ($entity->getEntityTypeId() == 'node') {
     $node = $entity;
     $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $node->id());
@@ -315,10 +315,6 @@ function _infinite_paragraphs_get_parent_base_data($entity, &$variables) {
     theme_get_setting('share_image_style')
   );
 
-  $variables['pinterest_share_img_url'] = MediaHelper::getImageUrlFromMediaReference(
-    $entity,
-    'field_pinterest_image'
-  );
 
   $variables['parent']['facebook_share_button'] = theme_get_setting('facebook_share_button');
   $variables['parent']['whatsapp_share_button'] = theme_get_setting('whatsapp_share_button');
