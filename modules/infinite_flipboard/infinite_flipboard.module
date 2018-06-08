@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Contains infinite_flipboard_node_view.module.
+ */
+
+use Drupal\views\ViewExecutable;
+use Drupal\Core\Url;
+
+function infinite_flipboard_views_post_render(ViewExecutable $view, &$output, $cache) {
+  /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase $display */
+  $display = $view->getDisplay();
+
+  if($view->id() == 'infinite_taxonomy_term' && $display->display['id'] == 'flipboard_rss') {
+    foreach ($output['#rows'] as $idx => $row) {
+      $url = Url::fromUri($row['#row']->link, [
+               'query' => [
+                 'utm_source' => 'Flipboard',
+                 'utm_campaign' => 'flipboard_rss_feed',
+                 'medium' => 'referral',
+               ]
+             ]);
+      $output['#rows'][$idx]['#row']->link = $url->toString();
+    }
+  }
+}

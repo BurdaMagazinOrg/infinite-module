@@ -1,0 +1,9 @@
+services:
+  inbound_path_processor_flipboard:
+    class: Drupal\infinite_flipboard\PathProcessor\InboundPathProcessorFlipboard
+    tags:
+      - {name: path_processor_inbound}
+  outbound_path_processor_flipboard:
+    class: Drupal\infinite_flipboard\PathProcessor\OutboundPathProcessorFlipboard
+    tags:
+      - {name: path_processor_outbound}

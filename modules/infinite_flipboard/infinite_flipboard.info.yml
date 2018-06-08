@@ -1,0 +1,7 @@
+name: Infinite flipboard
+type: module
+description: Extra RSS feeds for flipboard
+package: Infinite
+core: '8.x'
+dependencies:
+  - views
