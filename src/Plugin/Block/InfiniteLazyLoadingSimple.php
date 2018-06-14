@@ -60,6 +60,7 @@ class InfiniteLazyLoadingSimple extends BlockBase {
       return array(
         '#theme' => 'lazy_loading',
         '#lazy_loading_url' => $lazy_loading_url,
+        '#article_title' => $node->getTitle(),
         '#attached' => array(
           'library' => array(
             'core/drupal.ajax',
