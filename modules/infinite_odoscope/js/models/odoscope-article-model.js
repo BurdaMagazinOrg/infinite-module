@@ -4,7 +4,8 @@
 
   window.OdoscopeArticleModel = BurdaInfinite.models.base.BaseModel.extend({
     defaults: {
-      loadingIndex: 0
+      loadingIndex: 0,
+      currentURL: null,
     },
     initialize: function (pAttributes, pOptions) {
       BurdaInfinite.models.base.BaseModel.prototype.initialize.call(this, pAttributes, pOptions);
@@ -41,7 +42,8 @@
       }
 
       this.set('loadingIndex', this.get('loadingIndex') + 1);
-      tmpURL = '/lazyloading/node/' + tmpModel.variantID + '/nojs?page=' + this.get('loadingIndex');
+      this.set('currentURL', '/lazyloading/node/' + tmpModel.variantID + '/nojs?page=' + this.get('loadingIndex'));
+      tmpURL = this.get('currentURL');
       console.log("%codoscopeArticleModel | getNextURL", "color: blue; font-weight: bold;", tmpURL, this);
       return tmpURL;
     }
