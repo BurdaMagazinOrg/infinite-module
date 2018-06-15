@@ -136,8 +136,10 @@ function infinite_base_theme() {
     ),
 
     'lazy_loading' => array(
-      'variables' => array('lazy_loading_url' => NULL),
-      'variables' => array('article_title' => NULL)
+      'variables' => array(
+        'lazy_loading_url' => NULL,
+        'article_title' => NULL,
+      )
     ),
   );
 }
