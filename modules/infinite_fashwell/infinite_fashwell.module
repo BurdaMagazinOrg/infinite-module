@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * The module file.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function infinite_fashwell_page_attachments(array &$attachments) {
+  // only include on admin pages
+  if (\Drupal::service('router.admin_context')->isAdminRoute(
+    \Drupal::routeMatch()->getRouteObject()
+  )) {
+  \Drupal::logger('attach')->info('attached');
+    $attachments['#attached']['library'][] = 'infinite_fashwell/admin';
+  }
+}
