@@ -20,7 +20,7 @@
     },
     getNextURL: function () {
       var url,
-        model,
+        latestModel,
         variantID,
         loadingIndex;
 
@@ -34,18 +34,18 @@
       /**
        * Set latest Model
        */
-      model = this.get('list').shift();
+      latestModel = this.get('list').shift();
 
       /**
        * Check if properties available
        */
-      if (!tmpModel.hasOwnProperty('variantID')) {
+      if (!latestModel.hasOwnProperty('variantID')) {
         return null;
       }
 
       this.set('loadingIndex', this.get('loadingIndex') + 1);
       loadingIndex = this.get('loadingIndex');
-      variantID = tmpModel.variantID;
+      variantID = latestModel.variantID;
       url = `/lazyloading/node/${variantID}/nojs?page=${loadingIndex}`;
       this.set('currentURL', url);
       console.log("%codoscopeArticleModel | getNextURL", "color: blue; font-weight: bold;", url, this);
