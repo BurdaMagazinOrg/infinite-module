@@ -19,10 +19,10 @@
       this.trigger('set:articleModel', this);
     },
     getNextURL: function () {
-      var url,
-        latestModel,
-        variantID,
-        loadingIndex;
+      var url;
+      var latestModel;
+      var variantID;
+      var loadingIndex;
 
       /**
        * Check if an Element in Array exists
