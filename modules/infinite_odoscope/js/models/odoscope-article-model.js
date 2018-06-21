@@ -4,7 +4,8 @@
 
   window.OdoscopeArticleModel = BurdaInfinite.models.base.BaseModel.extend({
     defaults: {
-      loadingIndex: 0
+      loadingIndex: 0,
+      currentURL: '',
     },
     initialize: function (pAttributes, pOptions) {
       BurdaInfinite.models.base.BaseModel.prototype.initialize.call(this, pAttributes, pOptions);
@@ -18,8 +19,10 @@
       this.trigger('set:articleModel', this);
     },
     getNextURL: function () {
-      var tmpURL,
-        tmpModel;
+      var url;
+      var latestModel;
+      var variantID;
+      var loadingIndex;
 
       /**
        * Check if an Element in Array exists
@@ -31,19 +34,22 @@
       /**
        * Set latest Model
        */
-      tmpModel = this.get('list').shift();
+      latestModel = this.get('list').shift();
 
       /**
        * Check if properties available
        */
-      if (!tmpModel.hasOwnProperty('variantID')) {
+      if (!latestModel.hasOwnProperty('variantID')) {
         return null;
       }
 
       this.set('loadingIndex', this.get('loadingIndex') + 1);
-      tmpURL = '/lazyloading/node/' + tmpModel.variantID + '/nojs?page=' + this.get('loadingIndex');
-      console.log("%codoscopeArticleModel | getNextURL", "color: blue; font-weight: bold;", tmpURL, this);
-      return tmpURL;
+      loadingIndex = this.get('loadingIndex');
+      variantID = latestModel.variantID;
+      url = `/lazyloading/node/${variantID}/nojs?page=${loadingIndex}`;
+      this.set('currentURL', url);
+      console.log("%codoscopeArticleModel | getNextURL", "color: blue; font-weight: bold;", url, this);
+      return url;
     }
   });
 
