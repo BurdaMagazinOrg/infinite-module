@@ -289,7 +289,7 @@ function infinite_views_page_attachments_alter(array &$attachments) {
     if ($has_prev) {
       // unset any other robots directive
       foreach ($attached['html_head'] as $key => &$item) {
-        if($item[0]['#attributes']['name'] == 'robots'){
+        if(isset($item[0]['#attributes']['name']) && $item[0]['#attributes']['name'] == 'robots'){
           unset($attached['html_head'][$key]);
         }
       }
