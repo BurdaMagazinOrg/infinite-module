@@ -44,6 +44,7 @@ class InfiniteLazyLoadingSimple extends BlockBase {
       // Perhaps we could use above code later again.
 
       $next_nid = $query->execute();
+      $title = '';
 
       if (!empty($next_nid)) {
         $page = 1;
@@ -53,6 +54,8 @@ class InfiniteLazyLoadingSimple extends BlockBase {
 
         $next_nid = array_shift($next_nid);
         $lazy_loading_url = '/lazyloading/node/' . $next_nid . '/nojs?page=' . $page;
+        $next_node = Node::load($next_nid);
+        $title = $next_node->getTitle();
       } else {
         $lazy_loading_url = '/home?page=0';
       }
@@ -60,6 +63,7 @@ class InfiniteLazyLoadingSimple extends BlockBase {
       return array(
         '#theme' => 'lazy_loading',
         '#lazy_loading_url' => $lazy_loading_url,
+        '#article_title' => $title,
         '#attached' => array(
           'library' => array(
             'core/drupal.ajax',
