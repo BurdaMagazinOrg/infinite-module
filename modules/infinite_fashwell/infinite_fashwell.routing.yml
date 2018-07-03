@@ -1,0 +1,7 @@
+infinite_fashwell.settings:
+  path: '/admin/config/services/fashwell'
+  defaults:
+    _form: '\Drupal\infinite_fashwell\Form\FashwellForm'
+    _title: 'Infinite Fashwell settings'
+  requirements:
+    _permission: 'administer site configuration'

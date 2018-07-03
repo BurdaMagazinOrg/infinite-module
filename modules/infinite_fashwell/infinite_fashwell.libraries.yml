@@ -5,5 +5,7 @@ admin:
   js:
     js/admin.js: {}
   dependencies:
-    - core/drupal: {}
-    - core/jquery: {}
+    - core/drupal
+    - core/jquery
+    - core/jquery.once
+    - core/drupalSettings

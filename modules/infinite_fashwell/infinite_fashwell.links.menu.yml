@@ -1,0 +1,6 @@
+infinite_fashwell.settings:
+  title: 'Fashwell Settings'
+  route_name: infinite_fashwell.settings
+  description: 'Configure Fashwell API settings'
+  parent: system.admin_config_services
+  weight: 99

@@ -1,8 +1,8 @@
 (function($, Drupal, drupalSettings) {
   "use strict";
 
-  var APITOKEN = "021a146f1f5f2d1146e86765088d4f81d9d0625a";
-  var URL = "https://www.fashwell.com/api/burda/v1/posts/";
+  var API_TOKEN = drupalSettings.infinite_fashwell.API_TOKEN;
+  var API_URL = drupalSettings.infinite_fashwell.API_URL;
 
   Drupal.behaviors.infiniteFashwell = {
     attach: function(context, settings) {
@@ -25,11 +25,11 @@
 
       $this.append(throbber);
 
-      $.ajax(URL, {
+      $.ajax(API_URL, {
         method: "POST",
         dataType: "json",
         headers: {
-          Authorization: "Token " + APITOKEN
+          Authorization: "Token " + API_TOKEN
         },
         data: {
           url: imageUrl

@@ -13,6 +13,12 @@ function infinite_fashwell_page_attachments(array &$attachments) {
   if (\Drupal::service('router.admin_context')->isAdminRoute(
     \Drupal::routeMatch()->getRouteObject()
   )) {
+    $config = \Drupal::config('infinite_fashwell.settings');
+
     $attachments['#attached']['library'][] = 'infinite_fashwell/admin';
+    $attachments['#attached']['drupalSettings']['infinite_fashwell'] = [
+      'API_TOKEN' => $config->get('api_token'),
+      'API_URL' => $config->get('api_url')
+    ];
   }
 }
