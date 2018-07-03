@@ -38,9 +38,9 @@
         .success(function(data) {
           setTimeout(function() {
             $this.attr("href", data.annotator_url);
+            $this.find(".ajax-progress-throbber").remove();
             var newWindow = window.open(data.annotator_url);
             newWindow.focus();
-            $this.find(".ajax-progress-throbber").remove();
           }, 2500);
         })
         .error(function(jqXHR, textStatus, errorThrown) {
