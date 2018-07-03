@@ -13,7 +13,6 @@ function infinite_fashwell_page_attachments(array &$attachments) {
   if (\Drupal::service('router.admin_context')->isAdminRoute(
     \Drupal::routeMatch()->getRouteObject()
   )) {
-  \Drupal::logger('attach')->info('attached');
     $attachments['#attached']['library'][] = 'infinite_fashwell/admin';
   }
 }

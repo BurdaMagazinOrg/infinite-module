@@ -1,4 +1,7 @@
 admin:
+  css:
+    theme:
+      css/admin.css: {}
   js:
     js/admin.js: {}
   dependencies:
