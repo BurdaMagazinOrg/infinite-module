@@ -368,19 +368,20 @@ Drupal.behaviors.infiniteWishlist = {
         // on front page handle movement of icon on scroll
         if (document.body.classList.contains('page-front')) {
             var mainNav = document.getElementById('menu-main-navigation');
-            var icon = mainNav
-                .querySelector('.flyout--wishlist');
+            var userMenuHeader = document.getElementById('user-navigation--header');
+            var userMenumainNav = document.getElementById('user-navigation--main-navigation');
+            var icon = mainNav.querySelector('.flyout--wishlist');
             icon.parentNode.removeChild(icon);
 
             var moveIcon = function () {
                 if (mainNav.classList.contains('stuck')) {
                     if (null === mainNav.querySelector('#wishlist__toggle')) { // button is in social bar
-                        mainNav.insertBefore(button.parentNode, mainNav.querySelector('.icon-search'));
+                        userMenumainNav.append(button.parentNode);
                         Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
                     }
                 } else {
                     if (mainNav.querySelector('#wishlist__toggle')) { // button is in main nav
-                        document.querySelector('.socials-bar').appendChild(button.parentNode);
+                        userMenuHeader.appendChild(button.parentNode);
                         Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
                     }
                 }

@@ -13,6 +13,16 @@ function infinite_wishlist_page_attachments(array &$attachments)
 }
 
 /**
+ * Implements hook_preprocess_region() for header_large.
+ */
+function infinite_wishlist_preprocess_region__header_large(&$variables)
+{
+  if (\Drupal::moduleHandler()->moduleExists('infinite_wishlist')) {
+    $variables['include_wishlist_icon'] = true;
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function infinite_wishlist_theme() {
@@ -30,6 +40,7 @@ function infinite_wishlist_theme() {
     ],
     'infinite_wishlist_flyout' => [
       'variables' => [],
+      '#theme' => 'infinite_wishlist_flyout',
     ],
   ];
 }
