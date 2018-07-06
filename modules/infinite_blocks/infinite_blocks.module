@@ -155,18 +155,14 @@ function infinite_blocks_preprocess_block(&$variables) {
 
     $variables['content']['#use_parent_container'] = $variables['use_container'];
 
-    if ('infinite_blocks_socials' === $variables['base_plugin_id']) {
-      if (\Drupal::moduleHandler()->moduleExists('infinite_wishlist')) {
-        if ('header_large' === $block->getRegion()) {
-          $variables['content']['#include_wishlist_icon'] = true;
-        }
-      }
-    }
-
-    if (in_array($variables['base_plugin_id'], ['system_menu_block', 'infinite_blocks_socials'])) {
+    if ($variables['base_plugin_id'] == 'system_menu_block') {
       $tipserIsActivated = (bool)\Drupal::config('tipser_client.config')->get('tipser_activated');
       $variables['content']['#include_tipser_icon'] = $tipserIsActivated;
       $variables['include_tipser_icon'] = $tipserIsActivated;
+    }
+
+    if ($variables['base_plugin_id'] == 'system_menu_block' && \Drupal::moduleHandler()->moduleExists('infinite_wishlist')) {
+        $variables['include_wishlist_icon'] = true;
     }
   }
 }
