@@ -15,6 +15,9 @@ class SchemaMetatagManager extends \Drupal\schema_metatag\SchemaMetatagManager {
   public static function parseJsonld(array &$elements) {
     $items = parent::parseJsonld($elements);
 
+    if (!isset($items['@graph']) || !is_array($items['@graph'])) {
+      return;
+    }
     // The current implementation of REWE button does not work
     // with the graph structure. Therefore, we look for recipeIngredient as
     // our recipe indicator and then copy all items from graph so the REWE button
