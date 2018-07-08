@@ -42,7 +42,7 @@ class InfiniteFashwellAutocompleteWidget extends EntityReferenceAutocompleteWidg
         $element['target_id']['#attributes']['class'][] = 'fashwell';
         $element['target_id']['#attributes']['data-product-title'] = $product->get('product_name')->value;
         $element['target_id']['#attributes']['data-product-image'] = $image_url;
-        $element['target_id']['#field_suffix'] = t('Fashwell this');
+        $element['target_id']['#field_suffix'] = '<a class="fashwell-alt" target="_blank">' . t('Fashwell alternative') . '</a>';
       }
     }
     return $element;
