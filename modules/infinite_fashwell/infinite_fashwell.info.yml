@@ -1,0 +1,9 @@
+name: Infinite Fashwell
+type: module
+description: Provides fashwell widget for advertising_products.
+configure: infinite_fashwell.settings
+package: Infinite
+core: 8.x
+version: 8.x-2.x-dev
+dependencies:
+  - advertising_products
