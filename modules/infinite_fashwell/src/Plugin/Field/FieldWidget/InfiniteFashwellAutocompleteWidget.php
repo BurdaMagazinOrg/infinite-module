@@ -3,7 +3,7 @@
 namespace Drupal\infinite_fashwell\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget;
+use Drupal\advertising_products\Plugin\Field\FieldWidget\AdvertisingProductsAutocompleteWidget;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
@@ -20,14 +20,12 @@ use Drupal\Core\Entity\FieldableEntityInterface;
  *   }
  * )
  */
-class InfiniteFashwellAutocompleteWidget extends EntityReferenceAutocompleteWidget {
+class InfiniteFashwellAutocompleteWidget extends AdvertisingProductsAutocompleteWidget {
   /**
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
-
-    $element['target_id']['#selection_handler'] = 'advertising_products:product';
 
     $value = $items->getValue();
     if ($value && is_array($value) && isset($value[$delta])
