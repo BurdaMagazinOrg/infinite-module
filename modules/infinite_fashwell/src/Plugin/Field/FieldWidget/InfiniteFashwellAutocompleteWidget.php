@@ -35,12 +35,14 @@ class InfiniteFashwellAutocompleteWidget extends AdvertisingProductsAutocomplete
       if ($product) {
         $image_id = $product->get('product_image')->target_id;
         $image = \Drupal::entityTypeManager()->getStorage('file')->load($image_id);
-        $image_url = file_create_url($image->getFileUri());
+        if ($image) {
+          $image_url = file_create_url($image->getFileUri());
 
-        $element['target_id']['#attributes']['class'][] = 'fashwell';
-        $element['target_id']['#attributes']['data-product-title'] = $product->get('product_name')->value;
-        $element['target_id']['#attributes']['data-product-image'] = $image_url;
-        $element['target_id']['#field_suffix'] = '<a class="fashwell-alt" target="_blank">' . t('Fashwell alternative') . '</a>';
+          $element['target_id']['#attributes']['class'][] = 'fashwell';
+          $element['target_id']['#attributes']['data-product-title'] = $product->get('product_name')->value;
+          $element['target_id']['#attributes']['data-product-image'] = $image_url;
+          $element['target_id']['#field_suffix'] = '<a class="fashwell-alt" target="_blank">' . t('Fashwell alternative') . '</a>';
+        }
       }
     }
     return $element;
