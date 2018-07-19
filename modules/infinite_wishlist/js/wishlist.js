@@ -325,7 +325,7 @@ Drupal.behaviors.infiniteWishlist = {
 
   dispatchToggleEvent() {
     const toggleStatus = document.getElementById('wishlist').classList.contains('open');
-    const event = new CustomEvent('wishlist-overlay', { detail: { layerVisible: toggleStatus } });
+    const event = new CustomEvent('wishlist-overlay', { detail: { isLayerVisible: toggleStatus } });
     window.dispatchEvent(event);
   },
 
@@ -358,7 +358,7 @@ Drupal.behaviors.infiniteWishlist = {
       }
     });
     window.addEventListener('tipser-overlay', (e) => {
-      if (e.detail.layerVisible) {
+      if (e.detail.isLayerVisible) {
         wishlist.classList.remove('open');
       }
     });
