@@ -1,4 +1,4 @@
-(function ($, Drupal, drupalSettings, Backbone, BurdaInfinite) {
+(function ($, Drupal, drupalSettings, Backbone, BurdaInfinite, AppConfig) {
 
     "use strict";
 
@@ -20,7 +20,7 @@
             // this.setGroupCookie(this.get('group'));
             console.log("%codoscopeManager | activate", "color: deepskyblue;", pOdoscopeAttr, this);
 
-            TrackingManager.trackEvent({
+            dataLayer.push({
                 event: AppConfig.gtmEventName,
                 category: OdoscopeManager.GTM_EVENT_CATEGORY,
                 action: 'pageview',
@@ -165,4 +165,4 @@
         });
     }
 
-})(jQuery, Drupal, drupalSettings, Backbone, BurdaInfinite);
+})(jQuery, Drupal, drupalSettings, Backbone, BurdaInfinite, AppConfig);

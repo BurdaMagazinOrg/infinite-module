@@ -2,13 +2,13 @@
 
   "use strict";
 
-  window.OdoscopeArticleModel = BurdaInfinite.models.base.BaseModel.extend({
+  window.OdoscopeArticleModel = Backbone.Model.extend({
     defaults: {
       loadingIndex: 0,
       currentURL: '',
     },
     initialize: function (pAttributes, pOptions) {
-      BurdaInfinite.models.base.BaseModel.prototype.initialize.call(this, pAttributes, pOptions);
+      // BurdaInfinite.models.base.BaseModel.prototype.initialize.call(this, pAttributes, pOptions);
       this.set('list', []);
     },
     create: function (pData) {
