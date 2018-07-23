@@ -329,6 +329,21 @@ Drupal.behaviors.infiniteWishlist = {
     window.dispatchEvent(event);
   },
 
+  handleClick() {
+    const wishlist = document.getElementById('wishlist');
+    Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
+    wishlist.classList.toggle('open');
+    if (wishlist.classList.contains('open')) {
+      TrackingManager.trackEvent({
+        category: 'wishlist',
+        action: 'wishlist--click-wishlist-icon',
+        location: window.location.pathname,
+        eventNonInteraction: false,
+      });
+    }
+    this.dispatchToggleEvent();
+  },
+
   enableHeaderIcon() {
     const touchOrClickEvent = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click';
 
@@ -338,25 +353,15 @@ Drupal.behaviors.infiniteWishlist = {
     }
 
     const wishlist = document.getElementById('wishlist');
-    button.addEventListener(touchOrClickEvent, () => {
-      Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
-      wishlist.classList.toggle('open');
-      if (wishlist.classList.contains('open')) {
-        TrackingManager.trackEvent({
-          category: 'wishlist',
-          action: 'wishlist--click-wishlist-icon',
-          location: window.location.pathname,
-          eventNonInteraction: false,
-        });
-      }
-      this.dispatchToggleEvent();
-    });
+    const closeButton = document.querySelector('.wishlist__close-button');
+    button.addEventListener(touchOrClickEvent, this.handleClick.bind(this));
     button.addEventListener('mouseover', () => {
       // only prefetch if overlay is not currently open
       if (wishlist.classList.contains('open') === false) {
         Drupal.behaviors.infiniteWishlist.fetchProducts();
       }
     });
+    closeButton.addEventListener(touchOrClickEvent, this.handleClick.bind(this));
     window.addEventListener('tipser-overlay', (e) => {
       if (e.detail.isLayerVisible) {
         wishlist.classList.remove('open');
