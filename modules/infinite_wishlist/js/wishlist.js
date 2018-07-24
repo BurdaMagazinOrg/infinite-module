@@ -334,8 +334,9 @@ Drupal.behaviors.infiniteWishlist = {
     const closest = BurdaInfinite.utils.BaseUtils.closest;
     const isWishlistOpen = wishlist.classList.contains('open');
     const clickedWishlistIcon = !!closest(e.target, '#wishlist__toggle');
+    const clickedCloseButton = !!closest(e.target, '.wishlist__close-button');
     const clickedOutsideOverlay = !closest(e.target, '#wishlist') && isWishlistOpen;
-    if (clickedWishlistIcon || clickedOutsideOverlay) {
+    if ((clickedWishlistIcon || clickedCloseButton) || clickedOutsideOverlay) {
       Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
       wishlist.classList.toggle('open');
       if (wishlist.classList.contains('open')) {
@@ -359,7 +360,6 @@ Drupal.behaviors.infiniteWishlist = {
     }
 
     const wishlist = document.getElementById('wishlist');
-    const closeButton = document.querySelector('.wishlist__close-button');
     window.addEventListener(touchOrClickEvent, this.handleClick.bind(this));
     button.addEventListener('mouseover', () => {
       // only prefetch if overlay is not currently open
@@ -367,7 +367,6 @@ Drupal.behaviors.infiniteWishlist = {
         Drupal.behaviors.infiniteWishlist.fetchProducts();
       }
     });
-    closeButton.addEventListener(touchOrClickEvent, this.handleClick.bind(this));
     window.addEventListener('tipser-overlay', (e) => {
       if (e.detail.isLayerVisible) {
         wishlist.classList.remove('open');
