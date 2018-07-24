@@ -329,19 +329,25 @@ Drupal.behaviors.infiniteWishlist = {
     window.dispatchEvent(event);
   },
 
-  handleClick() {
+  handleClick(e) {
     const wishlist = document.getElementById('wishlist');
-    Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
-    wishlist.classList.toggle('open');
-    if (wishlist.classList.contains('open')) {
-      TrackingManager.trackEvent({
-        category: 'wishlist',
-        action: 'wishlist--click-wishlist-icon',
-        location: window.location.pathname,
-        eventNonInteraction: false,
-      });
+    const closest = BurdaInfinite.utils.BaseUtils.closest;
+    const isWishlistOpen = wishlist.classList.contains('open');
+    const clickedWishlistIcon = !!closest(e.target, '#wishlist__toggle');
+    const clickedOutsideOverlay = !closest(e.target, '#wishlist') && isWishlistOpen;
+    if (clickedWishlistIcon || clickedOutsideOverlay) {
+      Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
+      wishlist.classList.toggle('open');
+      if (wishlist.classList.contains('open')) {
+        TrackingManager.trackEvent({
+          category: 'wishlist',
+          action: 'wishlist--click-wishlist-icon',
+          location: window.location.pathname,
+          eventNonInteraction: false,
+        });
+      }
+      this.dispatchToggleEvent();
     }
-    this.dispatchToggleEvent();
   },
 
   enableHeaderIcon() {
@@ -354,7 +360,7 @@ Drupal.behaviors.infiniteWishlist = {
 
     const wishlist = document.getElementById('wishlist');
     const closeButton = document.querySelector('.wishlist__close-button');
-    button.addEventListener(touchOrClickEvent, this.handleClick.bind(this));
+    window.addEventListener(touchOrClickEvent, this.handleClick.bind(this));
     button.addEventListener('mouseover', () => {
       // only prefetch if overlay is not currently open
       if (wishlist.classList.contains('open') === false) {
