@@ -333,10 +333,9 @@ Drupal.behaviors.infiniteWishlist = {
     const wishlist = document.getElementById('wishlist');
     const closest = BurdaInfinite.utils.BaseUtils.closest;
     const isWishlistOpen = wishlist.classList.contains('open');
-    const clickedWishlistIcon = !!closest(e.target, '#wishlist__toggle');
-    const clickedCloseButton = !!closest(e.target, '.wishlist__close-button');
+    const clickedToggleButton = !!closest(e.target, '#wishlist__toggle, .wishlist__close-button');
     const clickedOutsideOverlay = !closest(e.target, '#wishlist') && isWishlistOpen;
-    if ((clickedWishlistIcon || clickedCloseButton) || clickedOutsideOverlay) {
+    if (clickedToggleButton || clickedOutsideOverlay) {
       Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
       wishlist.classList.toggle('open');
       if (wishlist.classList.contains('open')) {
