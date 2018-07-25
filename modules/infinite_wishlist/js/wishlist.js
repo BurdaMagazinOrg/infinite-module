@@ -329,37 +329,33 @@ Drupal.behaviors.infiniteWishlist = {
     window.dispatchEvent(event);
   },
 
-  handleClick(e) {
+  toggleOverlay() {
     const wishlist = document.getElementById('wishlist');
-    const closest = BurdaInfinite.utils.BaseUtils.closest;
-    const isWishlistOpen = wishlist.classList.contains('open');
-    const clickedToggleButton = !!closest(e.target, '#wishlist__toggle, .wishlist__close-button');
-    const clickedOutsideOverlay = !closest(e.target, '#wishlist') && isWishlistOpen;
-    if (clickedToggleButton || clickedOutsideOverlay) {
-      Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
-      wishlist.classList.toggle('open');
-      if (wishlist.classList.contains('open')) {
-        TrackingManager.trackEvent({
-          category: 'wishlist',
-          action: 'wishlist--click-wishlist-icon',
-          location: window.location.pathname,
-          eventNonInteraction: false,
-        });
-      }
-      this.dispatchToggleEvent();
+    Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
+    wishlist.classList.toggle('open');
+    if (wishlist.classList.contains('open')) {
+      TrackingManager.trackEvent({
+        category: 'wishlist',
+        action: 'wishlist--click-wishlist-icon',
+        location: window.location.pathname,
+        eventNonInteraction: false,
+      });
     }
+    this.dispatchToggleEvent();
   },
 
   enableHeaderIcon() {
+    const wishlist = document.getElementById('wishlist');
+    const button = document.getElementById('wishlist__toggle');
+    const closeButton = document.querySelector('.wishlist__close-button');
     const touchOrClickEvent = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click';
 
-    const button = document.getElementById('wishlist__toggle');
     if (button.injectedHeaderIcon) {
       return;
     }
 
-    const wishlist = document.getElementById('wishlist');
-    window.addEventListener(touchOrClickEvent, this.handleClick.bind(this));
+    button.addEventListener(touchOrClickEvent, this.toggleOverlay.bind(this));
+    closeButton.addEventListener(touchOrClickEvent, this.toggleOverlay.bind(this));
     button.addEventListener('mouseover', () => {
       // only prefetch if overlay is not currently open
       if (wishlist.classList.contains('open') === false) {
