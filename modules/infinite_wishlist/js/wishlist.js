@@ -329,28 +329,33 @@ Drupal.behaviors.infiniteWishlist = {
     window.dispatchEvent(event);
   },
 
+  toggleOverlay() {
+    const wishlist = document.getElementById('wishlist');
+    Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
+    wishlist.classList.toggle('open');
+    if (wishlist.classList.contains('open')) {
+      TrackingManager.trackEvent({
+        category: 'wishlist',
+        action: 'wishlist--click-wishlist-icon',
+        location: window.location.pathname,
+        eventNonInteraction: false,
+      });
+    }
+    this.dispatchToggleEvent();
+  },
+
   enableHeaderIcon() {
+    const wishlist = document.getElementById('wishlist');
+    const button = document.getElementById('wishlist__toggle');
+    const closeButton = document.querySelector('.wishlist__close-button');
     const touchOrClickEvent = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click';
 
-    const button = document.getElementById('wishlist__toggle');
     if (button.injectedHeaderIcon) {
       return;
     }
 
-    const wishlist = document.getElementById('wishlist');
-    button.addEventListener(touchOrClickEvent, () => {
-      Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
-      wishlist.classList.toggle('open');
-      if (wishlist.classList.contains('open')) {
-        TrackingManager.trackEvent({
-          category: 'wishlist',
-          action: 'wishlist--click-wishlist-icon',
-          location: window.location.pathname,
-          eventNonInteraction: false,
-        });
-      }
-      this.dispatchToggleEvent();
-    });
+    button.addEventListener(touchOrClickEvent, this.toggleOverlay.bind(this));
+    closeButton.addEventListener(touchOrClickEvent, this.toggleOverlay.bind(this));
     button.addEventListener('mouseover', () => {
       // only prefetch if overlay is not currently open
       if (wishlist.classList.contains('open') === false) {
