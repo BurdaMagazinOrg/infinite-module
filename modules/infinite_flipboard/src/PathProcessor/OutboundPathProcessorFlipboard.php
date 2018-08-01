@@ -17,7 +17,12 @@ class OutboundPathProcessorFlipboard implements OutboundPathProcessorInterface {
         $alias = \Drupal::service('path.alias_manager')
           ->getAliasByPath('/taxonomy/term/' . $path_args[2]);
 
-        return $alias . '/flipboard.xml';
+        if ($alias == '/') {
+          return '/flipboard.xml';
+        }
+        else {
+          return $alias . '/flipboard.xml';
+        }
       }
     }
     return $path;
