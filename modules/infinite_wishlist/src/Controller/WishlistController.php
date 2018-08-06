@@ -41,6 +41,9 @@ class WishlistController extends ControllerBase
 
       foreach ($query->fetchAll() as $product) {
         $imageFile = File::load($product->product_image__target_id);
+        if (!$imageFile) {
+          continue;
+        }
         $fileUri = $imageFile->getFileUri();
         /** @var \Drupal\Core\Image\Image $image */
         $image = \Drupal::service('image.factory')->get($fileUri);
