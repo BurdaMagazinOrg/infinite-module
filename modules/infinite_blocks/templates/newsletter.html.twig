@@ -50,19 +50,21 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="agreements[]" value="datenschutzeinwilligung">
-                                    Ich willige widerruflich ein, dass bestimmte Unternehmen von Hubert Burda Media
-                                    Daten
-                                    über mich und meine Verträge, Gewinnspiele, Newsletter, Internetnutzung sowie von
-                                    mir gemachte Angaben erheben,
-                                    zusammenführen, speichern und für individuelle Informationsangebote und Werbezwecke
-                                    nutzen. Alle Details
+                                    <span class="privacy-text">
+                                        Ich willige widerruflich ein, dass bestimmte Unternehmen von Hubert Burda Media
+                                        Daten
+                                        über mich und meine Verträge, Gewinnspiele, Newsletter, Internetnutzung sowie von
+                                        mir gemachte Angaben erheben,
+                                        zusammenführen, speichern und für individuelle Informationsangebote und Werbezwecke
+                                        nutzen. Alle Details
 
-                                    {% if use_ajax_permissions == 'true' %}
-                                        <a href="#" class="privacy-link">hier</a>.
-                                    {% else %}
-                                        <a href="{{ external_permission_url }}" target="_blank" rel="nofollow"
-                                           class="privacy-link">hier</a>.
-                                    {% endif %}
+                                        {% if use_ajax_permissions == 'true' %}
+                                            <a href="#" class="privacy-link">hier</a>.
+                                        {% else %}
+                                            <a href="{{ external_permission_url }}" target="_blank" rel="nofollow"
+                                            class="privacy-link">hier</a>.
+                                        {% endif %}
+                                    </span>
                                 </label>
                             </div>
                         </div>
