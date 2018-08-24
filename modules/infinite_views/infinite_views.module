@@ -85,6 +85,16 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
       }
       break;
 
+    case 'advertising_products':
+      if ($view->current_display == 'embed_in_advertising_products_paragraph') {
+        $filters = $view->getExposedInput();
+        $args = $view->args;
+        if ($args[0]) {
+          $filters['cat'] = $args[0];
+          $view->setExposedInput($filters);
+        }
+      }
+      break;
     default:
   }
 
