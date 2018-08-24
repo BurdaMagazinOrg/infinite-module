@@ -19,77 +19,77 @@ use Drupal\views\ViewExecutable;
  */
 function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
 
-	switch ($view->id()) {
+  switch ($view->id()) {
 
-		case 'infinite_archive':
+    case 'infinite_archive':
 
-			// Get default contextual filter for loading /archive
-			if (empty($args)) {
-				$args[] = infinite_views_archive_default_argument();
-			}
-			break;
+      // Get default contextual filter for loading /archive
+      if (empty($args)) {
+        $args[] = infinite_views_archive_default_argument();
+      }
+      break;
 
-		case 'infinite_front_presenter':
+    case 'infinite_front_presenter':
 
-		  // Exclude top presenter nodes from infinite_front_presenter view.
-			if ($view->current_display == 'four_teasers' || $view->current_display == 'exclude') {
+      // Exclude top presenter nodes from infinite_front_presenter view.
+      if ($view->current_display == 'four_teasers' || $view->current_display == 'exclude') {
 
-				$args = [];  // Clear default added args to get exclude NIDs working.
-				$exclude_displays = ['exclude_top'];
-				$presenter_view = 'infinite_front_presenter';
-				_infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
-			}
-			break;
+        $args = [];  // Clear default added args to get exclude NIDs working.
+        $exclude_displays = ['exclude_top'];
+        $presenter_view = 'infinite_front_presenter';
+        _infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
+      }
+      break;
 
-		case 'infinite_taxonomy_term':
+    case 'infinite_taxonomy_term':
 
-			$isFrontPage = \Drupal::service('path.matcher')->isFrontPage();
+      $isFrontPage = \Drupal::service('path.matcher')->isFrontPage();
 
-			// Switch to other views display in infinite_taxonomy_term view for page displays.
-			if ($view->getDisplay()->getBaseId() == 'page' && $display_id != 'rss') {
+      // Switch to other views display in infinite_taxonomy_term view for page displays.
+      if ($view->getDisplay()->getBaseId() == 'page' && $display_id != 'rss') {
 
-				if ($isFrontPage) {
-					$view->setDisplay('front');
-				}
-				else {
-					/* @var Drupal\taxonomy\Entity\Term $term */
-					$term = Term::load($args[0]);
-					if ($term->getVocabularyId() == 'channel') {
-						$view->setDisplay('channel');
-					}
-					else {
-						$view->setDisplay('term');
-					}
-				}
-			}
+        if ($isFrontPage) {
+          $view->setDisplay('front');
+        }
+        else {
+          /* @var Drupal\taxonomy\Entity\Term $term */
+          $term = Term::load($args[0]);
+          if ($term->getVocabularyId() == 'channel') {
+            $view->setDisplay('channel');
+          }
+          else {
+            $view->setDisplay('term');
+          }
+        }
+      }
 
-			// Exclude front / channel presenter nodes infinite_taxonomy_term streaming view.
-			if ($view->getDisplay()->display['id'] == 'front' || $view->getDisplay()->display['id'] == 'channel') {
+      // Exclude front / channel presenter nodes infinite_taxonomy_term streaming view.
+      if ($view->getDisplay()->display['id'] == 'front' || $view->getDisplay()->display['id'] == 'channel') {
 
-				$exclude_displays = ['exclude'];
-				$presenter_view = 'infinite_channel_presenter';
-				if ($isFrontPage) {
-					$exclude_displays = ['exclude_top', 'exclude'];  // exclude_top is currently only used on frontpage.
-					$presenter_view = 'infinite_front_presenter';
-				}
+        $exclude_displays = ['exclude'];
+        $presenter_view = 'infinite_channel_presenter';
+        if ($isFrontPage) {
+          $exclude_displays = ['exclude_top', 'exclude'];  // exclude_top is currently only used on frontpage.
+          $presenter_view = 'infinite_front_presenter';
+        }
 
-				_infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
-			}
-			break;
+        _infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
+      }
+      break;
 
-		case 'infinite_vocabulary':
+    case 'infinite_vocabulary':
 
-			// Remove second arg on infinite vocabulary attachment
-			if ($view->current_display == 'attachment_1') {
-				unset($args[1]);
-			}
-       break;
+      // Remove second arg on infinite vocabulary attachment
+      if ($view->current_display == 'attachment_1') {
+        unset($args[1]);
+      }
+      break;
 
-		default:
-	}
+    default:
+  }
 
-	// Set possible changed $args for view.
-	$view->setArguments($args);
+  // Set possible changed $args for view.
+  $view->setArguments($args);
 }
 
 /**
