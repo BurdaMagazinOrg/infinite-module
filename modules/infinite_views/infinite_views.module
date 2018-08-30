@@ -85,6 +85,11 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
         unset($args[1]);
       }
       break;
+    case 'advertising_products':
+      if (\Drupal::service('router.amp_context')->isAmpRoute() && $view->current_display == 'embed_in_advertising_products_paragraph') {
+        $view->rowPlugin->options['view_mode'] = 'AMP';
+      }
+      break;
     default:
       break;
   }
@@ -96,7 +101,7 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
 /**
  * Implements hook_views_query_alter().
  */
-function infinite_views_views_query_alter(ViewExecutable $view, QueryPluginBase &$query) {
+function infinite_views_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
   switch ($view->id()) {
     case 'advertising_products':
       /* This is somewhat brutal: since the argument handler does not support
