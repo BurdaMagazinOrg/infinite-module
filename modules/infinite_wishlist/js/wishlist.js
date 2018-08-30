@@ -180,7 +180,7 @@ Drupal.behaviors.infiniteWishlist = {
     if (items.length === 0) {
       const li = document.createElement('li');
       li.classList.add('wishlist__item--empty');
-      li.innerHTML = '<h4>Deine Wunschliste ist noch leer</h4>'
+      li.innerHTML = '<span class="wishlist__item-title">Deine Wunschliste ist noch leer</span>'
                 + '<div>'
                 + '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">\n'
                 + '    <g fill="none" fill-rule="evenodd">\n'
