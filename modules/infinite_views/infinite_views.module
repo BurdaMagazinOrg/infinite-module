@@ -89,6 +89,10 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
       if (\Drupal::service('router.amp_context')->isAmpRoute() && $view->current_display == 'embed_in_advertising_products_paragraph') {
         $view->rowPlugin->options['view_mode'] = 'amp';
       }
+      $current_path = \Drupal::service('path.current')->getPath();
+      if ($current_path == '/fia/nodes.xml') {
+        $view->rowPlugin->options['view_mode'] = 'facebook_instant_articles_rss';
+      }
       break;
     default:
       break;
