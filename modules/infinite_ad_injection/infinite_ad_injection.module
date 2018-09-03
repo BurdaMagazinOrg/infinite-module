@@ -85,15 +85,14 @@ function infinite_ad_injection_taxonomy_term_view_alter(array &$build, EntityInt
  */
 function infinite_ad_injection_term_inject_content($children, $elements){
   $contents = infinite_ad_injection_get_content(['dyn_blocks_taxonomy_term_page']);
-//  $contents = infinite_ad_injection_get_content__dummy();
+  $contents = infinite_ad_injection_get_content__dummy();
   if(empty($contents)) {
     return $children;
   }
 
   $cssSelector = new CssSelectorConverter();
   $selectors = [];
-  $selectors[] = $cssSelector->toXPath('div.item-paragraph:not(.item-paragraph--text):not(#steckbrief):not(.item-paragraph--spotlight)');
-  $selectors[] = $cssSelector->toXPath('div.item-paragraph--text p');
+  $selectors[] = $cssSelector->toXPath('div.item-paragraph:not(#steckbrief):not(.item-paragraph--spotlight)');
   return infinite_ad_injection_inject_content($children, $contents, $selectors, 0, 6);
 }
 
@@ -107,6 +106,7 @@ function infinite_ad_injection_term_inject_content($children, $elements){
  */
 function infinite_ad_injection_article_inject_content($children, $elements){
   $contents = infinite_ad_injection_get_content(['dyn_blocks_node']);
+  $contents = infinite_ad_injection_get_content__dummy();
   if(empty($contents)) {
     return $children;
   }
@@ -131,7 +131,7 @@ function infinite_ad_injection_article_inject_content($children, $elements){
  */
 function infinite_ad_injection_viversum_horoscope_inject_content($children, $elements){
   $contents = infinite_ad_injection_get_content(['dyn_blocks_node']);
-//  $contents = infinite_ad_injection_get_content__dummy();
+  $contents = infinite_ad_injection_get_content__dummy();
   if(empty($contents)) {
     return $children;
   }
@@ -140,7 +140,10 @@ function infinite_ad_injection_viversum_horoscope_inject_content($children, $ele
   $selectors[] = $cssSelector->toXPath('div.item-paragraph:not(.item-paragraph--text):not(.item-paragraph--viversum-zodiac)');
   $selectors[] = $cssSelector->toXPath('div.item-paragraph--text p');
   $selectors[] = $cssSelector->toXPath('div.item-paragraph--viversum-zodiac p');
-  return infinite_ad_injection_inject_content($children, $contents, $selectors, 0, 6, 'after');
+  if (!empty($selectors)) {
+    return infinite_ad_injection_inject_content($children, $contents, $selectors, 0, 6, 'after');
+  }
+  return $children;
 }
 
 /**
@@ -168,10 +171,41 @@ function infinite_ad_injection_inject_content($children, $contents, $selectors, 
 
   // Rules: first ad is injected after the 2nd element, than after each 6th element
   $i = 0;
-  foreach ($fragments as $f) {
-    if($i == $first || $i % $each == $first){
-      $class = trim($f->getAttribute('class') . ' pread pread-' . $i);
-      $f->setAttribute('class', $class);
+  foreach ($fragments as $fIndex => $f) {
+    if ($i == $first || $i % $each == $first) {
+
+      // Special handling for text / viversum paragraphs.
+      if ((strpos($f->getAttribute('class'), 'item-paragraph--text') !== FALSE ||
+        strpos($f->getAttribute('class'), 'item-paragraph--viversum-zodiac') !== FALSE) &&
+        $pTags = $f->getElementsByTagName('p')) {
+
+        // Do not append ad injection if next paragraph is an advertising paragraph.
+        if ($pTags->length <= ($first + 1) && $nextNode = $fragments->getNode($fIndex + 1)) {
+          if (strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE) {
+
+            $fragments->getNode($fIndex);  // Reset pointer of fragments.
+            continue;
+          }
+        }
+
+        // Add ad injection classes to first p-tag of text paragraph.
+        $class = trim($f->getElementsByTagName('p')->item($first)->getAttribute('class') . ' pread pread-' . $i);
+        $f->getElementsByTagName('p')->item($first)->setAttribute('class', $class);
+      }
+      else {
+
+        // Do not append ad injection if next paragraph is an advertising paragraph.
+        if ($nextNode = $fragments->getNode($fIndex + 1)) {
+          if (strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE) {
+
+            $fragments->getNode($fIndex);  // Reset pointer of fragments.
+            continue;
+          }
+        }
+
+        $class = trim($f->getAttribute('class') . ' pread pread-' . $i);
+        $f->setAttribute('class', $class);
+      }
     }
     $i++;
   }
