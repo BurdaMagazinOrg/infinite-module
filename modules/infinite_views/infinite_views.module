@@ -9,6 +9,7 @@ use Drupal\block\Entity\Block;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
 
 /**
  * Implements hook_views_pre_view().
@@ -19,77 +20,126 @@ use Drupal\views\ViewExecutable;
  */
 function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
 
-	switch ($view->id()) {
+  switch ($view->id()) {
 
-		case 'infinite_archive':
+    case 'infinite_archive':
 
-			// Get default contextual filter for loading /archive
-			if (empty($args)) {
-				$args[] = infinite_views_archive_default_argument();
-			}
-			break;
+      // Get default contextual filter for loading /archive
+      if (empty($args)) {
+        $args[] = infinite_views_archive_default_argument();
+      }
+      break;
 
-		case 'infinite_front_presenter':
+    case 'infinite_front_presenter':
 
-		  // Exclude top presenter nodes from infinite_front_presenter view.
-			if ($view->current_display == 'four_teasers' || $view->current_display == 'exclude') {
+      // Exclude top presenter nodes from infinite_front_presenter view.
+      if ($view->current_display == 'four_teasers' || $view->current_display == 'exclude') {
 
-				$args = [];  // Clear default added args to get exclude NIDs working.
-				$exclude_displays = ['exclude_top'];
-				$presenter_view = 'infinite_front_presenter';
-				_infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
-			}
-			break;
+        $args = [];  // Clear default added args to get exclude NIDs working.
+        $exclude_displays = ['exclude_top'];
+        $presenter_view = 'infinite_front_presenter';
+        _infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
+      }
+      break;
 
-		case 'infinite_taxonomy_term':
+    case 'infinite_taxonomy_term':
 
-			$isFrontPage = \Drupal::service('path.matcher')->isFrontPage();
+      $isFrontPage = \Drupal::service('path.matcher')->isFrontPage();
 
-			// Switch to other views display in infinite_taxonomy_term view for page displays.
-			if ($view->getDisplay()->getBaseId() == 'page' && $display_id != 'rss') {
+      // Switch to other views display in infinite_taxonomy_term view for page displays.
+      if ($view->getDisplay()->getBaseId() == 'page' && $display_id != 'rss') {
 
-				if ($isFrontPage) {
-					$view->setDisplay('front');
-				}
-				else {
-					/* @var Drupal\taxonomy\Entity\Term $term */
-					$term = Term::load($args[0]);
-					if ($term->getVocabularyId() == 'channel') {
-						$view->setDisplay('channel');
-					}
-					else {
-						$view->setDisplay('term');
-					}
-				}
-			}
+        if ($isFrontPage) {
+          $view->setDisplay('front');
+        }
+        else {
+          /* @var Drupal\taxonomy\Entity\Term $term */
+          $term = Term::load($args[0]);
+          if ($term->getVocabularyId() == 'channel') {
+            $view->setDisplay('channel');
+          }
+          else {
+            $view->setDisplay('term');
+          }
+        }
+      }
 
-			// Exclude front / channel presenter nodes infinite_taxonomy_term streaming view.
-			if ($view->getDisplay()->display['id'] == 'front' || $view->getDisplay()->display['id'] == 'channel') {
+      // Exclude front / channel presenter nodes infinite_taxonomy_term streaming view.
+      if ($view->getDisplay()->display['id'] == 'front' || $view->getDisplay()->display['id'] == 'channel') {
 
-				$exclude_displays = ['exclude'];
-				$presenter_view = 'infinite_channel_presenter';
-				if ($isFrontPage) {
-					$exclude_displays = ['exclude_top', 'exclude'];  // exclude_top is currently only used on frontpage.
-					$presenter_view = 'infinite_front_presenter';
-				}
+        $exclude_displays = ['exclude'];
+        $presenter_view = 'infinite_channel_presenter';
+        if ($isFrontPage) {
+          $exclude_displays = ['exclude_top', 'exclude'];  // exclude_top is currently only used on frontpage.
+          $presenter_view = 'infinite_front_presenter';
+        }
 
-				_infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
-			}
-			break;
+        _infinite_views_get_exclude_nids_helper($presenter_view, $exclude_displays, $args);
+      }
+      break;
 
-		case 'infinite_vocabulary':
+    case 'infinite_vocabulary':
 
-			// Remove second arg on infinite vocabulary attachment
-			if ($view->current_display == 'attachment_1') {
-				unset($args[1]);
-			}
-       break;
+      // Remove second arg on infinite vocabulary attachment
+      if ($view->current_display == 'attachment_1') {
+        unset($args[1]);
+      }
+      break;
+    case 'advertising_products':
+      if (\Drupal::service('router.amp_context')->isAmpRoute() && $view->current_display == 'embed_in_advertising_products_paragraph') {
+        $view->rowPlugin->options['view_mode'] = 'amp';
+      }
+      $current_path = \Drupal::service('path.current')->getPath();
+      if ($current_path == '/fia/nodes.xml') {
+        $view->rowPlugin->options['view_mode'] = 'facebook_instant_articles_rss';
+      }
+      break;
+    default:
+      break;
+  }
 
-		default:
-	}
+  // Set possible changed $args for view.
+  $view->setArguments($args);
+}
 
-	// Set possible changed $args for view.
-	$view->setArguments($args);
+/**
+ * Implements hook_views_query_alter().
+ */
+function infinite_views_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  switch ($view->id()) {
+    case 'advertising_products':
+      /* This is somewhat brutal: since the argument handler does not support
+       * LIKE queries, we do change the query here. We need to introduce more
+       * condition groups in case of multiple arguments.
+       */
+      if ($view->current_display == 'embed_in_advertising_products_paragraph') {
+        foreach ($query->where as &$condition_group) {
+          foreach ($condition_group['conditions'] as &$condition) {
+            if (strpos($condition['field'], 'field_product_category_txt_value') !== FALSE) {
+              if (is_array($condition['value'])) {
+                foreach ($condition['value'] as $idx => $value) {
+                  if ($idx > 0) {
+                    $condition_group['conditions'][] = [
+                      'field' => $condition['field'],
+                      'value' => '%' . $value . '%',
+                      'operator' => 'LIKE',
+                    ];
+                  }
+                }
+                $condition_group['type'] = 'OR';
+                $condition['operator'] = 'LIKE';
+                $condition['value'] = '%' . $condition['value'][0] . '%';
+              }
+              else {
+                $condition['operator'] = 'LIKE';
+                $condition['value'] = '%' . $condition['value'] . '%';
+              }
+            }
+          }
+        }
+      }
+      break;
+  }
 }
 
 /**
