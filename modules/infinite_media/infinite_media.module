@@ -173,6 +173,28 @@ function infinite_media_tokens($type, $tokens, array $data, array $options, Bubb
   return $replacements;
 }
 
+
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function infinite_media_views_data_alter(&$data) {
+  $data['media_field_data']['term_node_tid_depth'] = [
+    'help' => t('Display content if it has the selected taxonomy terms, or children of the selected terms. Due to additional complexity, this has fewer options than the versions without depth.'),
+    'real field' => 'mid',
+    'argument' => [
+      'title' => t('Has taxonomy term ID (with depth)'),
+      'id' => 'taxonomy_index_tid_depth',
+      'accept depth modifier' => TRUE,
+    ],
+    'filter' => [
+      'title' => t('Has taxonomy terms (with depth)'),
+      'id' => 'taxonomy_index_tid_depth',
+    ],
+  ];
+
+}
+
 /**
  * Helper function for getting dimension of an image.
  */
