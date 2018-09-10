@@ -8,13 +8,24 @@ use Drupal\taxonomy\Entity\Term;
 
 /**
  * @file
- * Enriches data layer with information about nodes and terms.
+ * Enriches data layer with information about nodes, taxonomy terms and users.
  */
 
 /**
  * Implements hook_entity_view().
  */
 function infinite_datalayer_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+
+  // We ony want datalayer for node, taxonomy_term or user entities.
+  if(!in_array($entity->getEntityTypeId(), ['node', 'taxonomy_term', 'user'])) {
+    return;
+  }
+
+  // Do nothing if view mode is not a datalayer view mode for this entity type.
+  if (!in_array($view_mode, infinite_datalayer_get_datalayer_view_modes($entity->getEntityTypeId()))) {
+    return;
+  }
+
   $datalayer_variables = infinite_datalayer_get_variables($entity, $view_mode);
   if($datalayer_variables){
     infinite_datalayer_add($build, $entity->uuid(), $datalayer_variables);
@@ -23,10 +34,6 @@ function infinite_datalayer_entity_view(array &$build, EntityInterface $entity, 
 
 function infinite_datalayer_get_variables(EntityInterface $entity, $view_mode) {
   $entity_type = $entity->getEntityTypeId();
-
-  if(!in_array($entity_type, ['taxonomy_term', 'user', 'node'])) {
-    return;
-  }
 
   $entity_bundle = $entity->bundle();
   $entity_id = $entity->id();
@@ -67,11 +74,6 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$datalayer_variables,
   $datalayer_variables_page = &$datalayer_variables['page'];
   $datalayer_variables_page['authorName'] = $node->getOwner()->getDisplayName();
 
-  if(!in_array($context['view_mode'], ['full', 'lazyloading'])){
-    $datalayer_variables = FALSE;
-    return;
-  }
-
   if($content_sub_type = _infinite_datalayer_content_sub_types($node)){
     $datalayer_variables_page['contentSubType'] = $content_sub_type;
   }
@@ -104,11 +106,6 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$datalayer_variables,
 function infinite_datalayer_infinite_datalayer_taxonomy_term_alter(&$datalayer_variables, $context) {
   /** @var \Drupal\taxonomy\Entity\Term $term */
   $term = $context['entity'];
-  if (strpos($context['view_mode'], 'amp') === 0 || !taxonomy_term_is_page($term) && $context['view_mode'] != 'paragraphs_only') {
-    $datalayer_variables = FALSE;
-    return;
-  }
-
   if ($term->bundle() == 'channel') {
     $datalayer_variables['page'] += _infinite_datalayer_category($term);
   }
@@ -300,4 +297,27 @@ function _infinite_datalayer_category(Term $term) {
   }
 
   return $category;
+}
+
+/**
+ * Helper function to get datalayer enabled view modes.
+ *
+ * @param bool $entityType
+ *
+ * @return array|bool|mixed
+ */
+function infinite_datalayer_get_datalayer_view_modes($entityType = FALSE) {
+  $datalayerViewModes = [
+    'node'          => ['full', 'lazyloading'],
+    'taxonomy_term' => ['default', 'paragraphs_only'],
+    'user'          => ['default'],
+  ];
+
+  if (!$entityType) {
+    return $datalayerViewModes;
+  }
+  else if (isset($datalayerViewModes[$entityType])) {
+    return $datalayerViewModes[$entityType];
+  }
+  return FALSE;
 }
