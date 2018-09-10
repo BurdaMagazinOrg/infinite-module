@@ -5,6 +5,9 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\node\NodeInterface;
+use Drupal\taxonomy\TermInterface;
+use Drupal\user\UserInterface;
 
 /**
  * @file
@@ -320,4 +323,25 @@ function infinite_datalayer_get_datalayer_view_modes($entityType = FALSE) {
     return $datalayerViewModes[$entityType];
   }
   return FALSE;
+}
+
+/**
+ * Implements template_preprocess_amp_analytics().
+ *
+ * Add datalayer variable to amp-analytics--googleanalytics.html.tiwg file.
+ */
+function infinite_datalayer_preprocess_amp_analytics__googleanalytics(&$variables) {
+  $datalayer = NULL;
+
+  // Get node, taxonomy_term or user entity from route.
+  if (($node = \Drupal::routeMatch()->getParameter('node')) && $node instanceof NodeInterface) {
+    $datalayer = infinite_datalayer_get_variables($node, 'full');
+  }
+  else if (($term = \Drupal::routeMatch()->getParameter('taxonomy_term')) && $term instanceof TermInterface) {
+    $datalayer = infinite_datalayer_get_variables($term, 'default');
+  }
+  else if (($user = \Drupal::routeMatch()->getParameter('user')) && $user instanceof UserInterface) {
+    $datalayer = infinite_datalayer_get_variables($user, 'default');
+  }
+  $variables['datalayer'] = $datalayer;
 }
