@@ -255,9 +255,14 @@ function _infinite_datalayer_advertising_products_sup_types_helper(&$content_sub
     case 'advertising_product_amazon':
       $content_sub_types[] = 'Affiliate-Amazon';
       break;
+    case 'advertising_product_tipser':
+      $content_sub_types[] = 'Affiliate-Tipser';
+      break;
     case 'advertising_product_tracdelight':
       $content_sub_types[] = 'Affiliate-Tracdelight';
       break;
+    default:
+      $content_sub_types[] = 'Affiliate-Undefined';
   }
 }
 
