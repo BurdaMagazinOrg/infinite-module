@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\block\Entity\Block;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\tipser_client\TipserClient;
 use Drupal\user\Entity\User;
 
 
@@ -156,9 +157,10 @@ function infinite_blocks_preprocess_block(&$variables) {
     $variables['content']['#use_parent_container'] = $variables['use_container'];
 
     if ($variables['base_plugin_id'] == 'system_menu_block') {
-      $tipserIsActivated = (bool)\Drupal::config('tipser_client.config')->get('tipser_activated');
-      $variables['content']['#include_tipser_icon'] = $tipserIsActivated;
-      $variables['include_tipser_icon'] = $tipserIsActivated;
+      $tipserIsActivated = TipserClient::isActivated();
+      $tipserShoppingCartIconIsActivated = TipserClient::iconIsActivated();
+      $variables['content']['#include_tipser_icon'] = $tipserIsActivated && $tipserShoppingCartIconIsActivated;
+      $variables['include_tipser_icon'] = $tipserIsActivated && $tipserShoppingCartIconIsActivated;
     }
 
     if ($variables['base_plugin_id'] == 'system_menu_block' && \Drupal::moduleHandler()->moduleExists('infinite_wishlist')) {
