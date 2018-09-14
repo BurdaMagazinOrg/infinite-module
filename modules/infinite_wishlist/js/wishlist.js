@@ -1,5 +1,5 @@
 Drupal.behaviors.infiniteWishlist = {
-  getWishlist() {
+  getWishlist: function() {
     const wishlist = localStorage.getItem('infinite__wishlist');
     if (wishlist === null) {
       return [];
@@ -7,7 +7,7 @@ Drupal.behaviors.infiniteWishlist = {
     return JSON.parse(wishlist);
   },
 
-  setCount() {
+  setCount: function() {
     const count = this.getWishlist().length;
     document.getElementById('wishlist__toggle__count').innerText = count;
     if (count) {
@@ -253,7 +253,7 @@ Drupal.behaviors.infiniteWishlist = {
     return `${dateData.d}d:${dateData.h}h:${dateData.m}m:${dateData.s}s`;
   },
 
-  getStoredProductIds() {
+  getStoredProductIds: function() {
     const storedProductIds = [];
     const wishlistItems = this.getWishlist();
     for (let i = 0; i < wishlistItems.length; i++) {
@@ -262,7 +262,7 @@ Drupal.behaviors.infiniteWishlist = {
     return storedProductIds;
   },
 
-  injectIcons() {
+  injectIcons: function() {
     const storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
     const items = document.getElementsByClassName('item-ecommerce');
     // var items = document.querySelectorAll('.item-ecommerce .img-container');
@@ -323,13 +323,13 @@ Drupal.behaviors.infiniteWishlist = {
     }
   },
 
-  dispatchToggleEvent() {
+  dispatchToggleEvent: function() {
     const toggleStatus = document.getElementById('wishlist').classList.contains('open');
     const event = new CustomEvent('wishlist-overlay', { detail: { isLayerVisible: toggleStatus } });
     window.dispatchEvent(event);
   },
 
-  toggleOverlay() {
+  toggleOverlay: function() {
     const wishlist = document.getElementById('wishlist');
     Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
     wishlist.classList.toggle('open');
@@ -344,7 +344,7 @@ Drupal.behaviors.infiniteWishlist = {
     this.dispatchToggleEvent();
   },
 
-  enableHeaderIcon() {
+  enableHeaderIcon: function() {
     const wishlist = document.getElementById('wishlist');
     const button = document.getElementById('wishlist__toggle');
     const closeButton = document.querySelector('.wishlist__close-button');
@@ -405,7 +405,7 @@ Drupal.behaviors.infiniteWishlist = {
     }
   },
 
-  resizeWishlistFlyout() {
+  resizeWishlistFlyout: function() {
     const offsetBottom = 70;
 
     const wl = document.getElementById('wishlist');
@@ -477,7 +477,7 @@ Drupal.behaviors.infiniteWishlist = {
     this.fetchProducts();
   },
 
-  toggleIconsAccordingToWishlistStatus() {
+  toggleIconsAccordingToWishlistStatus: function() {
     const injectedIcons = document.querySelectorAll('.wishlist__icon--add');
     const storedProductIds = Drupal.behaviors.infiniteWishlist.getStoredProductIds();
     for (let i = 0; i < injectedIcons.length; i++) {
@@ -491,14 +491,14 @@ Drupal.behaviors.infiniteWishlist = {
     }
   },
 
-  onFocus() {
+  onFocus: function() {
     Drupal.behaviors.infiniteWishlist.fetchProducts();
     Drupal.behaviors.infiniteWishlist.setCount();
     // handle already injected icons
     Drupal.behaviors.infiniteWishlist.toggleIconsAccordingToWishlistStatus();
   },
 
-  attach() {
+  attach: function() {
     try {
       const test = 'local_storage_availability_test';
       localStorage.setItem(test, test);
@@ -524,7 +524,7 @@ Drupal.behaviors.infiniteWishlist = {
     }
   },
 
-  detach() {
+  detach: function() {
     window.removeEventListener('focus', this.onFocus);
 
     const buttons = document.getElementsByClassName('wishlist__icon--add');
