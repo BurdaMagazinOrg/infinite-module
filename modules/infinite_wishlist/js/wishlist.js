@@ -18,7 +18,7 @@ Drupal.behaviors.infiniteWishlist = {
     }
   },
 
-  storeItem(uuid) {
+  storeItem: function(uuid) {
     const wishlist = this.getWishlist();
 
     let alreadyPresent = false;
@@ -48,7 +48,7 @@ Drupal.behaviors.infiniteWishlist = {
     });
   },
 
-  track(type, uuid) {
+  track: function(type, uuid) {
     /* global TrackingManager */
     const items = this.getWishlist();
     let item = null;
@@ -88,7 +88,7 @@ Drupal.behaviors.infiniteWishlist = {
     }
   },
 
-  animateStore(originalImage) {
+  animateStore: function(originalImage) {
     const originalRect = originalImage.getBoundingClientRect();
     const button = document.getElementById('wishlist__toggle');
     const buttonRect = button.getBoundingClientRect();
@@ -112,7 +112,7 @@ Drupal.behaviors.infiniteWishlist = {
     }, 0);
   },
 
-  fetchProducts(callback) {
+  fetchProducts: function(callback) {
     if (typeof callback === 'undefined') {
       callback = () => {
         Drupal.behaviors.infiniteWishlist.renderList(document.getElementById('wishlist__list'));
@@ -155,7 +155,7 @@ Drupal.behaviors.infiniteWishlist = {
     }
   },
 
-  renderList(container) {
+  renderList: function(container) {
     const items = this.getWishlist();
     const currentlyRenderedUuids = [];
     for (let i = 0; i < container.children.length; i++) {
@@ -232,7 +232,7 @@ Drupal.behaviors.infiniteWishlist = {
     this.resizeWishlistFlyout();
   },
 
-  getDurationInWishlist(item) {
+  getDurationInWishlist: function(item) {
     function convertMS(ms) {
       let h;
       const d = Math.floor(h / 24);
@@ -424,7 +424,7 @@ Drupal.behaviors.infiniteWishlist = {
     }
   },
 
-  initRemoveButtons(container) {
+  initRemoveButtons: function(container) {
     const buttons = container.querySelectorAll('[data-wishlist-remove]');
     for (let i = 0; i < buttons.length; i++) {
       const button = buttons[i];
@@ -438,7 +438,7 @@ Drupal.behaviors.infiniteWishlist = {
     }
   },
 
-  removeFromWishlist(uuid) {
+  removeFromWishlist: function(uuid) {
     const wishlist = this.getWishlist();
     for (let i = 0; i < wishlist.length; i++) {
       const item = wishlist[i];
