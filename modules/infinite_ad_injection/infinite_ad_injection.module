@@ -85,7 +85,7 @@ function infinite_ad_injection_taxonomy_term_view_alter(array &$build, EntityInt
  */
 function infinite_ad_injection_term_inject_content($children, $elements){
   $contents = infinite_ad_injection_get_content(['dyn_blocks_taxonomy_term_page']);
-  $contents = infinite_ad_injection_get_content__dummy();
+  //$contents = infinite_ad_injection_get_content__dummy();
   if(empty($contents)) {
     return $children;
   }
@@ -106,7 +106,7 @@ function infinite_ad_injection_term_inject_content($children, $elements){
  */
 function infinite_ad_injection_article_inject_content($children, $elements){
   $contents = infinite_ad_injection_get_content(['dyn_blocks_node']);
-  $contents = infinite_ad_injection_get_content__dummy();
+  //$contents = infinite_ad_injection_get_content__dummy();
   if(empty($contents)) {
     return $children;
   }
@@ -131,7 +131,7 @@ function infinite_ad_injection_article_inject_content($children, $elements){
  */
 function infinite_ad_injection_viversum_horoscope_inject_content($children, $elements){
   $contents = infinite_ad_injection_get_content(['dyn_blocks_node']);
-  $contents = infinite_ad_injection_get_content__dummy();
+  //$contents = infinite_ad_injection_get_content__dummy();
   if(empty($contents)) {
     return $children;
   }
