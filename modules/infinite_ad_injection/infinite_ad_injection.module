@@ -189,8 +189,10 @@ function infinite_ad_injection_inject_content($children, $contents, $selectors, 
         }
 
         // Add ad injection classes to first p-tag of text paragraph.
-        $class = trim($f->getElementsByTagName('p')->item($first)->getAttribute('class') . ' pread pread-' . $i);
-        $f->getElementsByTagName('p')->item($first)->setAttribute('class', $class);
+        try {
+          $class = trim($f->getElementsByTagName('p')->item($first)->getAttribute('class') . ' pread pread-' . $i);
+          $f->getElementsByTagName('p')->item($first)->setAttribute('class', $class);
+        } catch (\Error $e) {}
       }
       else {
 
