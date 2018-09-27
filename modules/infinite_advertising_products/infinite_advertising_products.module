@@ -2,13 +2,30 @@
 
 use Drupal\Core\Entity\EntityInterface;
 
-function infinite_advertising_products_entity_presave(EntityInterface $entity){
-
-  if($entity->getEntityTypeId() == 'advertising_product' && $entity->bundle() == 'advertising_product_tracdelight'){
+function infinite_advertising_products_entity_presave(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() == 'advertising_product' && $entity->bundle() == 'advertising_product_tracdelight') {
     /** @var \Drupal\advertising_products\Entity\AdvertisingProduct $entity */
-    if(isset($entity->product_data) && $entity->hasField('field_product_category_txt')) {
-      $entity->field_product_category_txt->value = $entity->product_data['category']['name']?:'not available';
+    if (isset($entity->product_data) && $entity->hasField('field_product_category_txt')) {
+      $entity->field_product_category_txt->value = $entity->product_data['category']['name'] ? : 'not available';
     }
   }
+}
 
+/**
+ * Implements hook_preprocess_HOOK() for advertising_product entity.
+ */
+function infinite_advertising_products_preprocess_advertising_product(&$variables) {
+  $product = $variables['elements']['#advertising_product'];
+
+  // Set the data attributes for tracking purposes.
+  $data_attributes = new Drupal\Core\Template\Attribute;
+  $data_attributes->setAttribute('data-vars-product-name', $product->product_name->value)
+    ->setAttribute('data-vars-product-shop', $product->product_shop->value)
+    ->setAttribute('data-vars-product-brand', $product->product_brand->value)
+    ->setAttribute('data-vars-product-price', $product->product_price->value)
+    ->setAttribute('data-vars-product-currency', $product->product_currency->value)
+    ->setAttribute('data-vars-product-uuid', $product->uuid->value)
+    ->setAttribute('data-vars-product-id', $product->product_id->value)
+    ->setAttribute('data-vars-product-sold-out', $product->product_sold_out->value);
+  $variables['data_attributes'] = $data_attributes;
 }
