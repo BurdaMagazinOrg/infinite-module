@@ -8,8 +8,39 @@
 use Drupal\block\Entity\Block;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ */
+function infinite_views_form_views_exposed_form_alter(&$form, $form_state, $form_id) {
+  \Drupal::logger('exposed_form_coupon_overview')->info($form_id);
+  if ($form_id == 'views_exposed_form') {
+    if ($form['#id'] == 'views-exposed-form-coupon-overview-page-1') {
+      // We use another view to get the actually used taxonomy terms. The
+      // view is cached and the cache should be invalidated when the coupons
+      // are updated.
+      $args = ['coupon', 'brands'];
+      $view = Views::getView('referenced_terms');
+      $view->setDisplay('default');
+      $view->setArguments($args);
+      $view->execute();
+      $result = $view->result;
+      $current_elements = $form['shop']['#options'];
+      $used_elements = [];
+      foreach ($result as $element) {
+        $used_elements[$element->tid] = $element->tid;
+      }
+      $unused_elements = array_diff_key($current_elements, $used_elements);
+      foreach ($unused_elements as $idx => $value) {
+        unset($form['shop']['#options'][$idx]);
+      }
+    }
+  }
+}
 
 /**
  * Implements hook_views_pre_view().
