@@ -41,7 +41,6 @@ function infinite_views_form_views_exposed_form_alter(&$form, $form_state, $form
       foreach ($unused_elements as $idx => $value) {
         unset($form['shop']['#options'][$idx]);
       }
-      $form['shop']['#type'] = 'checkboxes';
     }
   }
 }
