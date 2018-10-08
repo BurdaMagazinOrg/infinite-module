@@ -238,7 +238,7 @@ function _infinite_paragraphs_available_user_view_modes(FieldStorageDefinitionIn
 function _infinite_paragraphs_allowed_view_modes(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL, &$cacheable = TRUE) {
   $cacheable = FALSE;
 
-  if (in_array($entity->bundle(), array('content_teaser', 'gallery', 'instagram', 'pinterest', 'recent_content', 'term_teaser', 'twitter'))) {
+  if (in_array($entity->bundle(), array('gallery', 'instagram', 'pinterest', 'recent_content', 'term_teaser', 'twitter'))) {
     $allowed_view_modes = [
       'small' => 'Schmal',
     ];
