@@ -26,17 +26,22 @@ function infinite_views_form_views_exposed_form_alter(&$form, $form_state, $form
       // We use another view to get the actually used taxonomy terms. The
       // view is cached and the cache should be invalidated when the coupons
       // are updated.
-      $args = ['coupon', 'brands'];
+      if ($form['#id'] == 'views-exposed-form-coupon-term-related-embed-1') {
+        $tid = \Drupal::routeMatch()->getParameter('taxonomy_term')->id();
+        $args = ['coupon', 'brands', $tid];
+      }
+      else {
+        $args = ['coupon', 'brands'];
+      }
       $view = Views::getView('referenced_terms');
       $view->setDisplay('default');
       $view->setArguments($args);
       $view->execute();
       $result = $view->result;
       $current_elements = $form['shop']['#options'];
-      $used_elements = [];
-      foreach ($result as $element) {
-        $used_elements[$element->tid] = $element->tid;
-      }
+      // get term ids from view result
+      $used_elements = array_column($result, 'tid', 'tid');
+      // only use options that are actually used
       $unused_elements = array_diff_key($current_elements, $used_elements);
       foreach ($unused_elements as $idx => $value) {
         unset($form['shop']['#options'][$idx]);
