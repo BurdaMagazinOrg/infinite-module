@@ -26,6 +26,8 @@ function infinite_advertising_products_preprocess_advertising_product(&$variable
     ->setAttribute('data-vars-product-currency', $product->product_currency->value)
     ->setAttribute('data-vars-product-uuid', $product->uuid->value)
     ->setAttribute('data-vars-product-id', $product->product_id->value)
-    ->setAttribute('data-vars-product-sold-out', $product->product_sold_out->value);
+    ->setAttribute('data-vars-product-sold-out', $product->product_sold_out->value)
+    ->setAttribute('data-vars-product-provider', $product->product_provider->value)
+    ->setAttribute('data-vars-product-view-mode', $variables['elements']['#view_mode']);
   $variables['data_attributes'] = $data_attributes;
 }
