@@ -43,18 +43,12 @@ function infinite_views_form_views_exposed_form_alter(&$form, $form_state, $form
       $used_elements = array_column($result, 'tid', 'tid');
       // only use options that are actually used
       $unused_elements = array_diff_key($current_elements, $used_elements);
-      foreach ($unused_elements as $idx => $value) {
-        unset($form['shop']['#options'][$idx]);
-      }
+      $form['shop']['#options'] = array_diff_key($current_elements, $unused_elements);
 
       // now the same for channels
       $all_channels = $form['channel']['#options'];
       $wanted_channels = ['Fashion', 'Beauty', 'Livestyle'];
-      foreach ($all_channels as $idx => $channel) {
-        if (!in_array($channel, $wanted_channels)) {
-          unset($form['channel']['#options'][$idx]);
-        }
-      }
+      $form['channel']['#options'] = array_intersect($all_channels, $wanted_channels);
     }
   }
 }
