@@ -219,12 +219,9 @@ Drupal.behaviors.infiniteWishlist = {
             wishlist.classList.remove("open");
 
             const productId = e.currentTarget.getAttribute("data-product-id");
-            Drupal.behaviors.instyleInfiniteTipser.loadTipser(() => {
-              Drupal.behaviors.instyleInfiniteTipser.hideTipserIcons();
-              Drupal.behaviors.instyleInfiniteTipser.openTipserProductDetailPage(
-                productId
-              );
-            });
+            Drupal.behaviors.instyleInfiniteTipser.openTipserProductDetailPage(
+              productId
+            );
           });
         }
         link.setAttribute(
