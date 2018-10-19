@@ -104,6 +104,8 @@ function infinite_base_update_8106(&$sandbox) {
   $entity_type_manager = \Drupal::entityTypeManager();
   /** @var \Drupal\Core\Entity\EntityStorageInterface $taxonomy_term_storage */
   $taxonomy_term_storage = $entity_type_manager->getStorage('taxonomy_term');
+
+  // We get all terms regardless of vocabulary, this avoids hardcoding those.
   if (!isset($sandbox['total'])) {
     $sandbox['current'] = 0;
     $sandbox['count'] = 0;
@@ -127,6 +129,10 @@ function infinite_base_update_8106(&$sandbox) {
     '[term:field_seo_description:value]'
   ];
   foreach ($taxonomy_terms as $term) {
+    // In case the vocabulary does not have the new fields ignore.
+    if (!$term->hasField('field_seo_title')) {
+      continue;
+    }
     $meta = FALSE;
     // Check for meta info
     if (isset($term->field_meta_tags->value) && strlen($term->field_meta_tags->value) > 2) {
