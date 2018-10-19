@@ -109,13 +109,11 @@ function infinite_base_update_8106(&$sandbox) {
     $sandbox['count'] = 0;
     $sandbox['total'] = $taxonomy_term_storage->getQuery()
       ->accessCheck(FALSE)
-#      ->condition('type', $content_type)
       ->count()->execute();
   }
   $tids = $taxonomy_term_storage->getQuery()
     ->accessCheck(FALSE)
     ->range(0, 50)
-#    ->condition('type', $content_type)
     ->condition('tid', $sandbox['current'], '>')
     ->execute();
   $taxonomy_terms = $taxonomy_term_storage->loadMultiple($tids);
@@ -168,6 +166,9 @@ function infinite_base_update_8106(&$sandbox) {
       }
       if (isset($meta['og_description'])) {
         $meta['og_description'] = str_replace($search, $replace, $meta['og_description']);
+      }
+      if (isset($meta['twitter_cards_title'])) {
+        $meta['twitter_cards_title'] = str_replace($search, $replace, $meta['twitter_cards_title']);
       }
       // put the new values back
       $term->set('field_meta_tags', serialize($meta));
