@@ -99,7 +99,7 @@ function infinite_base_update_8104() {
 /**
  * Update vocabularies to use SEO fields.
  */
-function infinite_base_update_8106(&$sandbox) {
+function infinite_base_update_8107(&$sandbox) {
   /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
   $entity_type_manager = \Drupal::entityTypeManager();
   /** @var \Drupal\Core\Entity\EntityStorageInterface $taxonomy_term_storage */
@@ -130,7 +130,8 @@ function infinite_base_update_8106(&$sandbox) {
   ];
   foreach ($taxonomy_terms as $term) {
     // In case the vocabulary does not have the new fields ignore.
-    if (!$term->hasField('field_seo_title')) {
+    $field_definitions = $term->getFieldDefinitions();
+    if (!isset($field_definitions['field_seo_title'])) {
       continue;
     }
     $meta = FALSE;
