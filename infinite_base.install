@@ -158,7 +158,7 @@ function infinite_base_update_8106(&$sandbox) {
           $meta['description'] = '[term:field_seo_description:value]';
         }
         else {
-          $term->set('field_seo_description', $term->get('description')->value);
+          $term->set('field_seo_description', strip_tags($term->get('description')->value));
         }
       }
       if (isset($meta['og_title'])) {
@@ -176,7 +176,7 @@ function infinite_base_update_8106(&$sandbox) {
     // no meta info, just set fields.
     else {
       $term->set('field_seo_title', $term->get('name')->value);
-      $term->set('field_seo_description', $term->get('description')->value);
+      $term->set('field_seo_description', strip_tags($term->get('description')->value));
     }
     $term->save();
     $sandbox['current'] = $term->id();
