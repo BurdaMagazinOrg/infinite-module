@@ -157,6 +157,9 @@ function infinite_base_update_8107(&$sandbox) {
           $term->set('field_seo_title', $term->get('name')->value);
         }
       }
+      else {
+        $term->set('field_seo_title', $term->get('name')->value);
+      }
       if (isset($meta['description'])) {
         $count = 0;
         $meta['description'] = str_replace($search, $replace, $meta['description'], $count);
@@ -167,6 +170,9 @@ function infinite_base_update_8107(&$sandbox) {
         else {
           $term->set('field_seo_description', strip_tags($term->get('description')->value));
         }
+      }
+      else {
+        $term->set('field_seo_description', strip_tags($term->get('description')->value));
       }
       if (isset($meta['og_title'])) {
         $meta['og_title'] = str_replace($search, $replace, $meta['og_title']);
