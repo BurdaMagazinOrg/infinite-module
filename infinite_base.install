@@ -191,7 +191,39 @@ function infinite_base_update_8107(&$sandbox) {
       $term->set('field_seo_title', $term->get('name')->value);
       $term->set('field_seo_description', strip_tags($term->get('description')->value));
     }
-    $term->save();
+    // We would like to call term->save() here, but the nexx module does some
+    // time consuming stuff in its taxonomy_term_update hook which may make
+    // the update fail.
+    Database::getConnection()->insert('taxonomy_term__field_seo_title')
+      ->fields([
+          'bundle' => $term->bundle(),
+          'deleted' => 0,
+          'entity_id' => $term->id(),
+          'revision_id' => $term->id(),
+          'langcode' => 'de',
+          'delta' => 0,
+          'field_seo_title_value' => $term->get('field_seo_title')->value,
+        ])
+      ->execute();
+    Database::getConnection()->insert('taxonomy_term__field_seo_description')
+      ->fields([
+          'bundle' => $term->bundle(),
+          'deleted' => 0,
+          'entity_id' => $term->id(),
+          'revision_id' => $term->id(),
+          'langcode' => 'de',
+          'delta' => 0,
+          'field_seo_description_value' => $term->get('field_seo_description')->value,
+        ])
+      ->execute();
+    if ($meta) {
+      Database::getConnection()->update('taxonomy_term__field_meta_tags')
+        ->fields([
+            'field_meta_tags_value' => $term->field_meta_tags->value,
+          ])
+        ->condition('entity_id', $term->id())
+        ->execute();
+    }
     $sandbox['current'] = $term->id();
     $sandbox['count']++;
   }
