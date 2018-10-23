@@ -11,7 +11,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\taxonomy\TermInterface;
-use Drupal\Component\Utility;
+use Drupal\Component\Utility\Html;
 
 function infinite_base_drush_command(){
   $items = [];
