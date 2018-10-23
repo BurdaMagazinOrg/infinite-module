@@ -11,7 +11,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\taxonomy\TermInterface;
-use Drupal\Core\Mail\MailFormatHelper;
+use Drupal\Component\Utility;
 
 function infinite_base_drush_command(){
   $items = [];
@@ -173,11 +173,11 @@ function _drush_infinite_base_migrate_taxonomy_seo_data_batch_op(array $tids, $s
           $meta['description'] = '[term:field_seo_description:value]';
         }
         else {
-          $term->set('field_seo_description', MailFormatHelper::htmlToText($term->get('description')->value));
+          $term->set('field_seo_description', Html::decodeEntities($term->get('description')->value));
         }
       }
       else {
-        $term->set('field_seo_description', MailFormatHelper::htmlToText($term->get('description')->value));
+        $term->set('field_seo_description', Html::decodeEntities($term->get('description')->value));
       }
       if (isset($meta['og_title'])) {
         $meta['og_title'] = str_replace($search, $replace, $meta['og_title']);
@@ -194,7 +194,7 @@ function _drush_infinite_base_migrate_taxonomy_seo_data_batch_op(array $tids, $s
     // no meta info, just set fields.
     else {
       $term->set('field_seo_title', $term->get('name')->value);
-      $term->set('field_seo_description', MailFormatHelper::htmlToText($term->get('description')->value));
+      $term->set('field_seo_description', Html::decodeEntities($term->get('description')->value));
     }
     // We would like to call term->save() here, but the nexx module does some
     // time consuming stuff in its taxonomy_term_update hook which may make
