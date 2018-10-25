@@ -5,7 +5,6 @@
  */
 
 use \Drupal\file\Entity\File;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\taxonomy\TermInterface;
@@ -122,6 +121,7 @@ function drush_infinite_base_migrate_taxonomy_seo_data() {
  *
  */
 function _drush_infinite_base_migrate_taxonomy_seo_data_batch_op(array $tids, $storage) {
+  $connection = \Drupal::service('database');
   $taxonomy_terms = $storage->loadMultiple($tids);
   $search = [
     '[term:title]',
@@ -197,7 +197,7 @@ function _drush_infinite_base_migrate_taxonomy_seo_data_batch_op(array $tids, $s
     // We would like to call term->save() here, but the nexx module does some
     // time consuming stuff in its taxonomy_term_update hook which may make
     // the update fail.
-    Database::getConnection()->insert('taxonomy_term__field_seo_title')
+    $connection->insert('taxonomy_term__field_seo_title')
       ->fields([
           'bundle' => $term->bundle(),
           'deleted' => 0,
@@ -208,7 +208,7 @@ function _drush_infinite_base_migrate_taxonomy_seo_data_batch_op(array $tids, $s
           'field_seo_title_value' => $term->get('field_seo_title')->value,
         ])
       ->execute();
-    Database::getConnection()->insert('taxonomy_term__field_seo_description')
+    $connection->insert('taxonomy_term__field_seo_description')
       ->fields([
           'bundle' => $term->bundle(),
           'deleted' => 0,
@@ -220,7 +220,7 @@ function _drush_infinite_base_migrate_taxonomy_seo_data_batch_op(array $tids, $s
         ])
       ->execute();
     if ($meta) {
-      Database::getConnection()->update('taxonomy_term__field_meta_tags')
+      $connection->update('taxonomy_term__field_meta_tags')
         ->fields([
             'field_meta_tags_value' => $term->field_meta_tags->value,
           ])
