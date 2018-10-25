@@ -5,9 +5,7 @@
  */
 
 use \Drupal\file\Entity\File;
-
 use Drupal\Core\Database\Database;
-
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\taxonomy\TermInterface;
