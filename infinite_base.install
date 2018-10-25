@@ -90,4 +90,3 @@ function infinite_base_uninstall() {
 function infinite_base_update_8104() {
   // Do nothing here any more. Add 8105 with migrate code when new field type is ready.
 }
-
