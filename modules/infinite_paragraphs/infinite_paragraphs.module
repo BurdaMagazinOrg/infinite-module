@@ -102,6 +102,7 @@ function infinite_paragraphs_theme_suggestions_container_alter(array &$suggestio
         $suggestions[] = 'container__' . $node->getType() . '__' . $variables['element']['#type'];
       } else if (isset($variables['element']['#parent']['#taxonomy_term'])) {
         $term = $variables['element']['#parent']['#taxonomy_term'];
+        $suggestions[] = 'container__term' . '__' . $variables['element']['#type'];
         $suggestions[] = 'container__term__' . $term->bundle();
         $suggestions[] = 'container__term__' . $term->bundle() . '__' . $variables['element']['#type'];
       } else if (isset($variables['element']['#parent']['#user'])) {
