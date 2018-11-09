@@ -4,4 +4,4 @@ infinite_odoscope.infinite_odoscope_settings_form:
     _form: '\Drupal\infinite_odoscope\Form\SettingsForm'
     _title: 'Infinite Odoscope'
   requirements:
-    _permission: 'access administration pages'
+    _permission: 'administer odoscope settings'
