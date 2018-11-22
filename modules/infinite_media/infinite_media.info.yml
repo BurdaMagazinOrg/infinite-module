@@ -7,7 +7,6 @@ version: 8.x-1.x-dev
 dependencies:
   - datetime
   - field
-  - field_ui
   - focal_point
   - image
   - inline_entity_form

@@ -8,8 +8,6 @@ dependencies:
   - node
   - field
   - field_group
-  - field_ui
-  - menu_ui
   - options
   - paragraphs
   - scheduler
