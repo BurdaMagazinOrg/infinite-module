@@ -1,0 +1,5 @@
+name: Infinite Coupon
+type: module
+description: Provide custom code for Coupon handling
+package: Infinite
+core: "8.x"

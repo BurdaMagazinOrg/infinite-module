@@ -1,0 +1,6 @@
+<?php
+
+function infinite_coupon_preprocess_node__coupon(&$variables) {
+  $node = $variables['elements']['#node'];
+  $variables['end_date'] = $node->field_valid_from_to->end_date->getTimestamp();
+}
