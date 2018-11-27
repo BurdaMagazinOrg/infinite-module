@@ -1,5 +1,11 @@
+infinite_base.configuration:
+  route_name: infinite_base.configuration
+  title: 'Infinite base configuration'
+  description: 'Infinite base module configuration'
+  parent: system.admin_config_content
+
 infinite_base.filter_external_links:
   route_name: infinite_base.filter_external_links
   title: 'Configure external links filter'
   description: 'Provide a list of domains to exempt from link filtering.'
-  parent: system.admin_config_content
+  parent: infinite_base.configuration
