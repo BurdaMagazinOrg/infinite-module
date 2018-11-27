@@ -1,5 +1,5 @@
 <?php
-namespace Drupal\infinite_base\infinite_ad_injection\Form;
+namespace Drupal\infinite_ad_injection\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -8,29 +8,47 @@ class InfiniteAdInjectionForm extends ConfigFormBase
 {
 
   /**
-   * Gets the configuration names that will be editable.
-   *
-   * @return array
-   *   An array of configuration object names that are editable if called in
-   *   conjunction with the trait's config() method.
+   * {@inheritdoc}
    */
   protected function getEditableConfigNames()
   {
-    // TODO: Implement getEditableConfigNames() method.
+    return [
+      'infiniteAdInjection.adminsettings',
+    ];
   }
 
   /**
-   * Returns a unique string identifying the form.
-   *
-   * The returned ID should be a unique string that can be a valid PHP function
-   * name, since it's used in hook implementation names such as
-   * hook_form_FORM_ID_alter().
-   *
-   * @return string
-   *   The unique string identifying the form.
+   * {@inheritdoc}
    */
   public function getFormId()
   {
-    // TODO: Implement getFormId() method.
+    return 'infinite_ad_injection_configs';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state)
+  {
+    $config = $this->config('infiniteAdInjection.adminsettings');
+    $form['article_injection_settings'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('First Ad injection'),
+      '#description' => $this->t('After how many paragraph inject the first ad'),
+      '#default_value' => $config->get('article_injection_settings'),
+    ];
+
+    return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
+
+    $this->config('infiniteAdInjection.adminsettings')
+      ->set('article_injection_settings', $form_state->getValue('article_injection_settings'))
+      ->save();
   }
 }
