@@ -265,6 +265,6 @@ function _infinite_blocks_get_dyn_region_blocks($allowed_regions) {
  */
 function infinite_blocks_theme_suggestions_header_media_alter(array &$suggestions, array $variables) {
   if (\Drupal::service('path.matcher')->isFrontPage()) {
-    $suggestions[] = header_media__front;
+    $suggestions[] = 'header_media__front';
   }
 }
