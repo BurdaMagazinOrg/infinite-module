@@ -7,6 +7,17 @@ use Drupal\Core\Form\FormStateInterface;
 
 class InfiniteAdInjectionForm extends ConfigFormBase
 {
+  /**
+   * @var array Ad injection type configuration required
+   *            This variable is used inside the class to build dynamically the form (buildForm method)
+   *            settings configurations are created dynamically, based on the array key (content type):
+   *            first_{$type}_ad_injection => indicates the first paragraph after which put the first ads
+   *            each_{$type}_ad_injection => indicates after each paragraph after which put the first ads
+   */
+  protected $adInjectionTypes = [
+    'article',
+    'term'
+  ];
 
   /**
    * {@inheritdoc}
@@ -32,45 +43,31 @@ class InfiniteAdInjectionForm extends ConfigFormBase
   public function buildForm(array $form, FormStateInterface $form_state)
   {
     $config = $this->config('infiniteAdInjection.adminsettings');
+    //create a tab element
     $form['ad_injection_settings'] = [
       '#type' => 'vertical_tabs',
       'default_tab' => 'article_settings'
     ];
-    $form['article_settings'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Article settings'),
-      '#group' => 'ad_injection_settings'
-    ];
-    $form['article_settings']['first_article_ad_injection'] = [
-      '#type' => 'number',
-      '#title' => $this->t('First Ad injection'),
-      '#description' => $this->t('After how many paragraphs, inject the first ad'),
-      '#default_value' => $config->get('first_article_ad_injection'),
-    ];
-    $form['article_settings']['each_article_ad_injection'] = [
-      '#type' => 'number',
-      '#title' => $this->t('Add ads each n. paragraphs'),
-      '#description' => $this->t('Add ads every each n. paragraphs'),
-      '#default_value' =>  $config->get('each_article_ad_injection'),
-    ];
-
-    $form['term_settings'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Term settings'),
-      '#group' => 'ad_injection_settings'
-    ];
-    $form['term_settings']['first_term_ad_injection'] = [
-      '#type' => 'number',
-      '#title' => $this->t('First Ad injection'),
-      '#description' => $this->t('After how many paragraphs, inject the first ad'),
-      '#default_value' => $config->get('first_term_ad_injection'),
-    ];
-    $form['term_settings']['each_term_ad_injection'] = [
-      '#type' => 'number',
-      '#title' => $this->t('Add ads each n. paragraphs'),
-      '#description' => $this->t('Add ads every each n. paragraphs'),
-      '#default_value' =>  $config->get('each_term_ad_injection'),
-    ];
+    //populate the tab element with required configurations
+    foreach ($this->adInjectionTypes as $type)  {
+      $form["{$type}_settings"] = [
+        '#type' => 'details',
+        '#title' => $this->t(ucfirst("{$type} settings")),
+        '#group' => 'ad_injection_settings'
+      ];
+      $form["{$type}_settings"]["first_{$type}_ad_injection"] = [
+        '#type' => 'number',
+        '#title' => $this->t('First Ad injection'),
+        '#description' => $this->t('After how many paragraphs, inject the first ad'),
+        '#default_value' => $config->get("first_{$type}_ad_injection"),
+      ];
+      $form["{$type}_settings"]["each_{$type}_ad_injection"] = [
+        '#type' => 'number',
+        '#title' => $this->t('Add ads each n. paragraphs'),
+        '#description' => $this->t('Add ads every each n. paragraphs'),
+        '#default_value' =>  $config->get("each_{$type}_ad_injection"),
+      ];
+    }
 
     return parent::buildForm($form, $form_state);
   }
@@ -82,11 +79,11 @@ class InfiniteAdInjectionForm extends ConfigFormBase
   {
     parent::submitForm($form, $form_state);
 
-    $this->config('infiniteAdInjection.adminsettings')
-      ->set('first_article_ad_injection', $form_state->getValue('first_article_ad_injection'))
-      ->set('each_article_ad_injection', $form_state->getValue('each_article_ad_injection'))
-      ->set('first_term_ad_injection', $form_state->getValue('first_term_ad_injection'))
-      ->set('each_term_ad_injection', $form_state->getValue('each_term_ad_injection'))
-      ->save();
+    $config = $this->config('infiniteAdInjection.adminsettings');
+    foreach ($this->adInjectionTypes as $type)  {
+      $config->set("first_{$type}_ad_injection", $form_state->getValue("first_{$type}_ad_injection"));
+      $config->set("each_{$type}_ad_injection", $form_state->getValue("each_{$type}_ad_injection"));
+    }
+    $config->save();
   }
 }
