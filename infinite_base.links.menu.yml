@@ -6,6 +6,14 @@ infinite_base.configuration:
 
 infinite_base.filter_external_links:
   route_name: infinite_base.filter_external_links
-  title: 'Configure external links filter'
+  title: 'External links filter configuration'
   description: 'Provide a list of domains to exempt from link filtering.'
   parent: infinite_base.configuration
+  weight: 1
+
+infinite_base.ad_injection:
+  title: 'Ad injection configurations'
+  route_name: infiniteAdInjection.adminsettings_form
+  description: 'Ad injection configurations'
+  parent: infinite_base.configuration
+  weight: 2
