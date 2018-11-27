@@ -41,17 +41,35 @@ class InfiniteAdInjectionForm extends ConfigFormBase
       '#title' => $this->t('Article settings'),
       '#group' => 'ad_injection_settings'
     ];
-    $form['article_settings']['first_ad'] = [
+    $form['article_settings']['first_article_ad_injection'] = [
       '#type' => 'number',
       '#title' => $this->t('First Ad injection'),
       '#description' => $this->t('After how many paragraphs, inject the first ad'),
-      '#default_value' => $config->get('first_ad'),
+      '#default_value' => $config->get('first_article_ad_injection'),
     ];
-    $form['article_settings']['each_ad'] = [
+    $form['article_settings']['each_article_ad_injection'] = [
       '#type' => 'number',
       '#title' => $this->t('Add ads each n. paragraphs'),
       '#description' => $this->t('Add ads every each n. paragraphs'),
-      '#default_value' =>  $config->get('each_ad'),
+      '#default_value' =>  $config->get('each_article_ad_injection'),
+    ];
+
+    $form['term_settings'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Term settings'),
+      '#group' => 'ad_injection_settings'
+    ];
+    $form['term_settings']['first_term_ad_injection'] = [
+      '#type' => 'number',
+      '#title' => $this->t('First Ad injection'),
+      '#description' => $this->t('After how many paragraphs, inject the first ad'),
+      '#default_value' => $config->get('first_term_ad_injection'),
+    ];
+    $form['term_settings']['each_term_ad_injection'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Add ads each n. paragraphs'),
+      '#description' => $this->t('Add ads every each n. paragraphs'),
+      '#default_value' =>  $config->get('each_term_ad_injection'),
     ];
 
     return parent::buildForm($form, $form_state);
@@ -65,8 +83,10 @@ class InfiniteAdInjectionForm extends ConfigFormBase
     parent::submitForm($form, $form_state);
 
     $this->config('infiniteAdInjection.adminsettings')
-      ->set('first_ad', $form_state->getValue('first_ad'))
-      ->set('each_ad', $form_state->getValue('each_ad'))
+      ->set('first_article_ad_injection', $form_state->getValue('first_article_ad_injection'))
+      ->set('each_article_ad_injection', $form_state->getValue('each_article_ad_injection'))
+      ->set('first_term_ad_injection', $form_state->getValue('first_term_ad_injection'))
+      ->set('each_term_ad_injection', $form_state->getValue('each_term_ad_injection'))
       ->save();
   }
 }
