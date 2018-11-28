@@ -23,16 +23,14 @@ class InfiniteAdInjectionForm extends ConfigFormBase
   /**
    * {@inheritdoc}
    */
-  public function getFormId()
-  {
+  public function getFormId() {
     return 'infinite_ad_injection_configs';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state)
-  {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('infiniteAdInjection.adminsettings');
     //create a tab element
     $form['ad_injection_settings'] = [
@@ -66,8 +64,7 @@ class InfiniteAdInjectionForm extends ConfigFormBase
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state)
-  {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
     $config = $this->config('infiniteAdInjection.adminsettings');
@@ -81,10 +78,10 @@ class InfiniteAdInjectionForm extends ConfigFormBase
   /**
    * {@inheritdoc}
    */
-  protected function getEditableConfigNames()
-  {
+  protected function getEditableConfigNames()  {
     return [
       'infiniteAdInjection.adminsettings',
     ];
   }
+
 }

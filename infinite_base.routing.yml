@@ -4,7 +4,7 @@ infinite_base.configuration:
     _title: 'Infinite base configurations'
     _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
-    _permission: 'administer filters'
+    _permission: 'administer site configuration'
 
 node.lazyloading:
   path: '/lazyloading/node/{node}/{js}'
