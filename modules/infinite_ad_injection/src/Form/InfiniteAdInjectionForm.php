@@ -16,18 +16,9 @@ class InfiniteAdInjectionForm extends ConfigFormBase
    */
   protected $adInjectionTypes = [
     'article',
-    'term'
+    'term',
+    'viversum_horoscope'
   ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getEditableConfigNames()
-  {
-    return [
-      'infiniteAdInjection.adminsettings',
-    ];
-  }
 
   /**
    * {@inheritdoc}
@@ -49,7 +40,7 @@ class InfiniteAdInjectionForm extends ConfigFormBase
       'default_tab' => 'article_settings'
     ];
     //populate the tab element with required configurations
-    foreach ($this->adInjectionTypes as $type)  {
+    foreach ($this->adInjectionTypes as $type) {
       $form["{$type}_settings"] = [
         '#type' => 'details',
         '#title' => $this->t(ucfirst("{$type} settings")),
@@ -65,7 +56,7 @@ class InfiniteAdInjectionForm extends ConfigFormBase
         '#type' => 'number',
         '#title' => $this->t('Add ads each n. paragraphs'),
         '#description' => $this->t('Add ads every each n. paragraphs'),
-        '#default_value' =>  $config->get("each_{$type}_ad_injection"),
+        '#default_value' => $config->get("each_{$type}_ad_injection"),
       ];
     }
 
@@ -80,10 +71,20 @@ class InfiniteAdInjectionForm extends ConfigFormBase
     parent::submitForm($form, $form_state);
 
     $config = $this->config('infiniteAdInjection.adminsettings');
-    foreach ($this->adInjectionTypes as $type)  {
+    foreach ($this->adInjectionTypes as $type) {
       $config->set("first_{$type}_ad_injection", $form_state->getValue("first_{$type}_ad_injection"));
       $config->set("each_{$type}_ad_injection", $form_state->getValue("each_{$type}_ad_injection"));
     }
     $config->save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames()
+  {
+    return [
+      'infiniteAdInjection.adminsettings',
+    ];
   }
 }
