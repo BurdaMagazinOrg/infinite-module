@@ -2,6 +2,7 @@
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
@@ -113,6 +114,10 @@ function infinite_datalayer_infinite_datalayer_taxonomy_term_alter(&$datalayer_v
     $datalayer_variables['page'] += _infinite_datalayer_category($term);
   }
   $context['key'] = 'page';
+
+  if($content_sub_type = _infinite_datalayer_content_sub_types($term)){
+    $datalayer_variables['page']['contentSubType'] = $content_sub_type;
+  }
 }
 
 /**
@@ -177,23 +182,28 @@ function _infinite_datalayer_initialize_variables() {
 /**
  * Returns an ordered set of labels for eligible paragraphs.
  *
- * @param Node $node
+ * @param Entity $entity
  *
  * @return array
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  */
-function _infinite_datalayer_content_sub_types(Node $node) {
+function _infinite_datalayer_content_sub_types(Entity $entity) {
   $content_sub_types = [];
 
-  if ($node->hasField('field_sponsor_type')
-    && $node->field_sponsor_type->value == 'native'
-    && isset($node->field_campaign->entity)) {
+  if ($entity->hasField('field_sponsor_type')
+    && $entity->field_sponsor_type->value == 'native'
+    && isset($entity->field_campaign->entity)) {
     $content_sub_types[] = 'NativeArticle';
   }
 
-  if ($node->hasField('field_paragraphs')) {
-    foreach ($node->field_paragraphs->referencedEntities() as $paragraph) {
-      if (in_array($paragraph->bundle(), ['gallery', 'instagram', 'nexx_video', 'pinterest', 'riddle', 'twitter'])) {
+  if ($entity->hasField('field_paragraphs')) {
+    foreach ($entity->field_paragraphs->referencedEntities() as $paragraph) {
+      if (in_array($paragraph->bundle(), ['gallery', 'instagram', 'nexx_video', 'pinterest', 'riddle', 'spotlight', 'text', 'twitter'])) {
         $content_sub_types[] = Unicode::ucfirst($paragraph->bundle());
+      }
+      elseif ($paragraph->bundle() === 'seo_links') {
+          $content_sub_types[] = 'SEO Links';
       }
       elseif ($paragraph->bundle() == 'media' && isset($paragraph->field_media->entity)) {
         $content_sub_types[] = Unicode::ucfirst($paragraph->field_media->entity->bundle());
