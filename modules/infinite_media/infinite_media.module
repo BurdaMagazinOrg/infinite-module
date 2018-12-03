@@ -8,29 +8,27 @@ use Drupal\image\Entity\ImageStyle;
  * Implements hook_file_validate().
  */
 function infinite_media_file_validate(FileInterface $file) {
-	$errors = [];
+  $errors = [];
 
-	// Apply 'upload' image style on temporary image files.
-	if ($file->isTemporary() && in_array($file->getMimeType(), ['image/gif', 'image/jpeg', 'image/png'])) {
-		$image_style_name = 'upload';
-		$image_style = ImageStyle::load($image_style_name);
-		if ($image_style === NULL) {
-			$errors[] = t("The image style %image_style to be applied on the uploaded image does not exist.", ['%image_style' => $image_style_name]);
-		}
-		else {
-			$derived_uri = $file->getFileUri() . '.derived';
-			if (!$image_style->createDerivative($file->getFileUri(), $derived_uri)) {
-				$errors[] = t('The uploaded image could not be processed with style %image_style. The image file may be invalid.', ['%image_style' => $image_style_name]);
-			}
-			else {
-				if (file_unmanaged_move($derived_uri, $file->getFileUri(), FILE_EXISTS_REPLACE) === FALSE) {
-					$errors[] = t('An error occurred while saving the uploaded image file.');
-				}
-			}
-		}
-	}
+  // Apply 'upload' image style on temporary image files.
+  if ($file->isTemporary() && in_array($file->getMimeType(), ['image/gif', 'image/jpeg', 'image/png'])) {
+    $image_style_name = 'upload';
+    $image_style = ImageStyle::load($image_style_name);
+    if ($image_style === NULL) {
+      $errors[] = t("The image style %image_style to be applied on the uploaded image does not exist.", ['%image_style' => $image_style_name]);
+    } else {
+      $derived_uri = $file->getFileUri() . '.derived';
+      if (!$image_style->createDerivative($file->getFileUri(), $derived_uri)) {
+        $errors[] = t('The uploaded image could not be processed with style %image_style. The image file may be invalid.', ['%image_style' => $image_style_name]);
+      } else {
+        if (file_unmanaged_move($derived_uri, $file->getFileUri(), FILE_EXISTS_REPLACE) === FALSE) {
+          $errors[] = t('An error occurred while saving the uploaded image file.');
+        }
+      }
+    }
+  }
 
-	return $errors;
+  return $errors;
 }
 
 /**
@@ -49,17 +47,17 @@ function infinite_media_theme_suggestions_image_alter(array &$suggestions, array
  */
 function infinite_media_preprocess_media(&$variables) {
 
+  /* @var $media MediaEntity */
+
   // todo: later possible switch to media URL for sharing media items.
   $current_url = Url::fromRoute('<current>');
-  if ($node = \Drupal::routeMatch()->getParameter('node')) {  // Handling for lazy loading node URLs.
+  if ($node = \Drupal::routeMatch()->getParameter('node')) { // Handling for lazy loading node URLs.
     $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $node->id());
     $absolute_url = Url::fromUri('base:/' . $alias_path, array('absolute' => TRUE));
-  }
-  else if ($current_url->toString() != '/') {
+  } else if ($current_url->toString() != '/') {
     $absolute_url = Url::fromUri('base:/' . $current_url->toString(), array('absolute' => TRUE));
-  }
-  else {
-    $absolute_url = Url::fromRoute('<front>', array('absolute' => TRUE));  // Extra handling for <front>.
+  } else {
+    $absolute_url = Url::fromRoute('<front>', array('absolute' => TRUE)); // Extra handling for <front>.
   }
   $variables['absolute_node_url'] = $absolute_url->toString();
 
@@ -82,20 +80,21 @@ function infinite_media_preprocess_media(&$variables) {
         if (theme_get_setting('share_image_style')) {
           /* @var ImageStyle $share_img */
           $share_img = ImageStyle::load(theme_get_setting('share_image_style'));
-          if(is_object($share_img)) {
+          if (is_object($share_img)) {
             $variables['share_img_url'] = $share_img->buildUrl($image_url);
           }
         }
       }
     }
-  }
-  else if ($media->bundle() === 'file') {
+  } else if ($media->bundle() === 'file') {
     if (!$media->field_file->isEmpty()) {
       $file_uri = $media->field_file->entity->getFileUri();
       $variables['file_url'] = file_create_url($file_uri);
+      if (strpos('.svg', variables['file_url']) !== FALSE) {
+        $variables['svg_contents'] = file_get_contents($variables['file_url']);
+      }
     }
-  }
-  else if ($media->bundle() === 'video') {
+  } else if ($media->bundle() === 'video') {
   }
 }
 
@@ -116,8 +115,7 @@ function _infinite_media_image_dimension($height, $width) {
   // todo: should we handle square?
   if ($height < $width) {
     return 'landscape';
-  }
-  else {
+  } else {
     return 'portrait';
   }
 }
