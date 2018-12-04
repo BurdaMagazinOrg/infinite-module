@@ -90,7 +90,7 @@ function infinite_media_preprocess_media(&$variables) {
     if (!$media->field_file->isEmpty()) {
       $file_uri = $media->field_file->entity->getFileUri();
       $variables['file_url'] = file_create_url($file_uri);
-      if (strpos('.svg', variables['file_url']) !== FALSE) {
+      if (strpos('.svg', $variables['file_url']) !== FALSE) {
         $variables['svg_contents'] = file_get_contents($variables['file_url']);
       }
     }
