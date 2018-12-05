@@ -2,9 +2,7 @@
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
@@ -182,7 +180,7 @@ function _infinite_datalayer_initialize_variables() {
 /**
  * Returns an ordered set of labels for eligible paragraphs.
  *
- * @param Entity $entity
+ * @param EntityInterface $entity
  *
  * @return array
  * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
@@ -203,7 +201,7 @@ function _infinite_datalayer_content_sub_types(EntityInterface $entity) {
         $content_sub_types[] = Unicode::ucfirst($paragraph->bundle());
       }
       elseif ($paragraph->bundle() === 'seo_links') {
-          $content_sub_types[] = 'SEO Links';
+        $content_sub_types[] = 'SEO Links';
       }
       elseif ($paragraph->bundle() == 'media' && isset($paragraph->field_media->entity)) {
         $content_sub_types[] = Unicode::ucfirst($paragraph->field_media->entity->bundle());
