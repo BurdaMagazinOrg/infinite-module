@@ -188,7 +188,7 @@ function _infinite_datalayer_initialize_variables() {
  * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
  * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  */
-function _infinite_datalayer_content_sub_types(Entity $entity) {
+function _infinite_datalayer_content_sub_types(EntityInterface $entity) {
   $content_sub_types = [];
 
   if ($entity->hasField('field_sponsor_type')
