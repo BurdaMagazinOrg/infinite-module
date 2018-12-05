@@ -199,7 +199,7 @@ function _infinite_datalayer_content_sub_types(Entity $entity) {
 
   if ($entity->hasField('field_paragraphs')) {
     foreach ($entity->field_paragraphs->referencedEntities() as $paragraph) {
-      if (in_array($paragraph->bundle(), ['gallery', 'instagram', 'nexx_video', 'pinterest', 'riddle', 'spotlight', 'text', 'twitter'])) {
+      if (in_array($paragraph->bundle(), ['gallery', 'instagram', 'pinterest', 'riddle', 'spotlight', 'text', 'twitter'])) {
         $content_sub_types[] = Unicode::ucfirst($paragraph->bundle());
       }
       elseif ($paragraph->bundle() === 'seo_links') {
