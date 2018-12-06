@@ -45,7 +45,7 @@ Drupal.behaviors.infiniteWishlist = {
     });
     localStorage.setItem('infinite__wishlist', JSON.stringify(wishlist));
 
-    this.fetchProducts(() => {
+    this.fetchProducts(function() {
       Drupal.behaviors.infiniteWishlist.renderList(
         document.getElementById('wishlist__list')
       );
@@ -112,7 +112,7 @@ Drupal.behaviors.infiniteWishlist = {
     duplicate.style.height = `${originalRect.height}px`;
     duplicate.style.transformOrigin = 'top left';
     document.body.appendChild(duplicate);
-    window.setTimeout(() => {
+    window.setTimeout(function() {
       const newTop = buttonTop - originalRect.top;
       const newLeft = buttonLeft - originalRect.left;
       duplicate.style.transform = `translate(${newLeft}px, ${newTop}px) scale(0.3)`;
@@ -122,7 +122,7 @@ Drupal.behaviors.infiniteWishlist = {
 
   fetchProducts: function(callback) {
     if (typeof callback === 'undefined') {
-      callback = () => {
+      callback = function() {
         Drupal.behaviors.infiniteWishlist.renderList(
           document.getElementById('wishlist__list')
         );
@@ -153,7 +153,7 @@ Drupal.behaviors.infiniteWishlist = {
       const worker = new Worker(
         '/modules/contrib/infinite_base/modules/infinite_wishlist/js/wishlist-worker.js'
       );
-      worker.onmessage = e => {
+      worker.onmessage = function(e) {
         storedWishlist = e.data;
         localStorage.setItem(
           'infinite__wishlist',
@@ -212,7 +212,7 @@ Drupal.behaviors.infiniteWishlist = {
         container.appendChild(li);
         const link = li.querySelector('a');
         if (link.getAttribute('data-provider') === 'tipser') {
-          link.addEventListener('click', e => {
+          link.addEventListener('click', function(e) {
             e.preventDefault();
 
             const wishlist = document.getElementById('wishlist');
@@ -232,7 +232,7 @@ Drupal.behaviors.infiniteWishlist = {
           'data-product-extra-information',
           Drupal.behaviors.infiniteWishlist.getDurationInWishlist(item)
         );
-        link.addEventListener('click', e => {
+        link.addEventListener('click', function(e) {
           TrackingManager.trackEvent({
             category: 'wishlist',
             action: 'wishlist--click-item-in-wishlist',
@@ -323,7 +323,7 @@ Drupal.behaviors.infiniteWishlist = {
       if (storedProductIds.indexOf(icon.uuid) > -1) {
         icon.classList.add('in-wishlist');
       }
-      icon.addEventListener('click', e => {
+      icon.addEventListener('click', function(e) {
         e.stopPropagation();
         if (e.currentTarget.classList.contains('in-wishlist')) {
           e.currentTarget.classList.remove('in-wishlist');
@@ -336,7 +336,7 @@ Drupal.behaviors.infiniteWishlist = {
           Drupal.behaviors.infiniteWishlist.animateStore(
             e.currentTarget.parentNode.querySelector('img')
           );
-          window.setTimeout(() => {
+          window.setTimeout(function() {
             Drupal.behaviors.infiniteWishlist.setCount();
           }, 1000);
         }
@@ -387,13 +387,13 @@ Drupal.behaviors.infiniteWishlist = {
       touchOrClickEvent,
       this.toggleOverlay.bind(this)
     );
-    button.addEventListener('mouseover', () => {
+    button.addEventListener('mouseover', function() {
       // only prefetch if overlay is not currently open
       if (wishlist.classList.contains('open') === false) {
         Drupal.behaviors.infiniteWishlist.fetchProducts();
       }
     });
-    window.addEventListener('tipser-overlay', e => {
+    window.addEventListener('tipser-overlay', function(e) {
       if (e.detail.isLayerVisible) {
         wishlist.classList.remove('open');
       }
@@ -411,7 +411,7 @@ Drupal.behaviors.infiniteWishlist = {
       const icon = mainNav.querySelector('.flyout--wishlist');
       icon.parentNode.removeChild(icon);
 
-      const moveIcon = () => {
+      const moveIcon = function() {
         if (mainNav.classList.contains('stuck')) {
           if (mainNav.querySelector('#wishlist__toggle') === null) {
             // button is in social bar
@@ -426,12 +426,12 @@ Drupal.behaviors.infiniteWishlist = {
       };
       window.addEventListener('scroll', moveIcon);
       window.addEventListener('load', moveIcon);
-      window.addEventListener('scroll', () => {
+      window.addEventListener('scroll', function() {
         if (document.querySelector('#wishlist.open')) {
           Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
         }
       });
-      window.addEventListener('resize', () => {
+      window.addEventListener('resize', function() {
         if (document.querySelector('#wishlist.open')) {
           Drupal.behaviors.infiniteWishlist.resizeWishlistFlyout();
         }
@@ -463,7 +463,7 @@ Drupal.behaviors.infiniteWishlist = {
     const buttons = container.querySelectorAll('[data-wishlist-remove]');
     for (let i = 0; i < buttons.length; i++) {
       const button = buttons[i];
-      button.addEventListener('click', e => {
+      button.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         Drupal.behaviors.infiniteWishlist.removeFromWishlist(

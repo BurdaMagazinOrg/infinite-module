@@ -27,5 +27,11 @@
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "browserslist": [
+    "last 5 chrome version",
+    "last 5 firefox version",
+    "last 5 safari version",
+    "ie 11"
+  ]
 }
