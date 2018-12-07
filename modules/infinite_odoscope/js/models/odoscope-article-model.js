@@ -52,7 +52,7 @@
       this.set('loadingIndex', this.get('loadingIndex') + 1);
       loadingIndex = this.get('loadingIndex');
       variantID = latestModel.variantID;
-      url = `/lazyloading/node/${variantID}/nojs?page=${loadingIndex}`;
+      url = '/lazyloading/node/' + variantID + '/nojs?page=' + loadingIndex;
       this.set('currentURL', url);
       console.log(
         '%codoscopeArticleModel | getNextURL',

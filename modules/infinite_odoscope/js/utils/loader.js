@@ -11,6 +11,6 @@
 
   const currentHour = Math.floor(new Date().getTime() / (60 * 60 * 1000));
 
-  newScript.src = `${url}?${currentHour}`;
+  newScript.src = '' + url + '?' + currentHour;
   thisParent.insertBefore(newScript, thisScript.nextSibling);
 })(document);

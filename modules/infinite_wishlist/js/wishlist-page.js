@@ -9,7 +9,7 @@ Drupal.behaviors.infiniteWishlistPage = {
     if (container) {
       Drupal.behaviors.infiniteWishlist.fetchProducts(this.render);
 
-      window.addEventListener('focus', () => {
+      window.addEventListener('focus', function() {
         Drupal.behaviors.infiniteWishlist.fetchProducts(
           Drupal.behaviors.infiniteWishlistPage.render
         );

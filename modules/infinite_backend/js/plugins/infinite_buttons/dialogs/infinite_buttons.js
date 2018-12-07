@@ -1,4 +1,4 @@
-CKEDITOR.dialog.add('infinite_buttons', editor => {
+CKEDITOR.dialog.add('infinite_buttons', function(editor) {
   const lang = editor.lang.infinite_buttons;
 
   return {

@@ -12,7 +12,7 @@
       .parent()
       .attr('data-imagepin-attach-to');
 
-    const image = $(`img[data-imagepin-attach-from='${attach_id}']`);
+    const image = $("img[data-imagepin-attach-from='" + attach_id + "']");
 
     image.before(pin);
     // Ensure the parent is a block,
@@ -42,23 +42,27 @@
         const ratio_client_height = image_client_height / image_natural_height;
         pin.css(
           'top',
-          `${(
-            position.top *
-            ratio_client_height *
-            ratio_image_height
-          ).toString()}px`
+          '' +
+            (
+              position.top *
+              ratio_client_height *
+              ratio_image_height
+            ).toString() +
+            'px'
         );
         pin.css(
           'left',
-          `${(
-            position.left *
-            ratio_client_width *
-            ratio_image_width
-          ).toString()}px`
+          '' +
+            (
+              position.left *
+              ratio_client_width *
+              ratio_image_width
+            ).toString() +
+            'px'
         );
       } else {
-        pin.css('top', `${position.top.toString()}px`);
-        pin.css('left', `${position.left.toString()}px`);
+        pin.css('top', '' + position.top.toString() + 'px');
+        pin.css('left', '' + position.left.toString() + 'px');
       }
     }
   };
@@ -67,9 +71,11 @@
     $('img[data-imagepin-attach-from]').each(function() {
       const image = $(this);
       const attach_id = image.attr('data-imagepin-attach-from');
-      $(`.imagepin[data-imagepin-attached-to='${attach_id}']`).each(function() {
-        Drupal.imagepin.setPosition($(this), image);
-      });
+      $(".imagepin[data-imagepin-attached-to='" + attach_id + "']").each(
+        function() {
+          Drupal.imagepin.setPosition($(this), image);
+        }
+      );
     });
   };
 
@@ -203,15 +209,15 @@
      */
     $arrow.css('left', Math.max(0, pin_left_position - left_position));
 
-    overlay.css('top', `${top_position.toString()}px`);
-    overlay.css('left', `${left_position.toString()}px`);
+    overlay.css('top', '' + top_position.toString() + 'px');
+    overlay.css('left', '' + left_position.toString() + 'px');
     overlay.css('display', 'none');
     overlay.fadeIn('fast');
 
     pin.addClass('imagepin--active');
 
     if (!isTouchDevice) {
-      overlay.mouseleave(() => {
+      overlay.mouseleave(function() {
         Drupal.imagepin.removeOverlays(pin);
       });
     }
@@ -232,11 +238,11 @@
       .removeClass('imagepin--active');
   };
 
-  $(window).resize(() => {
+  $(window).resize(function() {
     Drupal.imagepin.adjustPositions();
   });
 
-  $(window).load(() => {
+  $(window).load(function() {
     Drupal.imagepin.adjustPositions();
   });
 
@@ -248,10 +254,10 @@
       $('.imagepin-widgets', context).each(function() {
         const widgets = $(this);
         const attach_id = widgets.attr('data-imagepin-attach-to');
-        const image = $(`img[data-imagepin-attach-from='${attach_id}']`);
+        const image = $("img[data-imagepin-attach-from='" + attach_id + "']");
 
         image
-          .load(() => {
+          .load(function() {
             widgets.css('max-width', image.width());
             image.parent().addClass('initialized');
             Drupal.imagepin.adjustPositions();
@@ -260,7 +266,7 @@
             if (this.complete) $(this).load();
           });
 
-        image.on('click', () => {
+        image.on('click', function() {
           Drupal.imagepin.removeOverlays(image);
         });
 
@@ -270,16 +276,20 @@
 
           const key = pin.attr('data-imagepin-key');
           const widget = $(
-            `[data-imagepin-attach-to='${attach_id}'] .imagepin-widget[data-imagepin-key='${key}']`
+            "[data-imagepin-attach-to='" +
+              attach_id +
+              "'] .imagepin-widget[data-imagepin-key='" +
+              key +
+              "']"
           );
 
           // click touchstart
-          pin.on('touchstart', e => {
+          pin.on('touchstart', function(e) {
             e.preventDefault();
             Drupal.imagepin.overlay(pin, widget);
           });
 
-          pin.on('mouseover', e => {
+          pin.on('mouseover', function(e) {
             Drupal.imagepin.overlay(pin, widget);
           });
         });

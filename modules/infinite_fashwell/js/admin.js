@@ -27,21 +27,21 @@
         method: 'POST',
         dataType: 'json',
         headers: {
-          Authorization: `Token ${API_TOKEN}`,
+          Authorization: 'Token ' + API_TOKEN,
         },
         data: {
           url: imageUrl,
         },
       })
-        .success(data => {
-          setTimeout(() => {
+        .success(function(data) {
+          setTimeout(function() {
             $this.attr('href', data.annotator_url);
             $this.find('.ajax-progress-throbber').remove();
             const newWindow = window.open(data.annotator_url);
             newWindow.focus();
           }, 2500);
         })
-        .error((jqXHR, textStatus, errorThrown) => {
+        .error(function(jqXHR, textStatus, errorThrown) {
           console.error(textStatus, errorThrown);
           $this.one(
             'click.fashwell',

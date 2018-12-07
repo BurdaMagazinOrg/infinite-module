@@ -8,14 +8,14 @@
 
       CKEDITOR.dialog.add(
         'infinite_buttons',
-        `${this.path}dialogs/infinite_buttons.js`
+        '' + this.path + 'dialogs/infinite_buttons.js'
       );
 
       // Add widget
       editor.ui.addButton('infinite_buttons', {
         label: lang.buttonTitle,
         command: 'infinite_buttons',
-        icon: `${this.path}icons/btn.jpg`,
+        icon: '' + this.path + 'icons/btn.jpg',
       });
 
       editor.widgets.add('infinite_buttons', {
@@ -57,14 +57,18 @@
           if (this.data.hasOwnProperty('customiconsleft')) {
             jQuery('.bs-icon-left', $el).remove();
             if (this.data.bsiconleft) {
-              $el.prepend(`<span class="icon ${this.data.bsiconleft}"></span>`);
+              $el.prepend(
+                '<span class="icon ' + this.data.bsiconleft + '"></span>'
+              );
             }
           }
 
           if (this.data.hasOwnProperty('customiconsright')) {
             jQuery('.bs-icon-right', $el).remove();
             if (this.data.bsiconright) {
-              $el.append(`<span class="icon ${this.data.bsiconright}"></span>`);
+              $el.append(
+                '<span class="icon ' + this.data.bsiconright + '"></span>'
+              );
             }
           }
 
@@ -72,7 +76,7 @@
             jQuery('.fa-icon-left', $el).remove();
             if (this.data.faiconleft) {
               $el.prepend(
-                `<i class="fa fa-icon-left ${this.data.faiconleft}"></i>`
+                '<i class="fa fa-icon-left ' + this.data.faiconleft + '"></i>'
               );
             }
           }
@@ -81,7 +85,7 @@
             jQuery('.fa-icon-right', $el).remove();
             if (this.data.faiconright) {
               $el.append(
-                `<i class="fa fa-icon-right ${this.data.faiconright}"></i>`
+                '<i class="fa fa-icon-right ' + this.data.faiconright + '"></i>'
               );
             }
           }

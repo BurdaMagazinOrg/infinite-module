@@ -90,7 +90,7 @@
         event: AppConfig.gtmEventName,
         category: OdoscopeManager.GTM_EVENT_CATEGORY,
         action: 'oscSaveTracking',
-        label: `${pGroup}/${pData}`,
+        label: '' + pGroup + '/' + pData,
         eventNonInteraction: true,
       });
     }
@@ -103,7 +103,7 @@
     // console.log("%codoscope | articlePageRendering", "color: deepskyblue;", pDecisionFunction, pConfig);
 
     pDecisionFunction({})
-      .then(pArticles => {
+      .then(function(pArticles) {
         console.log(
           '%codoscope | articlePageRendering  | decision',
           'color: deepskyblue;',
@@ -118,7 +118,7 @@
             .create(pArticles);
         }
       })
-      .catch(pError => {
+      .catch(function(pError) {
         console.log(
           '%codoscope | articlePageRendering | error',
           'color: red;',
@@ -145,17 +145,18 @@
     Drupal.behaviors.blazy.attach(pElement);
     // tmpInfiniteBlockViewModel.refresh();
 
-    jQuery('[data-view-type="teaserFeedView"]', pElement).each(
-      (pIndex, pTeaserElement) => {
-        tmpTeaserModel = tmpTeaserListModel[pIndex];
+    jQuery('[data-view-type="teaserFeedView"]', pElement).each(function(
+      pIndex,
+      pTeaserElement
+    ) {
+      tmpTeaserModel = tmpTeaserListModel[pIndex];
 
-        if (tmpTeaserModel) {
-          jQuery(pTeaserElement).data('infiniteModel', tmpTeaserModel);
-          tmpTeaserModel.setElement(pTeaserElement);
-          // tmpTeaserModel.refresh();
-        }
+      if (tmpTeaserModel) {
+        jQuery(pTeaserElement).data('infiniteModel', tmpTeaserModel);
+        tmpTeaserModel.setElement(pTeaserElement);
+        // tmpTeaserModel.refresh();
       }
-    );
+    });
 
     // update waypoints
     // window.Waypoint.refreshAll();
@@ -171,10 +172,10 @@
   };
 
   if (typeof window.oscCallbackCalls !== 'undefined') {
-    $(document).ready(() => {
-      jQuery(window.oscCallbackCalls).each((pIndex, pItem) => {
+    $(document).ready(function() {
+      jQuery(window.oscCallbackCalls).each(function(pIndex, pItem) {
         if (pItem.functionName == 'oscInfiniteBlockViewUpdated') {
-          _.delay(() => {
+          _.delay(function() {
             window[pItem.functionName].apply(null, pItem.arguments);
           }, 0);
         } else {
