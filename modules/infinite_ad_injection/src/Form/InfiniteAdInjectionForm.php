@@ -31,7 +31,7 @@ class InfiniteAdInjectionForm extends ConfigFormBase
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('infiniteAdInjection.adminsettings');
+    $config = $this->config('infinite_ad_injection.settings');
     //create a tab element
     $form['ad_injection_settings'] = [
       '#type' => 'vertical_tabs',
@@ -67,7 +67,7 @@ class InfiniteAdInjectionForm extends ConfigFormBase
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $config = $this->config('infiniteAdInjection.adminsettings');
+    $config = $this->config('infinite_ad_injection.settings');
     foreach ($this->adInjectionTypes as $type) {
       $config->set("first_{$type}_ad_injection", $form_state->getValue("first_{$type}_ad_injection"));
       $config->set("each_{$type}_ad_injection", $form_state->getValue("each_{$type}_ad_injection"));
@@ -80,7 +80,7 @@ class InfiniteAdInjectionForm extends ConfigFormBase
    */
   protected function getEditableConfigNames()  {
     return [
-      'infiniteAdInjection.adminsettings',
+      'infinite_ad_injection.settings',
     ];
   }
 

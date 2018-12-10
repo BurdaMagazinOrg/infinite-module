@@ -1,4 +1,4 @@
-infiniteAdInjection.adminsettings_form:
+infinite_ad_injection.settings_form:
   path: 'admin/config/content/ad_injection'
   defaults:
     _form: 'Drupal\infinite_ad_injection\Form\InfiniteAdInjectionForm'

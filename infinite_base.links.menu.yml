@@ -13,7 +13,7 @@ infinite_base.filter_external_links:
 
 infinite_base.ad_injection:
   title: 'Ad injection configurations'
-  route_name: infiniteAdInjection.adminsettings_form
+  route_name: infinite_ad_injection.settings_form
   description: 'Ad injection configurations'
   parent: infinite_base.configuration
   weight: 2

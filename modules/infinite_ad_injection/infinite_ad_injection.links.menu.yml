@@ -1,4 +1,4 @@
-infiniteAdInjection.adminsettings_form:
+infinite_ad_injection.settings_form:
   title: 'Ad injection configurations'
-  route_name: infiniteAdInjection.adminsettings_form
+  route_name: infinite_ad_injection.settings_form
   description: 'Configurations for Ad injection'
