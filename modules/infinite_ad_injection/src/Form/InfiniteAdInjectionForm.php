@@ -23,20 +23,28 @@ class InfiniteAdInjectionForm extends ConfigFormBase
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId()
+  {
     return 'infinite_ad_injection_configs';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state)
+  {
     $config = $this->config('infinite_ad_injection.settings');
     //create a tab element
+    $form['ad_enable_debug'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable debug'),
+      '#default_value' => $config->get("ad_enable_debug"),
+    ];
     $form['ad_injection_settings'] = [
       '#type' => 'vertical_tabs',
       'default_tab' => 'article_settings'
     ];
+
     //populate the tab element with required configurations
     foreach ($this->adInjectionTypes as $type) {
       $form["{$type}_settings"] = [
@@ -64,10 +72,12 @@ class InfiniteAdInjectionForm extends ConfigFormBase
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state)
+  {
     parent::submitForm($form, $form_state);
 
     $config = $this->config('infinite_ad_injection.settings');
+    $config->set("ad_enable_debug", $form_state->getValue("ad_enable_debug"));
     foreach ($this->adInjectionTypes as $type) {
       $config->set("first_{$type}_ad_injection", $form_state->getValue("first_{$type}_ad_injection"));
       $config->set("each_{$type}_ad_injection", $form_state->getValue("each_{$type}_ad_injection"));
@@ -78,7 +88,8 @@ class InfiniteAdInjectionForm extends ConfigFormBase
   /**
    * {@inheritdoc}
    */
-  protected function getEditableConfigNames()  {
+  protected function getEditableConfigNames()
+  {
     return [
       'infinite_ad_injection.settings',
     ];
