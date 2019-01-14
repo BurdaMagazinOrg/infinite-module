@@ -199,16 +199,16 @@ function infinite_ad_injection_inject_content($children, $contents, $selectors, 
 
   // Rules: first ad is injected after the 2nd element, than after each 6th element
   $i = 0;
+  $each = infinite_ad_injection_recalculate_each($each);
   foreach ($fragments as $fIndex => $f) {
-    if ($i == $first || $i % $each == $first) {
-
+    if ($i == $first || ($i % $each == 0 && $i > $first)) {
       // Special handling for text / viversum paragraphs.
       if ((strpos($f->getAttribute('class'), 'item-paragraph--text') !== FALSE ||
           strpos($f->getAttribute('class'), 'item-paragraph--viversum-zodiac') !== FALSE) &&
         $pTags = $f->getElementsByTagName('p')) {
 
         // Do not append ad injection if next paragraph is an advertising paragraph.
-        if ($pTags->length <= ($first + 1) && $nextNode = $fragments->getNode($fIndex + 1)) {
+        if ($pTags->length <= ($first + 1) && $nextNode = $fragments->getNode($fIndex)) {
           if (strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE) {
 
             $fragments->getNode($fIndex);  // Reset pointer of fragments.
@@ -225,7 +225,7 @@ function infinite_ad_injection_inject_content($children, $contents, $selectors, 
       } else {
 
         // Do not append ad injection if next paragraph is an advertising paragraph.
-        if ($nextNode = $fragments->getNode($fIndex + 1)) {
+        if ($nextNode = $fragments->getNode($fIndex)) {
           if (strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE) {
 
             $fragments->getNode($fIndex);  // Reset pointer of fragments.
@@ -258,6 +258,16 @@ function infinite_ad_injection_inject_content($children, $contents, $selectors, 
   $html = $qp->find('body')->innerHtml5();
   $markup = Markup::create($html);
   return $markup;
+}
+
+/**
+ * Readjust the each index to avoid the zero value configuration
+ * @param $value
+ * @return int
+ */
+function infinite_ad_injection_recalculate_each($value) {
+  if ($value==1 || $value==0)  return 1;
+  return $value;
 }
 
 function infinite_ad_injection_get_content__dummy()
