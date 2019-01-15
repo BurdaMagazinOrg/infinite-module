@@ -55,13 +55,13 @@ class InfiniteAdInjectionForm extends ConfigFormBase
       $form["{$type}_settings"]["first_{$type}_ad_injection"] = [
         '#type' => 'number',
         '#title' => $this->t('First Ad injection'),
-        '#description' => $this->t('After how many paragraphs, inject the first ad'),
+        '#description' => $this->t('Defines where the first ad is injected (counting from zero), counting of elements are defined in the documentation'),
         '#default_value' => $config->get("first_{$type}_ad_injection"),
       ];
       $form["{$type}_settings"]["each_{$type}_ad_injection"] = [
         '#type' => 'number',
         '#title' => $this->t('Add ads each n. paragraphs'),
-        '#description' => $this->t('Add ads every each n. paragraphs'),
+        '#description' => $this->t('Defines after how many elements inject again the Ad'),
         '#default_value' => $config->get("each_{$type}_ad_injection"),
       ];
     }
