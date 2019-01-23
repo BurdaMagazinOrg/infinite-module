@@ -2,41 +2,41 @@
 {% if 'tipser' == provider %}
   {% set attrs = attrs.
     setAttribute('data-provider', provider).
-    setAttribute('data-product-id', product.product_id) %}
-  {% elseif 'tracdelight' == provider %}
+    setAttribute('data-product-id', product.product_id) %} {% elseif 'tracdelight' == provider %}
   {% set attrs = attrs.
     setAttribute('href', product.product_url__uri).
-    setAttribute('subid', "wishlist-#{product.product_id}") %}
+    setAttribute('subid', "wishlist-#{product.product_id}") %} {% else %}
+  {% set attrs = attrs.
+    setAttribute('href', product.product_url__uri) %}
 {% endif %}
 <a class="wishlist__item" {{ attrs.setAttribute('target', "_blank") }}>
   <div class="wishlist__item__image-wrapper">
     {{ image }}
   </div>
-  <div class="wishlist__item__details" data-text-action-target="wishlist__item__name" data-text-action="text-overflow">
+  <div
+    class="wishlist__item__details"
+    data-text-action-target="wishlist__item__name"
+    data-text-action="text-overflow">
     <span class="wishlist__item__brand">
       {{ product.product_brand }}</span>
     <span class="wishlist__item__name">
       {{ product_name_without_brand }}</span>
     <div class="wishlist__item__prices">
       {% if product.product_currency == 'EUR' %}
-        {% set currency = '€' %}
-        {% else %}
+        {% set currency = '€' %} {% else %}
         {% set currency = product.product_currency %}
       {% endif %}
       {% if product.product_price != '0.00' %}
         {% if product.product_original_price %}
           <span class="wishlist__item__price has-original-price">
-            {{ product.product_original_price|replace({'.': ","}) }}
-            {{ currency }}
+            {{ product.product_original_price|replace({'.': ","}) }} {{ currency }}
           </span>
           <span class="wishlist__item__original-price">
-            {{ product.product_price|replace({'.': ","}) }}
-            {{ currency }}
+            {{ product.product_price|replace({'.': ","}) }} {{ currency }}
           </span>
           {% else %}
           <span class="wishlist__item__price">
-            {{ product.product_price|replace({'.': ","}) }}
-            {{ currency }}
+            {{ product.product_price|replace({'.': ","}) }} {{ currency }}
           </span>
         {% endif %}
       {% endif %}
