@@ -1,10 +1,10 @@
-(function ($, Drupal, window) {
+(function($, Drupal, window) {
   Drupal.behaviors.imagepinEditable = {
-    attach: function (context, settings) {
-      if(!$('form.node-look-form, form.node-look-edit-form').length) {
+    attach: function(context, settings) {
+      if (!$('form.node-look-form, form.node-look-edit-form').length) {
         $('.imagepin-modal-link').hide();
       }
     },
-    detach: function (context, settings) {}
+    detach: function(context, settings) {},
   };
-}(jQuery, Drupal, window));
+})(jQuery, Drupal, window);
