@@ -127,8 +127,17 @@ function infinite_ad_injection_article_inject_content($children, $elements)
   $selectors = [];
   $selectors[] = $cssSelector->toXPath('div.item-paragraph:not(.item-paragraph--text)');
   $selectors[] = $cssSelector->toXPath('div.item-paragraph--text p');
-  if (!empty($selectors)) {
+  //this is a very bad workaround to handle the position of the first article in Freundin
+  if (!empty($selectors) && $config->get('first_article_ad_injection') > 1) {
     return infinite_ad_injection_inject_content_articles(
+      $children,
+      $contents,
+      $selectors,
+      empty($config->get('first_article_ad_injection')) ? 1 : $config->get('first_article_ad_injection'),
+      empty($config->get('each_article_ad_injection')) ? 6 : $config->get('each_article_ad_injection')
+    );
+  }elseif(!empty($selectors)) {
+    return infinite_ad_injection_inject_content(
       $children,
       $contents,
       $selectors,
@@ -260,7 +269,7 @@ function infinite_ad_injection_inject_content($children, $contents, $selectors, 
 }
 
 /**
- * Specific ad injection for articles pages
+ * Specific ad injection for articles pages in Freundin
  *
  * @param array $children
  * @param array $contents
