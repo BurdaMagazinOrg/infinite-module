@@ -138,16 +138,32 @@ function infinite_odoscope_preprocess_html(&$variables) {
   $loader_js = strtr($loader_js, ['%TARGET_SCRIPT_PATH%' => $library_source_path]);
   $variables['odoscope_loader'] = $loader_js;
 
-
-  /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
-  $library_discovery = \Drupal::service('library.discovery');
-
-  $libraries = $library_discovery->getLibrariesByExtension('infinite_odoscope');
-
-  $variables['odoscope_cache_buster'] = 'not_set';
-  $variables['odoscope_file'] = '/' . $libraries['odoscope.main']['js'][0]['data'];
-  if (isset($libraries['odoscope.main']['js'][0]['attributes']['date'])) {
-    $variables['odoscope_cache_buster'] = $libraries['odoscope.main']['js'][0]['attributes']['date'];
+  if ($variables['odoscope_enabled']) {
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    if ($route_name == 'entity.taxonomy_term.canonical') {
+      $taxonomyTerm = \Drupal::routeMatch()->getParameter('taxonomy_term');
+      // If we only got back the entity ID, load the entity.
+      if (!is_object($taxonomyTerm) && is_numeric($taxonomyTerm)) {
+        $taxonomyTerm = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($taxonomyTerm);
+      }
+      if (is_object($taxonomyTerm) && $taxonomyTerm->bundle() == 'channel') {
+        _infinite_odoscope_add_main_odoscope($variables);
+      }
+    }
+    else if ($route_name == 'entity.node.canonical') {
+      $node = \Drupal::routeMatch()->getParameter('node');
+      // If we only got back the entity ID, load the entity.
+      if (!is_object($node) && is_numeric($node)) {
+        $node = \Drupal::entityTypeManager()->getStorage('node')->load($node);
+      }
+      if (is_object($node) && $node->bundle() == 'article') {
+        _infinite_odoscope_add_main_odoscope($variables);
+      }
+    }
+    // disable the odoscope in all other cases
+    else {
+      $variables['odoscope_enabled'] = FALSE;
+    }
   }
 }
 
@@ -206,4 +222,21 @@ function infinite_odoscope_cron() {
  */
 function infinite_odoscope_base64_postrender($markup) {
   return base64_encode($markup);
+}
+
+
+/**
+ * Make the main odoscope script available
+ */
+function _infinite_odoscope_add_main_odoscope(&$variables) {
+  /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
+  $library_discovery = \Drupal::service('library.discovery');
+
+  $libraries = $library_discovery->getLibrariesByExtension('infinite_odoscope');
+
+  $variables['odoscope_cache_buster'] = 'not_set';
+  $variables['odoscope_file'] = '/' . $libraries['odoscope.main']['js'][0]['data'];
+  if (isset($libraries['odoscope.main']['js'][0]['attributes']['date'])) {
+    $variables['odoscope_cache_buster'] = $libraries['odoscope.main']['js'][0]['attributes']['date'];
+  }
 }
