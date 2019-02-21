@@ -1,13 +1,16 @@
 (function(document) {
-  "use strict";
+  const url = '%TARGET_SCRIPT_PATH%';
 
-  var url = "%TARGET_SCRIPT_PATH%",
-    scripts = document.getElementsByTagName("script"),
-    thisScript = scripts[scripts.length - 1],
-    thisParent = thisScript.parentNode,
-    newScript = document.createElement("script"),
-    currentHour = Math.floor(new Date().getTime()/(60*60*1000));
+  const scripts = document.getElementsByTagName('script');
 
-  newScript.src = url + "?" + currentHour;
+  const thisScript = scripts[scripts.length - 1];
+
+  const thisParent = thisScript.parentNode;
+
+  const newScript = document.createElement('script');
+
+  const currentHour = Math.floor(new Date().getTime() / (60 * 60 * 1000));
+
+  newScript.src = '' + url + '?' + currentHour;
   thisParent.insertBefore(newScript, thisScript.nextSibling);
 })(document);

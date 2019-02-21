@@ -1,7 +1,7 @@
 <?php
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Markup;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\DomCrawler\Crawler;
@@ -85,8 +85,7 @@ function infinite_ad_injection_taxonomy_term_view_alter(array &$build, EntityInt
  *
  * @return \Drupal\Component\Render\MarkupInterface|string
  */
-function infinite_ad_injection_term_inject_content($children, $elements)
-{
+function infinite_ad_injection_term_inject_content($children, $elements) {
   $config = \Drupal::config('infinite_ad_injection.settings');
   $contents = $config->get("ad_enable_debug")>0 ? infinite_ad_injection_get_content__dummy() :
     infinite_ad_injection_get_content(['dyn_blocks_taxonomy_term_page']);
@@ -97,6 +96,7 @@ function infinite_ad_injection_term_inject_content($children, $elements)
   $cssSelector = new CssSelectorConverter();
   $selectors = [];
   $selectors[] = $cssSelector->toXPath('div.item-paragraph:not(#steckbrief):not(.item-paragraph--spotlight)');
+  $selectors[] = $cssSelector->toXPath('div.p:not(#steckbrief):not(.p--spotlight)');
   return infinite_ad_injection_inject_content(
     $children,
     $contents,
@@ -114,8 +114,7 @@ function infinite_ad_injection_term_inject_content($children, $elements)
  *
  * @return \Drupal\Component\Render\MarkupInterface|string
  */
-function infinite_ad_injection_article_inject_content($children, $elements)
-{
+function infinite_ad_injection_article_inject_content($children, $elements) {
   $config = \Drupal::config('infinite_ad_injection.settings');
   $contents = $config->get("ad_enable_debug")>0 ? infinite_ad_injection_get_content__dummy() :
     infinite_ad_injection_get_content(['dyn_blocks_node']);
@@ -126,7 +125,11 @@ function infinite_ad_injection_article_inject_content($children, $elements)
   $cssSelector = new CssSelectorConverter();
   $selectors = [];
   $selectors[] = $cssSelector->toXPath('div.item-paragraph:not(.item-paragraph--text)');
+  $selectors[] = $cssSelector->toXPath('div.p:not(.p--text)');
+
   $selectors[] = $cssSelector->toXPath('div.item-paragraph--text p');
+  $selectors[] = $cssSelector->toXPath('div.p--text p');
+
   //this is a very bad workaround to handle the position of the first article in Freundin
   if (!empty($selectors) && $config->get('first_article_ad_injection') > 1) {
     return infinite_ad_injection_inject_content_articles(
@@ -156,8 +159,7 @@ function infinite_ad_injection_article_inject_content($children, $elements)
  *
  * @return \Drupal\Component\Render\MarkupInterface|string
  */
-function infinite_ad_injection_viversum_horoscope_inject_content($children, $elements)
-{
+function infinite_ad_injection_viversum_horoscope_inject_content($children, $elements) {
   $config = \Drupal::config('infinite_ad_injection.settings');
   $contents = $config->get("ad_enable_debug")>0 ? infinite_ad_injection_get_content__dummy() :
     infinite_ad_injection_get_content(['dyn_blocks_node']);
@@ -167,8 +169,13 @@ function infinite_ad_injection_viversum_horoscope_inject_content($children, $ele
   $cssSelector = new CssSelectorConverter();
   $selectors = [];
   $selectors[] = $cssSelector->toXPath('div.item-paragraph:not(.item-paragraph--text):not(.item-paragraph--viversum-zodiac)');
+  $selectors[] = $cssSelector->toXPath('div.p:not(.p--text):not(.p--viversum-zodiac)');
+
   $selectors[] = $cssSelector->toXPath('div.item-paragraph--text p');
+  $selectors[] = $cssSelector->toXPath('div.p--text p');
+
   $selectors[] = $cssSelector->toXPath('div.item-paragraph--viversum-zodiac p');
+  $selectors[] = $cssSelector->toXPath('div.p--viversum-zodiac p');
   if (!empty($selectors)) {
     return infinite_ad_injection_inject_content(
       $children,
@@ -194,7 +201,7 @@ function infinite_ad_injection_viversum_horoscope_inject_content($children, $ele
  *
  * @return \Drupal\Component\Render\MarkupInterface|string
  */
-function infinite_ad_injection_inject_content($children, $contents, $selectors, $first, $each, $placement = 'after'){
+function infinite_ad_injection_inject_content($children, $contents, $selectors, $first, $each, $placement = 'after') {
   $contents_count = count($contents);
   $slelector = implode('|', $selectors);
 
@@ -211,15 +218,24 @@ function infinite_ad_injection_inject_content($children, $contents, $selectors, 
     if ($i == $first || $i % $each == $first) {
 
       // Special handling for text / viversum paragraphs.
-      if ((strpos($f->getAttribute('class'), 'item-paragraph--text') !== FALSE ||
-          strpos($f->getAttribute('class'), 'item-paragraph--viversum-zodiac') !== FALSE) &&
-        $pTags = $f->getElementsByTagName('p')) {
+      if ((
+        strpos($f->getAttribute('class'), 'item-paragraph--text') !== FALSE ||
+        strpos($f->getAttribute('class'), 'item-paragraph--viversum-zodiac') !== FALSE
+      ) || (
+        strpos($f->getAttribute('class'), 'p--text') !== FALSE ||
+        strpos($f->getAttribute('class'), 'p--viversum-zodiac') !== FALSE
+      ) &&
+        $pTags = $f->getElementsByTagName('p')
+      ) {
 
         // Do not append ad injection if next paragraph is an advertising paragraph.
         if ($pTags->length <= ($first + 1) && $nextNode = $fragments->getNode($fIndex + 1)) {
-          if (strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE) {
+          if (
+            strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE ||
+            strpos($nextNode->getAttribute('class'), 'p--advertising-products-paragraph') !== FALSE
+          ) {
 
-            $fragments->getNode($fIndex);  // Reset pointer of fragments.
+            $fragments->getNode($fIndex); // Reset pointer of fragments.
             continue;
           }
         }
@@ -229,14 +245,16 @@ function infinite_ad_injection_inject_content($children, $contents, $selectors, 
           $class = trim($f->getElementsByTagName('p')->item($first)->getAttribute('class') . ' pread pread-' . $i);
           $f->getElementsByTagName('p')->item($first)->setAttribute('class', $class);
         } catch (\Error $e) {}
-      }
-      else {
+      } else {
 
         // Do not append ad injection if next paragraph is an advertising paragraph.
         if ($nextNode = $fragments->getNode($fIndex + 1)) {
-          if (strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE) {
+          if (
+            strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE ||
+            strpos($nextNode->getAttribute('class'), 'p--advertising-products-paragraph') !== FALSE
+          ) {
 
-            $fragments->getNode($fIndex);  // Reset pointer of fragments.
+            $fragments->getNode($fIndex); // Reset pointer of fragments.
             continue;
           }
         }
@@ -365,8 +383,7 @@ function infinite_ad_injection_recalculate_each($value) {
   return $value;
 }
 
-function infinite_ad_injection_get_content__dummy()
-{
+function infinite_ad_injection_get_content__dummy() {
   $contents = [];
   $contents[] = '<div style="background-color: #f00">Ad injection 1</div>';
   $contents[] = '<div style="background-color: #0f0">Ad injection 2</div>';
@@ -374,8 +391,7 @@ function infinite_ad_injection_get_content__dummy()
   return $contents;
 }
 
-function infinite_ad_injection_get_content($regions = ['dyn_blocks_node'], $rendered = TRUE)
-{
+function infinite_ad_injection_get_content($regions = ['dyn_blocks_node'], $rendered = TRUE) {
   $contents = [];
 
   $blocks = _infinite_blocks_get_dyn_region_blocks($regions);
@@ -386,7 +402,7 @@ function infinite_ad_injection_get_content($regions = ['dyn_blocks_node'], $rend
         ->view($block);
 
       if ($rendered) {
-        $block_render = trim((string)\Drupal::service('renderer')->render($block_view));
+        $block_render = trim((string) \Drupal::service('renderer')->render($block_view));
         if (strlen($block_render)) {
           $contents[] = (string)$block_render;
         }

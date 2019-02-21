@@ -58,6 +58,9 @@ function infinite_paragraphs_entity_view_mode_alter(&$view_mode, EntityInterface
       $view_mode = $parent->field_user_view_mode->value;
     }
   }
+  if (\Drupal::service('router.amp_context')->isAmpRoute() && $entity->getEntityTypeId() == 'paragraph' && $entity->hasField('field_e_view_mode') && strpos($entity->field_e_view_mode->value, 'content_reference_') === 0) {
+    $view_mode = 'amp_content_reference';
+  }
 }
 
 /**
