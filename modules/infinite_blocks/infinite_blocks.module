@@ -222,6 +222,9 @@ function infinite_blocks_preprocess_user(&$variables) {
 
       $variables['has_header_block'] = TRUE;
     }
+    if ($user->hasField('field_hide_title') && ($user->field_hide_title->value !== '0')) {
+      $variables['user_title_hidden'] = TRUE;
+    }
   }
 }
 
