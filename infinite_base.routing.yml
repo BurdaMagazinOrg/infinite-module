@@ -9,6 +9,19 @@ node.lazyloading:
     _entity_access: 'node.view'
     js: 'nojs|ajax'
 
+node.lazyloading_view:
+  path: '/lazyloading/view/{channel}/{page}'
+  defaults:
+    _controller: '\Drupal\infinite_base\Controller\LazyLoadingViewsViewController::ajaxView'
+  options:
+    parameters:
+      channel:
+        type: entity:taxonomy_term
+    _theme: ajax_base_page
+  requirements:
+    _permission: 'access content'
+
+
 infinite_base.filter_external_links:
   path: '/admin/config/content/filter-external-links'
   defaults:
