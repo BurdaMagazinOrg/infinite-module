@@ -1,0 +1,7 @@
+infinite_ad_injection.settings_form:
+  path: 'admin/config/content/infinite_base/ad_injection'
+  defaults:
+    _form: 'Drupal\infinite_ad_injection\Form\InfiniteAdInjectionForm'
+    _title: 'Ad Injection configurations'
+  requirements:
+    _permission: 'administer site configuration'

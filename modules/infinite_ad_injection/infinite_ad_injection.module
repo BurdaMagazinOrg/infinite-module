@@ -6,14 +6,16 @@ use Drupal\Core\Render\Markup;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\DomCrawler\Crawler;
 
-function infinite_ad_injection_entity_display_build_alter(&$build, $context) {
+function infinite_ad_injection_entity_display_build_alter(&$build, $context)
+{
   return;
 }
 
 /**
  * Implements hook_preprocess_views().
  */
-function infinite_ad_injection_preprocess_views_view_unformatted(&$variables) {
+function infinite_ad_injection_preprocess_views_view_unformatted(&$variables)
+{
   /* @var Drupal\views\ViewExecutable $view */
   $view = $variables['view'];
 
@@ -44,7 +46,8 @@ function infinite_ad_injection_preprocess_views_view_unformatted(&$variables) {
   }
 }
 
-function infinite_ad_injection_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+function infinite_ad_injection_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display)
+{
   $view_modes = ['full'];
   if (Drupal::moduleHandler()->moduleExists('ad_entity')) {
     $view_modes[] = 'lazyloading';
@@ -63,7 +66,8 @@ function infinite_ad_injection_node_view_alter(array &$build, EntityInterface $e
 /**
  * Implements hook_ENTITY_TYPE_view_alter().
  */
-function infinite_ad_injection_taxonomy_term_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+function infinite_ad_injection_taxonomy_term_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display)
+{
 
   $view_modes = ['default', 'amp'];
   if ($entity->bundle() != 'channel' && in_array($build['#view_mode'], $view_modes)) {
@@ -82,8 +86,9 @@ function infinite_ad_injection_taxonomy_term_view_alter(array &$build, EntityInt
  * @return \Drupal\Component\Render\MarkupInterface|string
  */
 function infinite_ad_injection_term_inject_content($children, $elements) {
-  $contents = infinite_ad_injection_get_content(['dyn_blocks_taxonomy_term_page']);
-  //$contents = infinite_ad_injection_get_content__dummy();
+  $config = \Drupal::config('infinite_ad_injection.settings');
+  $contents = $config->get("ad_enable_debug")>0 ? infinite_ad_injection_get_content__dummy() :
+    infinite_ad_injection_get_content(['dyn_blocks_taxonomy_term_page']);
   if (empty($contents)) {
     return $children;
   }
@@ -92,7 +97,13 @@ function infinite_ad_injection_term_inject_content($children, $elements) {
   $selectors = [];
   $selectors[] = $cssSelector->toXPath('div.item-paragraph:not(#steckbrief):not(.item-paragraph--spotlight)');
   $selectors[] = $cssSelector->toXPath('div.p:not(#steckbrief):not(.p--spotlight)');
-  return infinite_ad_injection_inject_content($children, $contents, $selectors, 0, 6);
+  return infinite_ad_injection_inject_content(
+    $children,
+    $contents,
+    $selectors,
+    empty($config->get('first_term_ad_injection')) ? 0 : $config->get('first_term_ad_injection'),
+    empty($config->get('each_term_ad_injection')) ? 6 : $config->get('each_term_ad_injection')
+  );
 }
 
 /**
@@ -104,8 +115,9 @@ function infinite_ad_injection_term_inject_content($children, $elements) {
  * @return \Drupal\Component\Render\MarkupInterface|string
  */
 function infinite_ad_injection_article_inject_content($children, $elements) {
-  $contents = infinite_ad_injection_get_content(['dyn_blocks_node']);
-  //$contents = infinite_ad_injection_get_content__dummy();
+  $config = \Drupal::config('infinite_ad_injection.settings');
+  $contents = $config->get("ad_enable_debug")>0 ? infinite_ad_injection_get_content__dummy() :
+    infinite_ad_injection_get_content(['dyn_blocks_node']);
   if (empty($contents)) {
     return $children;
   }
@@ -117,8 +129,24 @@ function infinite_ad_injection_article_inject_content($children, $elements) {
 
   $selectors[] = $cssSelector->toXPath('div.item-paragraph--text p');
   $selectors[] = $cssSelector->toXPath('div.p--text p');
-  if (!empty($selectors)) {
-    return infinite_ad_injection_inject_content($children, $contents, $selectors, 1, 6);
+
+  //this is a very bad workaround to handle the position of the first article in Freundin
+  if (!empty($selectors) && $config->get('first_article_ad_injection') > 1) {
+    return infinite_ad_injection_inject_content_articles(
+      $children,
+      $contents,
+      $selectors,
+      empty($config->get('first_article_ad_injection')) ? 1 : $config->get('first_article_ad_injection'),
+      empty($config->get('each_article_ad_injection')) ? 6 : $config->get('each_article_ad_injection')
+    );
+  }elseif(!empty($selectors)) {
+    return infinite_ad_injection_inject_content(
+      $children,
+      $contents,
+      $selectors,
+      empty($config->get('first_article_ad_injection')) ? 1 : $config->get('first_article_ad_injection'),
+      empty($config->get('each_article_ad_injection')) ? 6 : $config->get('each_article_ad_injection')
+    );
   }
   return $children;
 }
@@ -132,8 +160,9 @@ function infinite_ad_injection_article_inject_content($children, $elements) {
  * @return \Drupal\Component\Render\MarkupInterface|string
  */
 function infinite_ad_injection_viversum_horoscope_inject_content($children, $elements) {
-  $contents = infinite_ad_injection_get_content(['dyn_blocks_node']);
-  //$contents = infinite_ad_injection_get_content__dummy();
+  $config = \Drupal::config('infinite_ad_injection.settings');
+  $contents = $config->get("ad_enable_debug")>0 ? infinite_ad_injection_get_content__dummy() :
+    infinite_ad_injection_get_content(['dyn_blocks_node']);
   if (empty($contents)) {
     return $children;
   }
@@ -148,13 +177,20 @@ function infinite_ad_injection_viversum_horoscope_inject_content($children, $ele
   $selectors[] = $cssSelector->toXPath('div.item-paragraph--viversum-zodiac p');
   $selectors[] = $cssSelector->toXPath('div.p--viversum-zodiac p');
   if (!empty($selectors)) {
-    return infinite_ad_injection_inject_content($children, $contents, $selectors, 0, 6, 'after');
+    return infinite_ad_injection_inject_content(
+      $children,
+      $contents,
+      $selectors,
+      empty($config->get('first_article_ad_injection')) ? 0 : $config->get('first_article_ad_injection'),
+      empty($config->get('each_article_ad_injection')) ? 6 : $config->get('each_article_ad_injection'),
+      'after'
+    );
   }
   return $children;
 }
 
 /**
- *
+ * Inject the ad
  *
  * @param array $children
  * @param array $contents
@@ -233,6 +269,93 @@ function infinite_ad_injection_inject_content($children, $contents, $selectors, 
   libxml_use_internal_errors(TRUE);
   $qp = html5qp($crawler);
   $qp->find('.pread')
+    ->each(function($i, $e) use ($contents, $contents_count, $placement){
+      if($content = $contents[$i % $contents_count]){
+        // Wrapping is required because querypath creates a whole valid html structure
+        // qp('<div>some content</div>') -> <html><head></head><body><div>some content</div></body></html>
+        // qp('<script src="..."></script>') -> <html><head><script src="..."></script></head></html>
+        $content_wrapped =  '<div class="ad-injct-wrpr">'.$content.'</div>';
+        $content_inner = qp($content_wrapped)->find('body div.ad-injct-wrpr')->innerHTML();
+        qp($e)->removeClass('pread')->$placement($content_inner);
+      }
+    });
+  libxml_clear_errors();
+
+  $html = $qp->find('body')->innerHtml5();
+  $markup = Markup::create($html);
+  return $markup;
+}
+
+/**
+ * Specific ad injection for articles pages in Freundin
+ *
+ * @param array $children
+ * @param array $contents
+ * @param array $selectors
+ * @param int $first
+ * @param int $each
+ * @param string $placement
+ *
+ * @return \Drupal\Component\Render\MarkupInterface|string
+ */
+function infinite_ad_injection_inject_content_articles($children, $contents, $selectors, $first, $each, $placement = 'after')
+{
+  $contents_count = count($contents);
+  $slelector = implode('|', $selectors);
+
+  $crawler = new Crawler();
+
+  // loading the html here instead of passing it into the constructor
+  // prevents problems with the charset
+  $crawler->addHtmlContent($children . '');
+  $fragments = $crawler->filterXPath($slelector);
+
+  // Rules: first ad is injected after the 2nd element, than after each 6th element
+  $i = 0;
+  $each = infinite_ad_injection_recalculate_each($each);
+  foreach ($fragments as $fIndex => $f) {
+    if ($i == $first || ($i % $each == 0 && $i > $first)) {
+      // Special handling for text / viversum paragraphs.
+      if ((strpos($f->getAttribute('class'), 'item-paragraph--text') !== FALSE ||
+          strpos($f->getAttribute('class'), 'item-paragraph--viversum-zodiac') !== FALSE) &&
+        $pTags = $f->getElementsByTagName('p')) {
+
+        // Do not append ad injection if next paragraph is an advertising paragraph.
+        if ($pTags->length <= ($first + 1) && $nextNode = $fragments->getNode($fIndex)) {
+          if (strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE) {
+
+            $fragments->getNode($fIndex);  // Reset pointer of fragments.
+            continue;
+          }
+        }
+
+        // Add ad injection classes to first p-tag of text paragraph.
+        try {
+          $class = trim($f->getElementsByTagName('p')->item($first)->getAttribute('class') . ' pread pread-' . $i);
+          $f->getElementsByTagName('p')->item($first)->setAttribute('class', $class);
+        } catch (\Error $e) {
+        }
+      } else {
+
+        // Do not append ad injection if next paragraph is an advertising paragraph.
+        if ($nextNode = $fragments->getNode($fIndex)) {
+          if (strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE) {
+
+            $fragments->getNode($fIndex);  // Reset pointer of fragments.
+            continue;
+          }
+        }
+
+        $class = trim($f->getAttribute('class') . ' pread pread-' . $i);
+        $f->setAttribute('class', $class);
+      }
+    }
+    $i++;
+  }
+
+  libxml_use_internal_errors(TRUE);
+  $qp = html5qp($crawler);
+  $qp->find('.pread')
     ->each(function ($i, $e) use ($contents, $contents_count, $placement) {
       if ($content = $contents[$i % $contents_count]) {
         // Wrapping is required because querypath creates a whole valid html structure
@@ -248,6 +371,16 @@ function infinite_ad_injection_inject_content($children, $contents, $selectors, 
   $html = $qp->find('body')->innerHtml5();
   $markup = Markup::create($html);
   return $markup;
+}
+
+/**
+ * Readjust the each index to avoid the zero value configuration
+ * @param $value
+ * @return int
+ */
+function infinite_ad_injection_recalculate_each($value) {
+  if ($value==1 || $value==0)  return 1;
+  return $value;
 }
 
 function infinite_ad_injection_get_content__dummy() {
@@ -271,7 +404,7 @@ function infinite_ad_injection_get_content($regions = ['dyn_blocks_node'], $rend
       if ($rendered) {
         $block_render = trim((string) \Drupal::service('renderer')->render($block_view));
         if (strlen($block_render)) {
-          $contents[] = (string) $block_render;
+          $contents[] = (string)$block_render;
         }
       } else {
         $contents[] = $block_view;
