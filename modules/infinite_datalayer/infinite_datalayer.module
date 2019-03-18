@@ -83,6 +83,7 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$datalayer_variables,
   if($node->hasField('field_channel')){
     if (isset($node->field_channel->entity)) {
       $datalayer_variables_page += _infinite_datalayer_category($node->field_channel->entity);
+      $datalayer_variables_page['channelId'] = $node->field_channel->entity->id();
     }
   }
 

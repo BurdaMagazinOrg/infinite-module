@@ -20,7 +20,11 @@ function infinite_ad_injection_preprocess_views_view_unformatted(&$variables)
   $view = $variables['view'];
 
   // Place dynamic blocks in taxonomy term stream from 'Dynamic blocks for taxonomy terms' region.
-  if ($view->id() == 'infinite_taxonomy_term' && $dyn_blocks = infinite_ad_injection_get_content(['dyn_blocks_taxonomy_term_stream'], FALSE)) {
+  if (
+    $view->id() === 'infinite_taxonomy_term' &&
+    $view->current_display !== 'show_more_stream' &&
+    $dyn_blocks = infinite_ad_injection_get_content(['dyn_blocks_taxonomy_term_stream'], FALSE)
+  ) {
 
     // Check for first 5 teasers from attachment.
     if ($view->pager->current_page === NULL) {
