@@ -13,12 +13,15 @@ use Drupal\views\Views;
  */
 class LazyLoadingViewsViewController extends ControllerBase {
 
-  public function ajaxView(Term $channel, $page) {
+  public function ajaxView($nodeId, Term $channel, $page) {
     if (FALSE === is_numeric($page)) {
       throw new \Exception('Page number needs to be numeric');
     }
 
-    $args = [$channel->id()];
+    $args = [
+      $channel->id(),
+      $nodeId,
+    ];
     $view = Views::getView('infinite_taxonomy_term');
     if (is_object($view)) {
       $view->setArguments($args);

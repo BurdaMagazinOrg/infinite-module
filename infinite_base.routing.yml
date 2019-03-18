@@ -18,7 +18,7 @@ node.lazyloading:
     js: 'nojs|ajax'
 
 node.lazyloading_view:
-  path: '/lazyloading/view/{channel}/{page}'
+  path: '/lazyloading/view/{nodeId}/{channel}/{page}'
   defaults:
     _controller: '\Drupal\infinite_base\Controller\LazyLoadingViewsViewController::ajaxView'
   options:
