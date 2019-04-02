@@ -361,13 +361,33 @@ function infinite_datalayer_preprocess_amp_analytics__googleanalytics(&$variable
  * Implements hook_ENTITY_TYPE_presave() for node entities.
  */
 function infinite_datalayer_node_presave(EntityInterface $entity) {
+  infinite_datalayer_set_content_sub_types_field($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for taxonomy_term entities.
+ */
+function infinite_datalayer_taxonomy_term_presave(EntityInterface $entity) {
+  infinite_datalayer_set_content_sub_types_field($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for user entities.
+ */
+function infinite_datalayer_user_presave(EntityInterface $entity) {
+  infinite_datalayer_set_content_sub_types_field($entity);
+}
+
+function infinite_datalayer_set_content_sub_types_field(EntityInterface $entity) {
   if ($entity->hasField('field_content_sub_types')) {
     unset($entity->field_content_sub_types);
     $contentSubTypes = _infinite_datalayer_content_sub_types($entity);
     foreach ($contentSubTypes as $contentSubType) {
       $entity->field_content_sub_types[] = ['value' => $contentSubType];
     }
+    return TRUE;
   }
+  return FALSE;
 }
 
 /**
