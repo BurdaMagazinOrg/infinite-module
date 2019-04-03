@@ -5,15 +5,11 @@
  * Module for adding custom Infinity base functions.
  */
 
-use Drupal\Component\Transliteration\PhpTransliteration;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
-use Drupal\views\Plugin\views\query\Sql;
-use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_entity_base_field_info_alter().
@@ -392,15 +388,4 @@ function _infinite_base_flat_promote_states(EntityInterface $entity) {
     return $promote_states;
   }
   return FALSE;
-}
-
-/**
- * @param \Drupal\views\ViewExecutable $view
- * @param \Drupal\views\Plugin\views\query\Sql $query
- */
-function infinite_base_views_query_alter(ViewExecutable $view, Sql $query) {
-  if ('infinite_taxonomy_term' === $view->id() && 'show_more_stream' === $view->current_display) {
-    $node = \Drupal\node\Entity\Node::load($view->args[1]);
-    $query->addWhere('infinite_base', 'node_field_data.created', $node->getCreatedTime(), '<');
-  }
 }
