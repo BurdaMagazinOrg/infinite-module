@@ -122,13 +122,6 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
       }
       break;
 
-    case 'infinite_vocabulary':
-
-      // Remove second arg on infinite vocabulary attachment
-      if ($view->current_display == 'attachment_1') {
-        unset($args[1]);
-      }
-      break;
     case 'advertising_products':
       if (\Drupal::service('router.amp_context')->isAmpRoute() && $view->current_display == 'embed_in_advertising_products_paragraph') {
         $view->rowPlugin->options['view_mode'] = 'amp';
