@@ -33,6 +33,7 @@ class LazyLoadingViewsViewController extends ControllerBase {
       $view->setOffset(0);
 
       $view->execute($display);
+      $view->hide_feed_container = true;
       $preview = $view->preview($display);
       $content = render($preview);
     }
