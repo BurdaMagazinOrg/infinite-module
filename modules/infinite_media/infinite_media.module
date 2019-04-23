@@ -119,3 +119,36 @@ function _infinite_media_image_dimension($height, $width) {
     return 'portrait';
   }
 }
+
+/**
+ * Helper function to downsize image files.
+ *
+ * @param int $fid
+ *   File ID which should be downsized.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function infinite_media_file_downsize(int $fid) {
+  $file = entity_load('file', $fid);
+
+  // Apply 'upload' image style on temporary image files.
+  if ($file->isPermanent() && in_array($file->getMimeType(), ['image/gif', 'image/jpeg', 'image/png'])) {
+    $image_style_name = 'downsize';
+    $image_style = ImageStyle::load($image_style_name);
+    if ($image_style === NULL) {
+      $errors[] = t("The image style %image_style to be applied on the image does not exist.", ['%image_style' => $image_style_name]);
+    } else {
+      $derived_uri = $file->getFileUri() . '.derived';
+      if (!$image_style->createDerivative($file->getFileUri(), $derived_uri)) {
+        $errors[] = t('The uploaded image could not be processed with style %image_style. The image file may be invalid.', ['%image_style' => $image_style_name]);
+      } else {
+        if (file_unmanaged_move($derived_uri, $file->getFileUri(), FILE_EXISTS_REPLACE) === FALSE) {
+          $errors[] = t('An error occurred while saving the uploaded image file.');
+        }
+        else {
+          $file->save();
+        }
+      }
+    }
+  }
+}
