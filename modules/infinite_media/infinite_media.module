@@ -3,6 +3,8 @@
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Implements hook_file_validate().
@@ -129,10 +131,27 @@ function _infinite_media_image_dimension($height, $width) {
  * @throws \Drupal\Core\Entity\EntityStorageException
  */
 function infinite_media_file_downsize(int $fid) {
-  $file = entity_load('file', $fid);
+
+  /* @var $file FileInterface */
+  $file = \Drupal::service('entity.manager')->getStorage('file')->load($fid);
 
   // Apply 'upload' image style on temporary image files.
   if ($file->isPermanent() && in_array($file->getMimeType(), ['image/gif', 'image/jpeg', 'image/png'])) {
+
+    // Get original file via SFP from PROD if not exists yet.
+    if (!file_exists($file->getFileUri())) {
+      $host = \Drupal::request()->getSchemeAndHttpHost();
+      $filePath = \Drupal::service('file_system')->realpath($file->getFileUri());
+
+      $httpClient = new Client();
+      try {
+        $httpClient->request('GET', $host . $filePath);
+      }
+      catch (GuzzleException $e) {
+        watchdog_exception('infinite_media', $e);
+      }
+    }
+
     $image_style_name = 'downsize';
     $image_style = ImageStyle::load($image_style_name);
     if ($image_style === NULL) {
