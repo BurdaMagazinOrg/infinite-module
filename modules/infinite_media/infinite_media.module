@@ -140,12 +140,9 @@ function infinite_media_file_downsize(int $fid) {
 
     // Get original file via SFP from PROD if not exists yet.
     if (!file_exists($file->getFileUri())) {
-      $host = \Drupal::request()->getSchemeAndHttpHost();
-      $filePath = \Drupal::service('file_system')->realpath($file->getFileUri());
-
       $httpClient = new Client();
       try {
-        $httpClient->request('GET', $host . $filePath);
+        $httpClient->request('GET', file_create_url($file->getFileUri());
       }
       catch (GuzzleException $e) {
         watchdog_exception('infinite_media', $e);
