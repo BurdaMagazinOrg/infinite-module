@@ -135,7 +135,7 @@ function infinite_media_file_downsize(int $fid) {
   /* @var $file FileInterface */
   $file = \Drupal::service('entity.manager')->getStorage('file')->load($fid);
 
-  // Apply 'upload' image style on temporary image files.
+  // Apply 'downsize' image style on given managed image file.
   if ($file->isPermanent() && in_array($file->getMimeType(), ['image/gif', 'image/jpeg', 'image/png'])) {
 
     // Get original file via SFP from PROD if not exists yet.
@@ -151,6 +151,13 @@ function infinite_media_file_downsize(int $fid) {
         watchdog_exception('infinite_media', $e);
       }
     }
+
+    // Copy orig file to public://before_downsize directory as backup.
+    $beforeDownsizeDir = file_build_uri("before_downsize");
+    $beforeDownsizeUri = str_replace("public:/", $beforeDownsizeDir, $file->getFileUri());
+    $destinationDir = \Drupal::service('file_system')->dirname($beforeDownsizeUri);
+    file_prepare_directory($destinationDir, FILE_CREATE_DIRECTORY);
+    file_unmanaged_copy($file->getFileUri(), $beforeDownsizeUri);
 
     $image_style_name = 'downsize';
     $image_style = ImageStyle::load($image_style_name);
