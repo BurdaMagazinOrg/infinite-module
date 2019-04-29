@@ -145,7 +145,7 @@ function infinite_media_file_downsize(int $fid) {
         $httpClient->request('GET', file_create_url($file->getFileUri()));
       }
       catch (GuzzleException $e) {
-        watchdog_exception('infinite_media', $e);
+        watchdog_exception('infinite_media', $e, 'Can not fetch original image via SFP from PROD. Image file URI: %image_uri', ['%image_uri' => $file->getFileUri()]);
       }
     }
 
@@ -163,10 +163,10 @@ function infinite_media_file_downsize(int $fid) {
     } else {
       $derived_uri = $file->getFileUri() . '.derived';
       if (!$image_style->createDerivative($file->getFileUri(), $derived_uri)) {
-        $errors[] = t('The uploaded image could not be processed with style %image_style. The image file may be invalid.', ['%image_style' => $image_style_name]);
+        $errors[] = t('The uploaded image could not be processed with style %image_style. The image file may be invalid. Image file URI: %image_uri', ['%image_style' => $image_style_name, '%image_uri' => $file->getFileUri()]);
       } else {
         if (file_unmanaged_move($derived_uri, $file->getFileUri(), FILE_EXISTS_REPLACE) === FALSE) {
-          $errors[] = t('An error occurred while saving the uploaded image file.');
+          $errors[] = t('An error occurred while saving the downsized image file. Image file URI: %image_uri', ['%image_uri' => $file->getFileUri()]);
         }
         else {
           $file->save();
