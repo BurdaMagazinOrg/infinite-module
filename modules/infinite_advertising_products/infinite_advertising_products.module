@@ -2,15 +2,14 @@
 
 use Drupal\Core\Entity\EntityInterface;
 
-function infinite_advertising_products_entity_presave(EntityInterface $entity) {
-  if ($entity->getEntityTypeId() == 'advertising_product' && $entity->bundle() == 'advertising_product_tracdelight') {
+function infinite_advertising_products_entity_advertising_products_presave(EntityInterface $entity) {
+  if ($entity->bundle() == 'advertising_product_tracdelight') {
     /** @var \Drupal\advertising_products\Entity\AdvertisingProduct $entity */
     if (isset($entity->product_data) && $entity->hasField('field_product_category_txt')) {
       $entity->field_product_category_txt->value = $entity->product_data['category']['name'] ? : 'not available';
     }
   }
-  if ($entity->getEntityTypeId() == 'advertising_product'
-    && \Drupal::hasService('visenze.tagging')
+  if (\Drupal::hasService('visenze.tagging')
     && $entity->hasField('field_visenze') && !$entity->field_visenze->value) {
     $image_url = file_create_url($entity->product_image->get(0)->entity->getFileUri());
     $visenzeTagging = \Drupal::service('visenze.tagging');
