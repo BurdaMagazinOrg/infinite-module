@@ -2,7 +2,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 
-function infinite_advertising_products_entity_advertising_products_presave(EntityInterface $entity) {
+function infinite_advertising_products_entity_advertising_product_presave(EntityInterface $entity) {
   if ($entity->bundle() == 'advertising_product_tracdelight') {
     /** @var \Drupal\advertising_products\Entity\AdvertisingProduct $entity */
     if (isset($entity->product_data) && $entity->hasField('field_product_category_txt')) {
