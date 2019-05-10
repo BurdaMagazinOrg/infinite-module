@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\file\Entity\File;
 
 function infinite_advertising_products_advertising_product_presave(EntityInterface $entity) {
   if ($entity->bundle() == 'advertising_product_tracdelight') {
@@ -9,8 +10,12 @@ function infinite_advertising_products_advertising_product_presave(EntityInterfa
       $entity->field_product_category_txt->value = $entity->product_data['category']['name'] ? : 'not available';
     }
   }
-  if (\Drupal::hasService('visenze.tagging')
-    && $entity->hasField('field_visenze') && !$entity->field_visenze->value) {
+  if (
+    \Drupal::hasService('visenze.tagging')
+    && $entity->hasField('field_visenze')
+    && !$entity->field_visenze->value
+    && $entity->product_image->get(0)->entity instanceof File
+  ) {
     $image_url = file_create_url($entity->product_image->get(0)->entity->getFileUri());
     $visenzeTagging = \Drupal::service('visenze.tagging');
 
