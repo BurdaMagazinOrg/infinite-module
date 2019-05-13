@@ -3,6 +3,8 @@
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Implements hook_file_validate().
@@ -117,5 +119,59 @@ function _infinite_media_image_dimension($height, $width) {
     return 'landscape';
   } else {
     return 'portrait';
+  }
+}
+
+/**
+ * Helper function to downsize image files.
+ *
+ * @param int $fid
+ *   File ID which should be downsized.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function infinite_media_file_downsize(int $fid) {
+
+  /* @var $file FileInterface */
+  $file = \Drupal::service('entity.manager')->getStorage('file')->load($fid);
+
+  // Apply 'downsize' image style on given managed image file.
+  if ($file->isPermanent() && in_array($file->getMimeType(), ['image/gif', 'image/jpeg', 'image/png'])) {
+
+    // Get original file via SFP from PROD if not exists yet.
+    if (!file_exists($file->getFileUri())) {
+      $httpClient = new Client();
+      try {
+        $httpClient->request('GET', file_create_url($file->getFileUri()));
+      }
+      catch (GuzzleException $e) {
+        watchdog_exception('infinite_media', $e, 'Can not fetch original image via SFP from PROD. Image file URI: %image_uri', ['%image_uri' => $file->getFileUri()]);
+      }
+    }
+
+    // Copy orig file to public://before_downsize directory as backup.
+    $beforeDownsizeDir = file_build_uri("before_downsize");
+    $beforeDownsizeUri = str_replace("public:/", $beforeDownsizeDir, $file->getFileUri());
+    $destinationDir = \Drupal::service('file_system')->dirname($beforeDownsizeUri);
+    file_prepare_directory($destinationDir, FILE_CREATE_DIRECTORY);
+    file_unmanaged_copy($file->getFileUri(), $beforeDownsizeUri);
+
+    $image_style_name = 'downsize';
+    $image_style = ImageStyle::load($image_style_name);
+    if ($image_style === NULL) {
+      $errors[] = t("The image style %image_style to be applied on the image does not exist.", ['%image_style' => $image_style_name]);
+    } else {
+      $derived_uri = $file->getFileUri() . '.derived';
+      if (!$image_style->createDerivative($file->getFileUri(), $derived_uri)) {
+        $errors[] = t('The uploaded image could not be processed with style %image_style. The image file may be invalid. Image file URI: %image_uri', ['%image_style' => $image_style_name, '%image_uri' => $file->getFileUri()]);
+      } else {
+        if (file_unmanaged_move($derived_uri, $file->getFileUri(), FILE_EXISTS_REPLACE) === FALSE) {
+          $errors[] = t('An error occurred while saving the downsized image file. Image file URI: %image_uri', ['%image_uri' => $file->getFileUri()]);
+        }
+        else {
+          $file->save();
+        }
+      }
+    }
   }
 }
