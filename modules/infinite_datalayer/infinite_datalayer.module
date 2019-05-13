@@ -3,6 +3,8 @@
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
@@ -353,4 +355,75 @@ function infinite_datalayer_preprocess_amp_analytics__googleanalytics(&$variable
     $datalayer = infinite_datalayer_get_variables($user, 'default');
   }
   $variables['datalayer'] = $datalayer;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for node entities.
+ */
+function infinite_datalayer_node_presave(EntityInterface $entity) {
+  infinite_datalayer_set_content_sub_types_field($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for taxonomy_term entities.
+ */
+function infinite_datalayer_taxonomy_term_presave(EntityInterface $entity) {
+  infinite_datalayer_set_content_sub_types_field($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for user entities.
+ */
+function infinite_datalayer_user_presave(EntityInterface $entity) {
+  infinite_datalayer_set_content_sub_types_field($entity);
+}
+
+function infinite_datalayer_set_content_sub_types_field(EntityInterface $entity) {
+  if ($entity->hasField('field_content_sub_types')) {
+    unset($entity->field_content_sub_types);
+    $contentSubTypes = _infinite_datalayer_content_sub_types($entity);
+    foreach ($contentSubTypes as $contentSubType) {
+      $entity->field_content_sub_types[] = ['value' => $contentSubType];
+    }
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Returns allowed values for Content Sub Types field.
+ *
+ * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $definition
+ * @param \Drupal\Core\Entity\FieldableEntityInterface|NULL $entity
+ * @param bool $cacheable
+ *
+ * @return array
+ *   List of allowed datalayer content sub types.
+ */
+function infinite_datalayer_allowed_content_sub_types(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL, &$cacheable = TRUE) {
+  $contentSubTypes = [
+    'undefined' => 'Undefined',
+    'advertising_product_amazon' => 'Affiliate-Amazon',
+    'advertising_product_generic' => 'Affiliate-Generic',
+    'advertising_product_tipser' => 'Affiliate-Tipser',
+    'advertising_product_tracdelight' => 'Affiliate-Tracdelight',
+    'advertising_product_undefined' => 'Affiliate-Undefined',
+    'media_file' => 'File',
+    'media_image' => 'Image',
+    'media_nexx_video' => 'Nexx Video',
+    'media_video' => 'Video',
+    'native'  => 'NativeArticle',
+    'paragraph_ecommerce_look' => 'Ecommerce Look',
+    'paragraph_gallery' => 'Gallery',
+    'paragraph_instagram' => 'Instagram',
+    'paragraph_pinterest' => 'Pinterest',
+    'paragraph_riddle' => 'Riddle',
+    'paragraph_seo_links' => 'SEO Links',
+    'paragraph_spotlight' => 'Spotlight',
+    'paragraph_text' => 'Text',
+    'paragraph_twitter' => 'Twitter',
+  ];
+
+  // We use here the array flip because GraphQL only shows keys.
+  return array_flip($contentSubTypes);
 }
