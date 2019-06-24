@@ -7,3 +7,8 @@ outbrain_js:
     gpl-compatible: true
   js:
     //widgets.outbrain.com/outbrain.js: { type: external }
+
+consent_js:
+  version: 1.0.0
+  js:
+    js/consent.js: {}
