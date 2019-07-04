@@ -1,2 +1,14 @@
 <?php
 
+/**
+ * Implement hook_requirements() to prevent installation of this module.
+ */
+function infinite_article_requirements($phase) {
+  if ($phase === 'install') {
+    $requirements['infinite_article'] = [
+      'value' => t('Abandoned'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('This module, the infinite_base module and the infinite theme cannot be installed anymore. The module can only be used in existing installations.'),
+    ];
+  }
+}

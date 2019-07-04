@@ -4,7 +4,19 @@ use Drupal\Core\Image\Image;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\media_entity\Entity\Media;
+
+/**
+ * Implement hook_requirements() to prevent installation of this module.
+ */
+function infinite_media_requirements($phase) {
+  if ($phase === 'install') {
+    $requirements['infinite_media'] = [
+      'value' => t('Abandoned'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('This module, the infinite_base module and the infinite theme cannot be installed anymore. The module can only be used in existing installations.'),
+    ];
+  }
+}
 
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
@@ -37,7 +49,6 @@ function infinite_media_preprocess_media(&$variables) {
   }
   $variables['absolute_node_url'] = $absolute_url->toString();
 
-  /* @var Media $media */
   $media = $variables['elements']['#media'];
   $variables['media_type'] = $media->bundle();
   $variables['media_id'] = $media->id();

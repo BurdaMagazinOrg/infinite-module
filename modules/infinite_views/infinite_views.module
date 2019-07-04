@@ -12,6 +12,19 @@ use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutable;
 
 /**
+ * Implement hook_requirements() to prevent installation of this module.
+ */
+function infinite_views_requirements($phase) {
+  if ($phase === 'install') {
+    $requirements['infinite_views'] = [
+      'value' => t('Abandoned'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('This module, the infinite_base module and the infinite theme cannot be installed anymore. The module can only be used in existing installations.'),
+    ];
+  }
+}
+
+/**
  * Implements hook_views_pre_view().
  *
  * Exclude previous loaded NIDs from presenter views.

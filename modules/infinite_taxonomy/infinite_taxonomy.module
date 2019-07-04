@@ -9,6 +9,19 @@ use Drupal\Core\Field\BaseFieldDefinition;
  */
 
 /**
+ * Implement hook_requirements() to prevent installation of this module.
+ */
+function infinite_taxonomy_requirements($phase) {
+  if ($phase === 'install') {
+    $requirements['infinite_taxonomy'] = [
+      'value' => t('Abandoned'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('This module, the infinite_base module and the infinite theme cannot be installed anymore. The module can only be used in existing installations.'),
+    ];
+  }
+}
+
+/**
  * Implements hook_entity_base_field_info().
  */
 function infinite_taxonomy_entity_base_field_info(EntityTypeInterface $entity_type) {
