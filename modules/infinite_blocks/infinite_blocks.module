@@ -16,7 +16,7 @@ use Drupal\user\Entity\User;
  */
 function infinite_blocks_requirements($phase) {
   if ($phase === 'install') {
-    $requirements['infinite_blocks'] = [
+    return $requirements['infinite_blocks'] = [
       'value' => t('Abandoned'),
       'severity' => REQUIREMENT_ERROR,
       'description' => t('This module, the infinite_base module and the infinite theme cannot be installed anymore. The module can only be used in existing installations.'),

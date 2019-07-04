@@ -13,7 +13,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  */
 function infinite_taxonomy_requirements($phase) {
   if ($phase === 'install') {
-    $requirements['infinite_taxonomy'] = [
+    return $requirements['infinite_taxonomy'] = [
       'value' => t('Abandoned'),
       'severity' => REQUIREMENT_ERROR,
       'description' => t('This module, the infinite_base module and the infinite theme cannot be installed anymore. The module can only be used in existing installations.'),
