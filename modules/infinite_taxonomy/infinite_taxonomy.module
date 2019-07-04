@@ -12,13 +12,17 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * Implement hook_requirements() to prevent installation of this module.
  */
 function infinite_taxonomy_requirements($phase) {
+  $requirements = [];
+
   if ($phase === 'install') {
-    return $requirements['infinite_taxonomy'] = [
+    $requirements['infinite_taxonomy'] = [
       'value' => t('Abandoned'),
       'severity' => REQUIREMENT_ERROR,
       'description' => t('This module, the infinite_base module and the infinite theme cannot be installed anymore. The module can only be used in existing installations.'),
     ];
   }
+
+  return $requirements;
 }
 
 /**

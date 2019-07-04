@@ -16,13 +16,17 @@ use Drupal\Core\Form\FormStateInterface;
  * Implement hook_requirements() to prevent installation of this module.
  */
 function infinite_base_requirements($phase) {
+  $requirements = [];
+
   if ($phase === 'install') {
-    return $requirements['infinite'] = [
+    $requirements['infinite'] = [
       'value' => t('Abandoned'),
       'severity' => REQUIREMENT_ERROR,
       'description' => t('The infinite_base module, its child modules and the infinite theme cannot be installed anymore. The module can only be used in existing installations.'),
     ];
   }
+
+  return $requirements;
 }
 
 

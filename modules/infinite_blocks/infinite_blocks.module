@@ -15,13 +15,17 @@ use Drupal\user\Entity\User;
  * Implement hook_requirements() to prevent installation of this module.
  */
 function infinite_blocks_requirements($phase) {
+  $requirements = [];
+
   if ($phase === 'install') {
-    return $requirements['infinite_blocks'] = [
+    $requirements['infinite_blocks'] = [
       'value' => t('Abandoned'),
       'severity' => REQUIREMENT_ERROR,
       'description' => t('This module, the infinite_base module and the infinite theme cannot be installed anymore. The module can only be used in existing installations.'),
     ];
   }
+
+  return $requirements;
 }
 
 
