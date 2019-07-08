@@ -3,6 +3,23 @@
 use Drupal\config_update\ConfigRevertInterface;
 
 /**
+ * Implement hook_requirements() to prevent installation of this module.
+ */
+function infinite_views_requirements($phase) {
+  $requirements = [];
+
+  if ($phase === 'install') {
+    return $requirements['infinite_views'] = [
+      'value' => t('Abandoned'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('This module, the infinite_base module and the infinite theme cannot be installed anymore. The module can only be used in existing installations.'),
+    ];
+  }
+
+  return $requirements;
+}
+
+/**
  * Add Infinite Front view, for lazyloading after oldest article is reached
  */
 function infinite_views_update_8101() {

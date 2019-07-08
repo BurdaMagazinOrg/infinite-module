@@ -6,23 +6,6 @@ use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
 
 /**
- * Implement hook_requirements() to prevent installation of this module.
- */
-function infinite_media_requirements($phase) {
-  $requirements = [];
-
-  if ($phase === 'install') {
-    $requirements['infinite_media'] = [
-      'value' => t('Abandoned'),
-      'severity' => REQUIREMENT_ERROR,
-      'description' => t('This module, the infinite_base module and the infinite theme cannot be installed anymore. The module can only be used in existing installations.'),
-    ];
-  }
-
-  return $requirements;
-}
-
-/**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
 function infinite_media_theme_suggestions_image_alter(array &$suggestions, array $variables) {
