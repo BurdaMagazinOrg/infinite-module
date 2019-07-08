@@ -12,7 +12,6 @@ use Drupal\Core\Form\FormStateInterface;
  * Module for adding custom Infinity base functions.
  */
 
-
 /**
  * Implements hook_entity_view_mode_alter().
  *

@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * Implement hook_requirements() to prevent installation of this module.
+ */
+function infinite_paragraphs_requirements($phase) {
+  $requirements = [];
+
+  if ($phase === 'install') {
+    $requirements['infinite_paragraphs'] = [
+      'value' => t('Abandoned'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('This module, the infinite_base module and the infinite theme cannot be installed anymore. The module can only be used in existing installations.'),
+    ];
+  }
+
+  return $requirements;
+}

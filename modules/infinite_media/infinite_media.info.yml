@@ -12,7 +12,6 @@ dependencies:
   - image
   - inline_entity_form
   - link
-  - media_entity
   - responsive_image
   - thunder_media
 config_devel:

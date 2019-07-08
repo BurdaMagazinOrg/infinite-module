@@ -11,7 +11,6 @@ use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
 
-
 function infinite_blocks_theme() {
   return [
     'header_media' => array(
