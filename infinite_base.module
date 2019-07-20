@@ -33,7 +33,7 @@ function infinite_base_entity_presave(EntityInterface $entity){
   if ('node' === $entity->getEntityTypeId()) {
     /** @var \Drupal\node\Entity\Node $node */
     $node = $entity;
-    $entity = Metatags::injectGooglebotNews($node);
+    $entity = (new Metatags())->injectGooglebotNews($node);
   }
 }
 
