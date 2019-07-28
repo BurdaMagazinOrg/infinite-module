@@ -10,8 +10,10 @@ class Metatags {
       return $node;
     }
 
-    // If node is native or advertorila set googlebot news value
+    // If node is native or advertorial set googlebot news value
     $metaTagsField = $node->get('field_meta_tags')->first();
+
+    $clearValue = true;
     if ($metaTagsField) {
       $metaTagsValue = unserialize($metaTagsField->getValue()['value']);
 
@@ -21,6 +23,7 @@ class Metatags {
         in_array($node->get('field_sponsor_type')->first()->value, ['native', 'advertorial'])
       ) {
         $this->setGooglebotNewsMetatagValue($node, $metaTagsValue);
+        $clearValue = false;
       }
     } else {
       $metaTagsValue = [];
@@ -29,6 +32,11 @@ class Metatags {
     // If node is ecommerce landing page set googlebot news value
     if($this->nodeIsEcommerceLandingPage($node)) {
       $this->setGooglebotNewsMetatagValue($node, $metaTagsValue);
+      $clearValue = false;
+    }
+
+    if ($clearValue) {
+      $this->setGooglebotNewsMetatagValue($node, $metaTagsValue, '');
     }
 
     return $node;
@@ -58,11 +66,6 @@ class Metatags {
     array $metaTagsValue,
     string $defaultValue = 'noindex, nofollow'
   ): void {
-    // if another value is already set, do not overwrite
-    if (false === empty($metaTagsValue['metatag_googlebot_news'])) {
-      return;
-    }
-
     $metaTagsValue['metatag_googlebot_news'] = $defaultValue;
     $node->set('field_meta_tags', serialize($metaTagsValue));
   }
