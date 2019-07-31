@@ -41,7 +41,7 @@ Drupal.behaviors.infiniteWishlist = {
       uuid: uuid,
       expires: 0,
       markup: '',
-      addedToWishlistTimestamp: Date.now(),
+      addedToWishlistTimestamp: Date.now()
     });
     localStorage.setItem('infinite__wishlist', JSON.stringify(wishlist));
 
@@ -78,7 +78,7 @@ Drupal.behaviors.infiniteWishlist = {
           action: 'wishlist--add-to-wishlist',
           label: '' + item.name + ' | ' + item.productId,
           location: window.location.pathname,
-          eventNonInteraction: false,
+          eventNonInteraction: false
         });
         break;
       case 'removed':
@@ -90,7 +90,7 @@ Drupal.behaviors.infiniteWishlist = {
           productExtraInformation: Drupal.behaviors.infiniteWishlist.getDurationInWishlist(
             item
           ),
-          eventNonInteraction: false,
+          eventNonInteraction: false
         });
         break;
       default:
@@ -246,7 +246,7 @@ Drupal.behaviors.infiniteWishlist = {
             productExtraInformation: e.currentTarget.getAttribute(
               'data-product-extra-information'
             ),
-            eventNonInteraction: false,
+            eventNonInteraction: false
           });
         });
       }
@@ -273,7 +273,7 @@ Drupal.behaviors.infiniteWishlist = {
         d: d,
         h: h,
         m: m,
-        s: s,
+        s: s
       };
     }
 
@@ -342,6 +342,7 @@ Drupal.behaviors.infiniteWishlist = {
       }
       icon.addEventListener('click', function(e) {
         e.stopPropagation();
+        e.preventDefault();
         if (e.currentTarget.classList.contains('in-wishlist')) {
           e.currentTarget.classList.remove('in-wishlist');
           Drupal.behaviors.infiniteWishlist.removeFromWishlist(
@@ -368,7 +369,7 @@ Drupal.behaviors.infiniteWishlist = {
       .getElementById('wishlist')
       .classList.contains('open');
     const event = new CustomEvent('wishlist-overlay', {
-      detail: { isLayerVisible: toggleStatus },
+      detail: { isLayerVisible: toggleStatus }
     });
     window.dispatchEvent(event);
   },
@@ -382,7 +383,7 @@ Drupal.behaviors.infiniteWishlist = {
         category: 'wishlist',
         action: 'wishlist--click-wishlist-icon',
         location: window.location.pathname,
-        eventNonInteraction: false,
+        eventNonInteraction: false
       });
     }
     this.dispatchToggleEvent();
@@ -601,5 +602,5 @@ Drupal.behaviors.infiniteWishlist = {
     }
 
     headerIcon.parentNode.replaceChild(clone, headerIcon);
-  },
+  }
 };
