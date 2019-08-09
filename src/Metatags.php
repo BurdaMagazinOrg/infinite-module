@@ -19,6 +19,7 @@ class Metatags {
 
       if (
         $node->hasField('field_meta_tags') &&
+        $node->hasField('field_sponsor_type') &&
         $node->get('field_sponsor_type')->first() &&
         in_array($node->get('field_sponsor_type')->first()->value, ['native', 'advertorial'])
       ) {
