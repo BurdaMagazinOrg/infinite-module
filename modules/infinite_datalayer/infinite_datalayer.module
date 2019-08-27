@@ -417,6 +417,7 @@ function infinite_datalayer_allowed_content_sub_types(FieldStorageDefinitionInte
     'paragraph_gallery' => 'Gallery',
     'paragraph_instagram' => 'Instagram',
     'paragraph_pinterest' => 'Pinterest',
+    'paragraph_products' => 'Products',
     'paragraph_riddle' => 'Riddle',
     'paragraph_seo_links' => 'SEO Links',
     'paragraph_spotlight' => 'Spotlight',
