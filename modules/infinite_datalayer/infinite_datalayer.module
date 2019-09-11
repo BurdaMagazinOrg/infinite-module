@@ -16,23 +16,32 @@ use Drupal\user\UserInterface;
  */
 
 /**
- * Implements hook_entity_view().
+ * Implements hook_ENTITY_TYPE_view() for node entities.
  */
-function infinite_datalayer_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-
-  // We ony want datalayer for node, taxonomy_term or user entities.
-  if(!in_array($entity->getEntityTypeId(), ['node', 'taxonomy_term', 'user'])) {
-    return;
-  }
-
-  // Do nothing if view mode is not a datalayer view mode for this entity type.
-  if (!in_array($view_mode, infinite_datalayer_get_datalayer_view_modes($entity->getEntityTypeId()))) {
-    return;
-  }
-
-  $datalayer_variables = infinite_datalayer_get_variables($entity, $view_mode);
-  if($datalayer_variables){
+function infinite_datalayer_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if (in_array($view_mode, ['full', 'lazyloading'])
+    && $datalayer_variables = infinite_datalayer_get_variables($entity, $view_mode)) {
     infinite_datalayer_add($build, $entity->uuid(), $datalayer_variables);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for taxonomy_term entities.
+ */
+function infinite_datalayer_taxonomy_term_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if (in_array($view_mode, ['default', 'paragraphs_only'])
+    && $datalayer_variables = infinite_datalayer_get_variables($entity, $view_mode)) {
+    infinite_datalayer_add($build, $entity->uuid(), $datalayer_variables);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for user entities.
+ */
+function infinite_datalayer_user_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($view_mode == 'default'
+    && $datalayer_variables = infinite_datalayer_get_variables($entity, $view_mode)) {
+      infinite_datalayer_add($build, $entity->uuid(), $datalayer_variables);
   }
 }
 
@@ -78,8 +87,17 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$datalayer_variables,
   $datalayer_variables_page = &$datalayer_variables['page'];
   $datalayer_variables_page['authorName'] = $node->getOwner()->getDisplayName();
 
-  if($content_sub_type = _infinite_datalayer_content_sub_types($node)){
-    $datalayer_variables_page['contentSubType'] = $content_sub_type;
+  if ($node->hasField('field_content_sub_types')
+    && !$node->get('field_content_sub_types')->isEmpty()) {
+
+    $content_sub_types = [];
+    foreach ($node->field_content_sub_types as $item) {
+      $content_sub_types[] = $item->value;
+    }
+    $datalayer_variables_page['contentSubType'] = $content_sub_types;
+  }
+  else if ($content_sub_types = _infinite_datalayer_content_sub_types($node)) {
+    $datalayer_variables_page['contentSubType'] = $content_sub_types;
   }
 
   if($node->hasField('field_channel')){
@@ -102,7 +120,6 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$datalayer_variables,
   else {
     $datalayer_variables_page['publishDate'] = date(DATE_ISO8601, $node->created->value);
   }
-
 }
 
 /**
@@ -116,7 +133,16 @@ function infinite_datalayer_infinite_datalayer_taxonomy_term_alter(&$datalayer_v
   }
   $context['key'] = 'page';
 
-  if($content_sub_type = _infinite_datalayer_content_sub_types($term)){
+  if ($term->hasField('field_content_sub_types')
+    && !$term->get('field_content_sub_types')->isEmpty()) {
+
+    $content_sub_types = [];
+    foreach ($term->field_content_sub_types as $item) {
+      $content_sub_types[] = $item->value;
+    }
+    $datalayer_variables_page['contentSubType'] = $content_sub_types;
+  }
+  else if ($content_sub_type = _infinite_datalayer_content_sub_types($term)) {
     $datalayer_variables['page']['contentSubType'] = $content_sub_type;
   }
 }
@@ -311,29 +337,6 @@ function _infinite_datalayer_category(Term $term) {
   }
 
   return $category;
-}
-
-/**
- * Helper function to get datalayer enabled view modes.
- *
- * @param bool $entityType
- *
- * @return array|bool|mixed
- */
-function infinite_datalayer_get_datalayer_view_modes($entityType = FALSE) {
-  $datalayerViewModes = [
-    'node'          => ['full', 'lazyloading'],
-    'taxonomy_term' => ['default', 'paragraphs_only'],
-    'user'          => ['default'],
-  ];
-
-  if (!$entityType) {
-    return $datalayerViewModes;
-  }
-  else if (isset($datalayerViewModes[$entityType])) {
-    return $datalayerViewModes[$entityType];
-  }
-  return FALSE;
 }
 
 /**
