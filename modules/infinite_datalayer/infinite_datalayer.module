@@ -16,23 +16,32 @@ use Drupal\user\UserInterface;
  */
 
 /**
- * Implements hook_entity_view().
+ * Implements hook_ENTITY_TYPE_view() for node entities.
  */
-function infinite_datalayer_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-
-  // We ony want datalayer for node, taxonomy_term or user entities.
-  if(!in_array($entity->getEntityTypeId(), ['node', 'taxonomy_term', 'user'])) {
-    return;
-  }
-
-  // Do nothing if view mode is not a datalayer view mode for this entity type.
-  if (!in_array($view_mode, infinite_datalayer_get_datalayer_view_modes($entity->getEntityTypeId()))) {
-    return;
-  }
-
-  $datalayer_variables = infinite_datalayer_get_variables($entity, $view_mode);
-  if($datalayer_variables){
+function infinite_datalayer_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if (in_array($view_mode, ['full', 'lazyloading'])
+    && $datalayer_variables = infinite_datalayer_get_variables($entity, $view_mode)) {
     infinite_datalayer_add($build, $entity->uuid(), $datalayer_variables);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for taxonomy_term entities.
+ */
+function infinite_datalayer_taxonomy_term_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if (in_array($view_mode, ['default', 'paragraphs_only'])
+    && $datalayer_variables = infinite_datalayer_get_variables($entity, $view_mode)) {
+    infinite_datalayer_add($build, $entity->uuid(), $datalayer_variables);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for user entities.
+ */
+function infinite_datalayer_user_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($view_mode == 'default'
+    && $datalayer_variables = infinite_datalayer_get_variables($entity, $view_mode)) {
+      infinite_datalayer_add($build, $entity->uuid(), $datalayer_variables);
   }
 }
 
@@ -77,10 +86,7 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$datalayer_variables,
   $node = $context['entity'];
   $datalayer_variables_page = &$datalayer_variables['page'];
   $datalayer_variables_page['authorName'] = $node->getOwner()->getDisplayName();
-
-  if($content_sub_type = _infinite_datalayer_content_sub_types($node)){
-    $datalayer_variables_page['contentSubType'] = $content_sub_type;
-  }
+  $datalayer_variables_page['contentSubType'] = infinite_datalayer_get_content_sub_types($node);
 
   if($node->hasField('field_channel')){
     if (isset($node->field_channel->entity)) {
@@ -92,17 +98,14 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$datalayer_variables,
   if($node->bundle() == 'article'){
     $datalayer_variables_page['articlePublishDate'] = date(DATE_ISO8601, $node->created->value);
 
+    $context['key'] = 'page';
     if (\Drupal::request()->attributes->get('js') == 'ajax') {
       $context['key'] = $node->uuid();
-    }
-    else {
-      $context['key'] = 'page';
     }
   }
   else {
     $datalayer_variables_page['publishDate'] = date(DATE_ISO8601, $node->created->value);
   }
-
 }
 
 /**
@@ -114,11 +117,8 @@ function infinite_datalayer_infinite_datalayer_taxonomy_term_alter(&$datalayer_v
   if ($term->bundle() == 'channel') {
     $datalayer_variables['page'] += _infinite_datalayer_category($term);
   }
+  $datalayer_variables['page']['contentSubType'] = infinite_datalayer_get_content_sub_types($term);
   $context['key'] = 'page';
-
-  if($content_sub_type = _infinite_datalayer_content_sub_types($term)){
-    $datalayer_variables['page']['contentSubType'] = $content_sub_type;
-  }
 }
 
 /**
@@ -137,6 +137,8 @@ function infinite_datalayer_infinite_datalayer_user_alter(&$datalayer_variables,
 
 /**
  * Implements hook_preprocess_node().
+ *
+ * TODO: Is this really required?
  */
 function infinite_datalayer_preprocess_node(&$variables) {
   $variables['uuid'] = $variables['node']->uuid();
@@ -302,6 +304,7 @@ function _infinite_datalayer_category(Term $term) {
       // term is in the last position.
     case 2:
       $category['category'] = $term->name->value;
+      $category['subCategory'] = $term->name->value;
       break;
     default:
       $parent = array_values($parents)[count($parents) - 2];
@@ -311,29 +314,6 @@ function _infinite_datalayer_category(Term $term) {
   }
 
   return $category;
-}
-
-/**
- * Helper function to get datalayer enabled view modes.
- *
- * @param bool $entityType
- *
- * @return array|bool|mixed
- */
-function infinite_datalayer_get_datalayer_view_modes($entityType = FALSE) {
-  $datalayerViewModes = [
-    'node'          => ['full', 'lazyloading'],
-    'taxonomy_term' => ['default', 'paragraphs_only'],
-    'user'          => ['default'],
-  ];
-
-  if (!$entityType) {
-    return $datalayerViewModes;
-  }
-  else if (isset($datalayerViewModes[$entityType])) {
-    return $datalayerViewModes[$entityType];
-  }
-  return FALSE;
 }
 
 /**
@@ -358,6 +338,31 @@ function infinite_datalayer_preprocess_amp_analytics__googleanalytics(&$variable
 }
 
 /**
+ * Get content sub types of an entity.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   Entity to get content sub types from.
+ *
+ * @return array
+ *   Return array of content sub types.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function infinite_datalayer_get_content_sub_types(EntityInterface $entity) {
+  if ($entity->hasField('field_content_sub_types')
+    && !$entity->get('field_content_sub_types')->isEmpty()) {
+
+    $content_sub_types = [];
+    foreach ($entity->field_content_sub_types as $item) {
+      $content_sub_types[] = $item->value;
+    }
+    return $content_sub_types;
+  }
+  return _infinite_datalayer_content_sub_types($entity);
+}
+
+/**
  * Implements hook_ENTITY_TYPE_presave() for node entities.
  */
 function infinite_datalayer_node_presave(EntityInterface $entity) {
@@ -378,6 +383,18 @@ function infinite_datalayer_user_presave(EntityInterface $entity) {
   infinite_datalayer_set_content_sub_types_field($entity);
 }
 
+/**
+ * Set values for field_content_sub_types if possible.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   Entity for which we want set values of field_content_sub_types.
+ *
+ * @return bool
+ *   Return FALSE if field_content_sub_types does not exists.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
 function infinite_datalayer_set_content_sub_types_field(EntityInterface $entity) {
   if ($entity->hasField('field_content_sub_types')) {
     unset($entity->field_content_sub_types);
