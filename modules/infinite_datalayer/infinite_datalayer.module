@@ -304,6 +304,7 @@ function _infinite_datalayer_category(Term $term) {
       // term is in the last position.
     case 2:
       $category['category'] = $term->name->value;
+      $category['subCategory'] = $term->name->value;
       break;
     default:
       $parent = array_values($parents)[count($parents) - 2];
