@@ -280,6 +280,10 @@ function infinite_ad_injection_inject_content($children, $contents, $selectors, 
         // qp('<script src="..."></script>') -> <html><head><script src="..."></script></head></html>
         $content_wrapped =  '<div class="ad-injct-wrpr">'.$content.'</div>';
         $content_inner = qp($content_wrapped)->find('body div.ad-injct-wrpr')->innerHTML();
+        if ($i === 0 && qp($content_wrapped)->find('amp-fx-flying-carpet')->count()) {
+          $placement = 'before';
+          qp($e)->addClass('p--text-first');
+        }
         qp($e)->removeClass('pread')->$placement($content_inner);
       }
     });
