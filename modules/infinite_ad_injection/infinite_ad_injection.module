@@ -1,8 +1,10 @@
 <?php
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Markup;
+use Drupal\infinite_ad_injection\AdInjectionContentInjection;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -87,10 +89,10 @@ function infinite_ad_injection_taxonomy_term_view_alter(array &$build, EntityInt
  * @param $children
  * @param $elements
  *
- * @return \Drupal\Component\Render\MarkupInterface|string
+ * @return MarkupInterface|string
  */
 function infinite_ad_injection_term_inject_content($children, $elements) {
-  $config = \Drupal::config('infinite_ad_injection.settings');
+  $config = Drupal::config('infinite_ad_injection.settings');
   $contents = $config->get("ad_enable_debug")>0 ? infinite_ad_injection_get_content__dummy() :
     infinite_ad_injection_get_content(['dyn_blocks_taxonomy_term_page']);
   if (empty($contents)) {
@@ -105,8 +107,8 @@ function infinite_ad_injection_term_inject_content($children, $elements) {
     $children,
     $contents,
     $selectors,
-    empty($config->get('first_term_ad_injection')) ? 0 : $config->get('first_term_ad_injection'),
-    empty($config->get('each_term_ad_injection')) ? 6 : $config->get('each_term_ad_injection')
+    empty($config->get('first_term_ad_injection')) ? 0 : (int) $config->get('first_term_ad_injection'),
+    empty($config->get('each_term_ad_injection')) ? 6 : (int) $config->get('each_term_ad_injection')
   );
 }
 
@@ -116,10 +118,10 @@ function infinite_ad_injection_term_inject_content($children, $elements) {
  * @param $children
  * @param $elements
  *
- * @return \Drupal\Component\Render\MarkupInterface|string
+ * @return MarkupInterface|string
  */
 function infinite_ad_injection_article_inject_content($children, $elements) {
-  $config = \Drupal::config('infinite_ad_injection.settings');
+  $config = Drupal::config('infinite_ad_injection.settings');
   $contents = $config->get("ad_enable_debug")>0 ? infinite_ad_injection_get_content__dummy() :
     infinite_ad_injection_get_content(['dyn_blocks_node']);
   if (empty($contents)) {
@@ -140,16 +142,16 @@ function infinite_ad_injection_article_inject_content($children, $elements) {
       $children,
       $contents,
       $selectors,
-      empty($config->get('first_article_ad_injection')) ? 1 : $config->get('first_article_ad_injection'),
-      empty($config->get('each_article_ad_injection')) ? 6 : $config->get('each_article_ad_injection')
+      empty($config->get('first_article_ad_injection')) ? 1 : (int) $config->get('first_article_ad_injection'),
+      empty($config->get('each_article_ad_injection')) ? 6 : (int) $config->get('each_article_ad_injection')
     );
   }elseif(!empty($selectors)) {
     return infinite_ad_injection_inject_content(
       $children,
       $contents,
       $selectors,
-      empty($config->get('first_article_ad_injection')) ? 1 : $config->get('first_article_ad_injection'),
-      empty($config->get('each_article_ad_injection')) ? 6 : $config->get('each_article_ad_injection')
+      empty($config->get('first_article_ad_injection')) ? 1 : (int) $config->get('first_article_ad_injection'),
+      empty($config->get('each_article_ad_injection')) ? 6 : (int) $config->get('each_article_ad_injection')
     );
   }
   return $children;
@@ -161,10 +163,10 @@ function infinite_ad_injection_article_inject_content($children, $elements) {
  * @param $children
  * @param $elements
  *
- * @return \Drupal\Component\Render\MarkupInterface|string
+ * @return MarkupInterface|string
  */
 function infinite_ad_injection_viversum_horoscope_inject_content($children, $elements) {
-  $config = \Drupal::config('infinite_ad_injection.settings');
+  $config = Drupal::config('infinite_ad_injection.settings');
   $contents = $config->get("ad_enable_debug")>0 ? infinite_ad_injection_get_content__dummy() :
     infinite_ad_injection_get_content(['dyn_blocks_node']);
   if (empty($contents)) {
@@ -185,8 +187,8 @@ function infinite_ad_injection_viversum_horoscope_inject_content($children, $ele
       $children,
       $contents,
       $selectors,
-      empty($config->get('first_article_ad_injection')) ? 0 : $config->get('first_article_ad_injection'),
-      empty($config->get('each_article_ad_injection')) ? 6 : $config->get('each_article_ad_injection'),
+      empty($config->get('first_article_ad_injection')) ? 0 : (int) $config->get('first_article_ad_injection'),
+      empty($config->get('each_article_ad_injection')) ? 6 : (int) $config->get('each_article_ad_injection'),
       'after'
     );
   }
@@ -196,102 +198,19 @@ function infinite_ad_injection_viversum_horoscope_inject_content($children, $ele
 /**
  * Inject the ad
  *
- * @param array $children
+ * @param Markup $children
  * @param array $contents
  * @param array $selectors
  * @param int $first
  * @param int $each
  * @param string $placement
  *
- * @return \Drupal\Component\Render\MarkupInterface|string
+ * @return MarkupInterface|string
  */
-function infinite_ad_injection_inject_content($children, $contents, $selectors, $first, $each, $placement = 'after') {
-  $contents_count = count($contents);
-  $slelector = implode('|', $selectors);
-
-  $crawler = new Crawler();
-
-  // loading the html here instead of passing it into the constructor
-  // prevents problems with the charset
-  $crawler->addHtmlContent($children . '');
-  $fragments = $crawler->filterXPath($slelector);
-
-  // Rules: first ad is injected after the 2nd element, than after each 6th element
-  $i = 0;
-  foreach ($fragments as $fIndex => $f) {
-    if ($i == $first || $i % $each == $first) {
-
-      // Special handling for text / viversum paragraphs.
-      if ((
-        strpos($f->getAttribute('class'), 'item-paragraph--text') !== FALSE ||
-        strpos($f->getAttribute('class'), 'item-paragraph--viversum-zodiac') !== FALSE
-      ) || (
-        strpos($f->getAttribute('class'), 'p--text') !== FALSE ||
-        strpos($f->getAttribute('class'), 'p--viversum-zodiac') !== FALSE
-      ) &&
-        $pTags = $f->getElementsByTagName('p')
-      ) {
-
-        // Do not append ad injection if next paragraph is an advertising paragraph.
-        if ($pTags->length <= ($first + 1) && $nextNode = $fragments->getNode($fIndex + 1)) {
-          if (
-            strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE ||
-            strpos($nextNode->getAttribute('class'), 'p--advertising-products-paragraph') !== FALSE
-          ) {
-
-            $fragments->getNode($fIndex); // Reset pointer of fragments.
-            continue;
-          }
-        }
-
-        // Add ad injection classes to first p-tag of text paragraph.
-        try {
-          $class = trim($f->getElementsByTagName('p')->item($first)->getAttribute('class') . ' pread pread-' . $i);
-          $f->getElementsByTagName('p')->item($first)->setAttribute('class', $class);
-        } catch (\Error $e) {}
-      } else {
-
-        // Do not append ad injection if next paragraph is an advertising paragraph.
-        if ($nextNode = $fragments->getNode($fIndex + 1)) {
-          if (
-            strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE ||
-            strpos($nextNode->getAttribute('class'), 'p--advertising-products-paragraph') !== FALSE
-          ) {
-
-            $fragments->getNode($fIndex); // Reset pointer of fragments.
-            continue;
-          }
-        }
-
-        $class = trim($f->getAttribute('class') . ' pread pread-' . $i);
-        $f->setAttribute('class', $class);
-      }
-    }
-    $i++;
-  }
-
-  libxml_use_internal_errors(TRUE);
-  $qp = html5qp($crawler);
-  $qp->find('.pread')
-    ->each(function($i, $e) use ($contents, $contents_count, $placement){
-      if($content = $contents[$i % $contents_count]){
-        // Wrapping is required because querypath creates a whole valid html structure
-        // qp('<div>some content</div>') -> <html><head></head><body><div>some content</div></body></html>
-        // qp('<script src="..."></script>') -> <html><head><script src="..."></script></head></html>
-        $content_wrapped =  '<div class="ad-injct-wrpr">'.$content.'</div>';
-        $content_inner = qp($content_wrapped)->find('body div.ad-injct-wrpr')->innerHTML();
-        if ($i === 0 && qp($content_wrapped)->find('amp-fx-flying-carpet')->count()) {
-          $placement = 'before';
-          qp($e)->addClass('p--text-first');
-        }
-        qp($e)->removeClass('pread')->$placement($content_inner);
-      }
-    });
-  libxml_clear_errors();
-
-  $html = $qp->find('body')->innerHtml5();
-  $markup = Markup::create($html);
-  return $markup;
+function infinite_ad_injection_inject_content(Markup $children, $contents, $selectors, $first, $each, $placement = 'after') {
+  $contentInjection = new AdInjectionContentInjection();
+  $contentInjection->injectAds($children, $contents, $selectors, $first, $each, $placement);
+  return $contentInjection->getMarkup();
 }
 
 /**
@@ -304,7 +223,7 @@ function infinite_ad_injection_inject_content($children, $contents, $selectors, 
  * @param int $each
  * @param string $placement
  *
- * @return \Drupal\Component\Render\MarkupInterface|string
+ * @return MarkupInterface|string
  */
 function infinite_ad_injection_inject_content_articles($children, $contents, $selectors, $first, $each, $placement = 'after')
 {
@@ -341,7 +260,7 @@ function infinite_ad_injection_inject_content_articles($children, $contents, $se
         try {
           $class = trim($f->getElementsByTagName('p')->item($first)->getAttribute('class') . ' pread pread-' . $i);
           $f->getElementsByTagName('p')->item($first)->setAttribute('class', $class);
-        } catch (\Error $e) {
+        } catch (Error $e) {
         }
       } else {
 
@@ -405,12 +324,12 @@ function infinite_ad_injection_get_content($regions = ['dyn_blocks_node'], $rend
   $blocks = _infinite_blocks_get_dyn_region_blocks($regions);
   if (isset($blocks) && is_array($blocks)) {
     foreach ($blocks as $id => $block) {
-      $block_view = \Drupal::entityTypeManager()
+      $block_view = Drupal::entityTypeManager()
         ->getViewBuilder('block')
         ->view($block);
 
       if ($rendered) {
-        $block_render = trim((string) \Drupal::service('renderer')->render($block_view));
+        $block_render = trim((string) Drupal::service('renderer')->render($block_view));
         if (strlen($block_render)) {
           $contents[] = (string)$block_render;
         }
