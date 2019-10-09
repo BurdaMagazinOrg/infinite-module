@@ -95,6 +95,15 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$datalayer_variables,
     }
   }
 
+  if ($node->hasField('field_sponsor_type')) {
+    if ($node->field_sponsor_type->value) {
+      $datalayer_variables_page['sponsorType'] = $node->field_sponsor_type->value;
+    }
+    else {
+      $datalayer_variables_page['sponsorType'] = 'default';
+    }
+  }
+
   if($node->bundle() == 'article'){
     $datalayer_variables_page['articlePublishDate'] = date(DATE_ISO8601, $node->created->value);
 
