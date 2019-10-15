@@ -105,10 +105,15 @@ function infinite_advertising_products_node_view_alter(array &$build, EntityInte
  *   The markup result.
  */
 function infinite_advertising_products_replace_amazon_tag($markup, $elements) {
-  $view_mode = $elements['#view_mode'];
   $node = $elements['#node'];
+  $replaceAttr = 'data-external-url';
 
-  $contentReplaceAmazonTags = new ReplaceAmazonTags($node->field_amazon_tag->value, $view_mode);
+  // We need on AMP another attribute to replace.
+  if ($view_mode = $elements['#view_mode'] == 'amp') {
+    $replaceAttr = 'href';
+  }
+
+  $contentReplaceAmazonTags = new ReplaceAmazonTags($node->field_amazon_tag->value, $replaceAttr);
   $contentReplaceAmazonTags->replaceAmazonTags($markup);
   return $contentReplaceAmazonTags->getMarkup();
 }

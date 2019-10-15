@@ -32,9 +32,16 @@ class ReplaceAmazonTags {
   /**
    * The QueryPath DOM query.
    *
-   * @var DOMQuery $queryPath
+   * @var DOMQuery
    */
   protected $queryPath;
+
+  /**
+   * The attribute we want to replace.
+   *
+   * @var string
+   */
+  protected $replaceAttr;
 
   /**
    * Array of product selectors for non-AMP.
@@ -42,33 +49,23 @@ class ReplaceAmazonTags {
    * @var array
    */
   protected $selectors = [
+    'a.item-product[data-vars-product-provider="amazon"]',
     '.item-product[data-provider="amazon"]',
     '.item-product-slider[data-provider="amazon"]',
   ];
 
   /**
-   * Array of product selectors for AMP.
-   *
-   * @var array
-   */
-  protected $selectorsAmp = [
-    'a.item-product[data-vars-product-provider="amazon"]',
-  ];
-
-  protected $viewMode;
-
-  /**
-   * Constructs aReplaceAmazonTags object.
+   * Constructs a ReplaceAmazonTags object.
    *
    * @param $amazonTag
    *   The Amazon tag to override.
-   * @param string $viewMode
-   *   The selected view mode to act on.
+   * @param string $replaceAttr
+   *   The attribute we want to replace.
    */
-  public function __construct($amazonTag, $viewMode = 'full') {
+  public function __construct($amazonTag, $replaceAttr = 'data-external-url') {
     $this->amazonTag = $amazonTag;
     $this->crawler = new Crawler();
-    $this->viewMode = $viewMode;
+    $this->replaceAttr = $replaceAttr;
   }
 
   /**
@@ -83,28 +80,14 @@ class ReplaceAmazonTags {
     // prevents problems with the charset.
     $this->crawler->addHtmlContent($markup);
 
-    switch ($this->viewMode) {
-
-      // Get all amazon products for AMP and replace Amazon tag.
-      case 'amp':
-        foreach ($this->selectorsAmp as $selectorAmp) {
-          $itemProducts = $this->crawler->filter($selectorAmp);
-          foreach ($itemProducts as $itemProduct) {
-            $amazonUrl = $itemProduct->getAttribute('href');
-            $itemProduct->setAttribute('href', $this->getChangedAmazonUrl($amazonUrl));
-          }
+    foreach ($this->selectors as $selector) {
+      $itemProducts = $this->crawler->filter($selector);
+      foreach ($itemProducts as $itemProduct) {
+        $amazonUrl = $itemProduct->getAttribute($this->replaceAttr);
+        if (parse_url($amazonUrl) !== FALSE) {
+          $itemProduct->setAttribute($this->replaceAttr, $this->getChangedAmazonUrl($amazonUrl));
         }
-        break;
-
-      // Get all amazon products for non-AMP and replace Amazon tag.
-      default:
-        foreach ($this->selectors as $selector) {
-          $itemProducts = $this->crawler->filter($selector);
-          foreach ($itemProducts as $itemProduct) {
-            $amazonUrl = $itemProduct->getAttribute('data-external-url');
-            $itemProduct->setAttribute('data-external-url', $this->getChangedAmazonUrl($amazonUrl));
-          }
-        }
+      }
     }
   }
 
