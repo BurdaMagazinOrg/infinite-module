@@ -50,8 +50,7 @@ class ReplaceAmazonTags {
    */
   protected $selectors = [
     'a.item-product[data-vars-product-provider="amazon"]',
-    '.item-product[data-provider="amazon"]',
-    '.item-product-slider[data-provider="amazon"]',
+    '.item-ecommerce[data-provider="amazon"]',
   ];
 
   /**
