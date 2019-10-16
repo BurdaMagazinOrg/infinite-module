@@ -1,8 +1,13 @@
 <?php
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\file\Entity\File;
+use Drupal\infinite_advertising_products\ReplaceAmazonTags;
 
+/**
+ * Implements hook_ENTITY_TYPE_presave() for advertising_product entities.
+ */
 function infinite_advertising_products_advertising_product_presave(EntityInterface $entity) {
   if ($entity->bundle() == 'advertising_product_tracdelight') {
     /** @var \Drupal\advertising_products\Entity\AdvertisingProduct $entity */
@@ -68,4 +73,47 @@ function infinite_advertising_products_preprocess_advertising_product(&$variable
 
   // Provide data_attributes for advertising product TWIG file.
   $variables['data_attributes'] = $data_attributes;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter() for node entities.
+ */
+function infinite_advertising_products_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  $view_modes = [
+    'amp',
+    'full',
+    'lazyloading',
+  ];
+  if (($entity->hasField('field_amazon_tag'))
+    && !$entity->field_amazon_tag->isEmpty()
+    && in_array($build['#view_mode'], $view_modes)) {
+
+    $build['#post_render'][] = 'infinite_advertising_products_replace_amazon_tag';
+  }
+}
+
+/**
+ * Post render callback to replace Amazon tag for non-ProductDB products.
+ *
+ * @param $markup
+ *   The markup result of the rendering.
+ *
+ * @param $elements
+ *   The elements of the rendering.
+ *
+ * @return mixed
+ *   The markup result.
+ */
+function infinite_advertising_products_replace_amazon_tag($markup, $elements) {
+  $node = $elements['#node'];
+  $replaceAttr = 'data-external-url';
+
+  // We need on AMP another attribute to replace.
+  if ($view_mode = $elements['#view_mode'] == 'amp') {
+    $replaceAttr = 'href';
+  }
+
+  $contentReplaceAmazonTags = new ReplaceAmazonTags($node->field_amazon_tag->value, $replaceAttr);
+  $contentReplaceAmazonTags->replaceAmazonTags($markup);
+  return $contentReplaceAmazonTags->getMarkup();
 }
