@@ -277,7 +277,7 @@ function _infinite_paragraphs_view_mode_widget_alter(array &$element, $index) {
   }
 }
 
-function _infinite_paragraphs_get_parent_base_data(\Drupal\Core\Entity\Entity $entity, &$variables) {
+function _infinite_paragraphs_get_parent_base_data(EntityInterface $entity, &$variables) {
   if ($entity->getEntityTypeId() == 'node') {
     $node = $entity;
     $alias_path = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $node->id());
