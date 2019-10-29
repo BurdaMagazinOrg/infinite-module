@@ -21,7 +21,7 @@ class Metatags {
         $node->hasField('field_meta_tags') &&
         $node->hasField('field_sponsor_type') &&
         $node->get('field_sponsor_type')->first() &&
-        in_array($node->get('field_sponsor_type')->first()->value, ['native', 'advertorial'])
+        in_array($node->get('field_sponsor_type')->first()->value, ['native', 'advertorial', 'deal'])
       ) {
         $this->setGooglebotNewsMetatagValue($node, $metaTagsValue);
         $clearValue = false;
