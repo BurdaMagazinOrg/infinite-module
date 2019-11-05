@@ -6,6 +6,7 @@
 
 use Drupal\Core\Queue\RequeueException;
 use Drupal\Core\Queue\SuspendQueueException;
+use Drupal\Core\Url;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -214,6 +215,57 @@ function _odoscope_infinite_execute_view($args) {
     $total_rows = $export_limit;
   }
 
+  // Get view exposed input which is the query string parameters from url.
+  $query_parameters = $view->getExposedInput();
+  // Remove the file format parameter from the query string.
+  if (array_key_exists('_format', $query_parameters)) {
+    unset($query_parameters['_format']);
+  }
+
+  // Get view exposed input which is the query string parameters from url.
+  $query_parameters = $view->getExposedInput();
+  // Remove the file format parameter from the query string.
+  if (array_key_exists('_format', $query_parameters)) {
+    unset($query_parameters['_format']);
+  }
+
+  // Check where to redirect the user after the batch finishes.
+  // Defaults to the <front> route.
+  $redirect_url = Url::fromRoute('<front>');
+
+  // Get options set in views display configuration.
+  $custom_redirect = $view->getDisplay()->getOption('custom_redirect_path');
+  $redirect_to_display = $view->getDisplay()->getOption('redirect_to_display');
+
+  // Check if the url query string should be added to the redirect URL.
+  $include_query_params = $view->display_handler->getOption('include_query_params');
+
+  if ($custom_redirect) {
+    $redirect_path = $view->display_handler->getOption('redirect_path');
+    if (isset($redirect_path)) {
+      // Replace tokens in the redirect_path.
+      $token_service = \Drupal::token();
+      $redirect_path = $token_service->replace($redirect_path, ['view' => $view]);
+
+      if ($include_query_params) {
+        $redirect_url = Url::fromUserInput(trim($redirect_path), ['query' => $query_parameters]);
+      }
+      else {
+        $redirect_url = Url::fromUserInput(trim($redirect_path));
+      }
+    }
+  }
+  elseif (isset($redirect_to_display) && $redirect_to_display !== 'none') {
+    // Get views display URL.
+    $display_route = $view->getUrl([], $redirect_to_display)->getRouteName();
+    if ($include_query_params) {
+      $redirect_url = Url::fromRoute($display_route, [], ['query' => $query_parameters]);
+    }
+    else {
+      $redirect_url = Url::fromRoute($display_route);
+    }
+  }
+
   $batch_definition = [
     'operations' => [
       [
@@ -224,6 +276,8 @@ function _odoscope_infinite_execute_view($args) {
           $view->args,
           $view->getExposedInput(),
           $total_rows,
+          $query_parameters,
+          $redirect_url->toString(),
           ],
       ],
     ],
