@@ -84,7 +84,7 @@ function drush_infinite_odoscope_odoscope_queue() {
         ->condition('status', FILE_STATUS_PERMANENT, '<>')
         ->condition('created', REQUEST_TIME - 120, '>')
         ->condition('filemime', 'text/csv')
-        ->condition('uri', db_like('private://') . '%' . db_like('article-update.csv'), 'LIKE')
+        ->condition('filename', 'article-update.csv')
         ->sort('created', 'DESC')
         ->range(0, 1)
         ->execute();
