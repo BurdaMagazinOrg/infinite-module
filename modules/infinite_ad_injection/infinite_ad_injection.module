@@ -216,7 +216,7 @@ function infinite_ad_injection_inject_content(Markup $children, $contents, $sele
 /**
  * Specific ad injection for articles pages in Freundin
  *
- * @param array $children
+ * @param Markup $children
  * @param array $contents
  * @param array $selectors
  * @param int $first
@@ -227,87 +227,9 @@ function infinite_ad_injection_inject_content(Markup $children, $contents, $sele
  */
 function infinite_ad_injection_inject_content_articles($children, $contents, $selectors, $first, $each, $placement = 'after')
 {
-  $contents_count = count($contents);
-  $slelector = implode('|', $selectors);
-
-  $crawler = new Crawler();
-
-  // loading the html here instead of passing it into the constructor
-  // prevents problems with the charset
-  $crawler->addHtmlContent($children . '');
-  $fragments = $crawler->filterXPath($slelector);
-
-  // Rules: first ad is injected after the 2nd element, than after each 6th element
-  $i = 0;
-  $each = infinite_ad_injection_recalculate_each($each);
-  foreach ($fragments as $fIndex => $f) {
-    if ($i == $first || ($i % $each == 0 && $i > $first)) {
-      // Special handling for text / viversum paragraphs.
-      if ((strpos($f->getAttribute('class'), 'item-paragraph--text') !== FALSE ||
-          strpos($f->getAttribute('class'), 'item-paragraph--viversum-zodiac') !== FALSE) &&
-        $pTags = $f->getElementsByTagName('p')) {
-
-        // Do not append ad injection if next paragraph is an advertising paragraph.
-        if ($pTags->length <= ($first + 1) && $nextNode = $fragments->getNode($fIndex)) {
-          if (strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE) {
-
-            $fragments->getNode($fIndex);  // Reset pointer of fragments.
-            continue;
-          }
-        }
-
-        // Add ad injection classes to first p-tag of text paragraph.
-        try {
-          $class = trim($f->getElementsByTagName('p')->item($first)->getAttribute('class') . ' pread pread-' . $i);
-          $f->getElementsByTagName('p')->item($first)->setAttribute('class', $class);
-        } catch (Error $e) {
-        }
-      } else {
-
-        // Do not append ad injection if next paragraph is an advertising paragraph.
-        if ($nextNode = $fragments->getNode($fIndex)) {
-          if (strpos($nextNode->getAttribute('class'), 'item-paragraph--advertising-products-paragraph') !== FALSE) {
-
-            $fragments->getNode($fIndex);  // Reset pointer of fragments.
-            continue;
-          }
-        }
-
-        $class = trim($f->getAttribute('class') . ' pread pread-' . $i);
-        $f->setAttribute('class', $class);
-      }
-    }
-    $i++;
-  }
-
-  libxml_use_internal_errors(TRUE);
-  $qp = html5qp($crawler);
-  $qp->find('.pread')
-    ->each(function ($i, $e) use ($contents, $contents_count, $placement) {
-      if ($content = $contents[$i % $contents_count]) {
-        // Wrapping is required because querypath creates a whole valid html structure
-        // qp('<div>some content</div>') -> <html><head></head><body><div>some content</div></body></html>
-        // qp('<script src="..."></script>') -> <html><head><script src="..."></script></head></html>
-        $content_wrapped = '<div class="ad-injct-wrpr">' . $content . '</div>';
-        $content_inner = qp($content_wrapped)->find('body div.ad-injct-wrpr')->innerHTML();
-        qp($e)->removeClass('pread')->$placement($content_inner);
-      }
-    });
-  libxml_clear_errors();
-
-  $html = $qp->find('body')->innerHtml5();
-  $markup = Markup::create($html);
-  return $markup;
-}
-
-/**
- * Readjust the each index to avoid the zero value configuration
- * @param $value
- * @return int
- */
-function infinite_ad_injection_recalculate_each($value) {
-  if ($value==1 || $value==0)  return 1;
-  return $value;
+  $contentInjection = new AdInjectionContentInjection();
+  $contentInjection->injectAds($children, $contents, $selectors, $first, $each, $placement);
+  return $contentInjection->getMarkup();
 }
 
 function infinite_ad_injection_get_content__dummy() {
