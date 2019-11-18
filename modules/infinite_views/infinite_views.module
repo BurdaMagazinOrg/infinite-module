@@ -145,8 +145,10 @@ function infinite_views_views_pre_view(ViewExecutable $view, $display_id, array 
 function infinite_views_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
   switch ($view->id()) {
     case 'infinite_taxonomy_term':
-      if ('show_more_stream' === $view->current_display
-        && $node = Node::load($view->args[1])) {
+      if (
+          in_array($view->current_display, ['show_more_stream', 'show_more_stream_graphql'])
+          && $node = Node::load($view->args[1])
+      ) {
 
         // Add filter based on created date of displayed node entity.
         $query->addWhere('infinite_views', 'node_field_data.created', $node->getCreatedTime(), '<');
