@@ -2,7 +2,7 @@ langcode: de
 status: true
 dependencies:
   module:
-    - media_entity
+    - media
 id: media.portrait_m
 label: 'Portrait M'
 targetEntityType: media

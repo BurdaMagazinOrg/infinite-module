@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_presenter_media
-    - media_entity.bundle.image
+    - media.type.image
     - node.type.article
 id: node.article.field_presenter_media
 field_name: field_presenter_media
