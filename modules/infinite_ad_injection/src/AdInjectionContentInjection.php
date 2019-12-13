@@ -36,14 +36,12 @@ class AdInjectionContentInjection
     $fragments = $this->crawler->filterXPath(implode('|', $selectors));
 
     // Rules: first ad is injected after the 2nd element, than after each 6th element
-    $i = 0;
     /**
      * @var  int $fIndex
      * @var DOMElement $fragment
      */
     foreach ($fragments as $fIndex => $fragment) {
-      if ($i !== $first && $i % $each !== $first) {
-        $i++;
+      if ($fIndex !== $first && $fIndex % $each !== $first) {
         continue;
       }
 
@@ -66,7 +64,7 @@ class AdInjectionContentInjection
         // Add ad injection classes to first p-tag of text paragraph.
         try {
           $firstPTag = $fragment->getElementsByTagName('p')->item($first);
-          $class = trim($firstPTag->getAttribute('class') . ' pread pread-' . $i);
+          $class = trim($firstPTag->getAttribute('class') . ' pread pread-' . $fIndex);
           $firstPTag->setAttribute('class', $class);
         } catch (Error $e) {
         }
@@ -79,10 +77,9 @@ class AdInjectionContentInjection
           }
         }
 
-        $class = trim($fragment->getAttribute('class') . ' pread pread-' . $i);
+        $class = trim($fragment->getAttribute('class') . ' pread pread-' . $fIndex);
         $fragment->setAttribute('class', $class);
       }
-      $i++;
     }
 
     $this->replaceContent($contents, $placement);
