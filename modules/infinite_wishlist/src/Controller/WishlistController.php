@@ -30,6 +30,39 @@ class WishlistController extends ControllerBase
       $uuids[] = $wishlistItem['uuid'];
     }
 
+    // Get products from ProductDB by UUID.
+    $uuidsFromProductDB = [];
+    $productFetcher = \Drupal::service('productdb_client.productdb_client_fetcher');
+    foreach ($uuids as $uuid) {
+      $productsFromProductDB = $productFetcher->fetchProductJson($uuid);
+      $build = [
+        '#theme' => 'infinite_wishlist_productdb_item',
+        '#product' => $productsFromProductDB['data'],
+        '#product_name' => $productsFromProductDB['data']['attributes']['title'],
+        '#image' => [
+          '#theme' => 'responsive_image',
+          '#width' => NULL,
+          '#height' => NULL,
+          '#responsive_image_style_id' => NULL,
+          '#uri' => NULL,
+        ],
+        '#provider' => explode("_", $productsFromProductDB['data']['attributes']['provider'])[0],
+      ];
+      $products[] = [
+        'productId' => $productsFromProductDB['data']['attributes']['provider_identifier'],
+        'uuid' => $productsFromProductDB['data']['id'],
+        'name' => $productsFromProductDB['data']['attributes']['title'],
+        'price' => $productsFromProductDB['data']['attributes']['price']['number'],
+        'currency' => $productsFromProductDB['data']['attributes']['price']['currency_code'],
+        'brand' => $productsFromProductDB['data']['attributes']['brand'],
+        'category' => NULL,
+        'markup' => \Drupal::service('renderer')->renderPlain($build),
+      ];
+      $uuidsFromProductDB[] = $uuid;
+    }
+    $uuids = array_diff($uuids, $uuidsFromProductDB);
+
+    // Get non-ProductDB products by UUID.
     if (false === empty($uuids)) {
       $query = Database::getConnection()
         ->select('advertising_product');
