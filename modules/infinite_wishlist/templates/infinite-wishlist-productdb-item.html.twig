@@ -30,16 +30,16 @@
         {% set currency = product.attributes.price.currency_code %}
       {% endif %}
       {% if product.attributes.price.number != '0.00' %}
-        {% if product.attributes.original_price.number %}
+        {% if product.attributes.original_price.number != product.attributes.price.number %}
           <span class="wishlist__item__price has-original-price">
-            {{ product.attributes.original_price.number|replace({'.': ","}) }} {{ currency }}
+            {{ product.attributes.original_price.number|number_format(2, ',', '.') }} {{ currency }}
           </span>
           <span class="wishlist__item__original-price">
-            {{ product.attributes.price.number|replace({'.': ","}) }} {{ currency }}
+            {{ product.attributes.price.number|number_format(2, ',', '.') }} {{ currency }}
           </span>
-          {% else %}
+        {% else %}
           <span class="wishlist__item__price">
-            {{ product.attributes.price.number|replace({'.': ","}) }} {{ currency }}
+            {{ product.attributes.price.number|number_format(2, ',', '.') }} {{ currency }}
           </span>
         {% endif %}
       {% endif %}
