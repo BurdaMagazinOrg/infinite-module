@@ -105,7 +105,12 @@ function infinite_datalayer_infinite_datalayer_node_alter(&$datalayer_variables,
   }
 
   if($node->bundle() == 'article'){
-    $datalayer_variables_page['articlePublishDate'] = date(DATE_ISO8601, $node->created->value);
+    if (isset($node->field_first_published->value)) {
+      $datalayer_variables_page['articlePublishDate'] = date(DATE_ISO8601, $node->field_first_published->value);
+    }
+    else {
+      $datalayer_variables_page['articlePublishDate'] = date(DATE_ISO8601, $node->created->value);
+    }
 
     $context['key'] = 'page';
     if (\Drupal::request()->attributes->get('js') == 'ajax') {
