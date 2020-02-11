@@ -2,16 +2,14 @@
 
 namespace Drupal\infinite_wishlist\Controller;
 
-
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Image\Image;
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class WishlistController extends ControllerBase
-{
+class WishlistController extends ControllerBase {
   public function show()
   {
     $build = array(
@@ -30,6 +28,39 @@ class WishlistController extends ControllerBase
       $uuids[] = $wishlistItem['uuid'];
     }
 
+    // Get products from ProductDB by UUID.
+    if ($productFetcher = \Drupal::service('productdb_client.productdb_client_fetcher')) {
+      $uuidsFromProductDB = [];
+      foreach ($uuids as $uuid) {
+        if ($productsFromProductDB = $productFetcher->fetchProductJson($uuid)) {
+          $build = [
+            '#theme' => 'infinite_wishlist_productdb_item',
+            '#product' => $productsFromProductDB['data'],
+            '#product_name' => $productsFromProductDB['data']['attributes']['title'],
+            '#image' => [
+              '#theme' => 'image',
+              '#uri' => $this->getThumbnailUrl($productsFromProductDB)->getUri(),
+              '#alt' => $productsFromProductDB['data']['attributes']['title'],
+            ],
+            '#provider' => explode("_", $productsFromProductDB['data']['attributes']['provider'])[0],
+          ];
+          $products[] = [
+            'productId' => $productsFromProductDB['data']['attributes']['provider_identifier'],
+            'uuid' => $productsFromProductDB['data']['id'],
+            'name' => $productsFromProductDB['data']['attributes']['title'],
+            'price' => $productsFromProductDB['data']['attributes']['price']['number'],
+            'currency' => $productsFromProductDB['data']['attributes']['price']['currency_code'],
+            'brand' => $productsFromProductDB['data']['attributes']['brand'],
+            'category' => NULL,
+            'markup' => \Drupal::service('renderer')->renderPlain($build),
+          ];
+          $uuidsFromProductDB[] = $uuid;
+        };
+      }
+      $uuids = array_diff($uuids, $uuidsFromProductDB);
+    }
+
+    // Get non-ProductDB products by UUID.
     if (false === empty($uuids)) {
       $query = Database::getConnection()
         ->select('advertising_product');
@@ -91,6 +122,26 @@ class WishlistController extends ControllerBase
     return new JsonResponse([
       'products' => $products,
     ]);
+  }
+
+  /**
+   * Get thumbnail image url of ProductDB product.
+   *
+   * @param $product
+   *
+   * @return Url|null
+   *   Absolute thumbnail image URL of ProductDB product or NULL.
+   */
+  protected function getThumbnailUrl($product) {
+    if (!isset($product['included']['0']['attributes']['uri']['url'])) {
+      return NULL;
+    }
+    $url = $product['included']['0']['attributes']['uri']['url'];
+    $url = str_replace('/files/', '/files/styles/thumbnail/public/', $url);
+
+    $product_db_url = $this->config('productdb_client.settings')
+      ->get('product_db_url');
+    return Url::fromUri($product_db_url . '/' . $url);
   }
 
   protected function removeLeadingBrandFromProductName($name, $brand)

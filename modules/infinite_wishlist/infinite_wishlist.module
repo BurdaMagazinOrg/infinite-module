@@ -35,6 +35,14 @@ function infinite_wishlist_theme() {
         'provider' => '',
       ],
     ],
+    'infinite_wishlist_productdb_item' => [
+      'variables' => [
+        'product' => [],
+        'product_name' => '',
+        'image' => null,
+        'provider' => '',
+      ],
+    ],
     'infinite_wishlist_page' => [
       'variables' => [],
     ],

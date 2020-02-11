@@ -1,0 +1,58 @@
+{% set attrs = create_attribute() %}
+{% if provider == 'tipser' %}
+  {% set attrs = attrs.
+    setAttribute('data-provider', provider).
+    setAttribute('data-product-id', product.attributes.provider_identifier) %}
+{% elseif provider == 'tracdelight' %}
+  {% set attrs = attrs.
+    setAttribute('href', product.attributes.shop_url).
+    setAttribute('subid', "wishlist-#{product.attributes.provider_identifier}") %}
+{% else %}
+  {% set attrs = attrs.
+    setAttribute('href', product.attributes.shop_url) %}
+{% endif %}
+<a class="wishlist__item wishlist__productdb__item" {{ attrs.setAttribute('target', "_blank") }}>
+  <div class="wishlist__item__image-wrapper">
+    {{ image }}
+  </div>
+  <div
+    class="wishlist__item__details"
+    data-text-action-target="wishlist__item__name"
+    data-text-action="text-overflow">
+    <span class="wishlist__item__brand">
+      {{ product.attributes.brand }}</span>
+    <span class="wishlist__item__name">
+      {{ product.attributes.title }}</span>
+    <div class="wishlist__item__prices">
+      {% if product.attributes.price.currency_code == 'EUR' %}
+        {% set currency = '€' %}
+      {% else %}
+        {% set currency = product.attributes.price.currency_code %}
+      {% endif %}
+      {% if product.attributes.price.number != '0.00' %}
+        {% if product.attributes.original_price.number != product.attributes.price.number %}
+          <span class="wishlist__item__price has-original-price">
+            {{ product.attributes.original_price.number|number_format(2, ',', '.') }} {{ currency }}
+          </span>
+          <span class="wishlist__item__original-price">
+            {{ product.attributes.price.number|number_format(2, ',', '.') }} {{ currency }}
+          </span>
+        {% else %}
+          <span class="wishlist__item__price">
+            {{ product.attributes.price.number|number_format(2, ',', '.') }} {{ currency }}
+          </span>
+        {% endif %}
+      {% endif %}
+    </div>
+    {% if product.attributes.stock_availability %}
+      {% if 'tipser' == provider %}
+        <div class="text-shop btn-buy">Kaufen</div>
+      {% else %}
+        <div class="text-shop">Zum Shop</div>
+      {% endif %}
+    {% else %}
+      <button class="button--sold-out">Ausverkauft</button>
+    {% endif %}
+  </div>
+  <button class="icon icon-close" data-wishlist-remove="{{ product.id }}"></button>
+</a>
