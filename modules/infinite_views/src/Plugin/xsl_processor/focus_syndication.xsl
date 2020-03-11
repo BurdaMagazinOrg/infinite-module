@@ -34,6 +34,7 @@
 
     <xsl:template match="item">
         <item>
+            <xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::resetLinkCounter)" />
             <title><xsl:value-of select="title/value" /></title>
             <link><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::getFrontendBaseUrl')" /><xsl:value-of select="url" /></link>
             <dcterms:created><xsl:value-of select="created/value" /></dcterms:created>
@@ -55,12 +56,12 @@
     <!-- paragraph templates -->
 
     <xsl:template match="field_paragraphs[type/target_id = 'text']">
-      <xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::completeURLs', field_text/value)" disable-output-escaping="yes"/>
+      <xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::stripURLs', field_text/value)" disable-output-escaping="yes"/>
     </xsl:template>
 
     <xsl:template match="field_paragraphs[type/target_id = 'quote']">
         <blockquote>
-            <p><xsl:value-of select="field_text/value" disable-output-escaping="yes"/></p>
+	    <p><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::stripURLs', field_text/value)" disable-output-escaping="yes"/></p>
             <footer><xsl:value-of select="field_quote_author/value" disable-output-escaping="yes"/></footer>
         </blockquote>
     </xsl:template>
