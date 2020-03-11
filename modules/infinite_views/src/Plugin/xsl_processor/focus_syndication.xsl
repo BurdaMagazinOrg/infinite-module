@@ -34,7 +34,7 @@
 
     <xsl:template match="item">
         <item>
-            <xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::resetLinkCounter)" />
+            <xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::resetLinkCounter')" />
             <title><xsl:value-of select="title/value" /></title>
             <link><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::getFrontendBaseUrl')" /><xsl:value-of select="url" /></link>
             <dcterms:created><xsl:value-of select="created/value" /></dcterms:created>
