@@ -79,10 +79,6 @@
         </figure>
     </xsl:template>
 
-    <xsl:template match="field_paragraphs/field_media[bundle/target_id = 'instagram']">
-        <xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::instagram', field_url/uri)" disable-output-escaping="yes"/>
-    </xsl:template>
-
     <xsl:template match="field_paragraphs/field_media[bundle/target_id = 'gallery']">
         <media:group>
             <xsl:apply-templates select="field_media_images" />
