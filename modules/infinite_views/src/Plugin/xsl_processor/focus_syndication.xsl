@@ -43,7 +43,7 @@
             <xsl:apply-templates select="field_teaser_media|field_paragraphs/field_media[bundle/target_id = 'gallery']" />
             <description>
                 <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
-                <xsl:apply-templates select="field_paragraphs[type/target_id = 'text' or type/target_id = 'quote']|field_paragraphs/field_media[bundle/target_id = 'image']]" />
+                <xsl:apply-templates select="field_paragraphs[type/target_id = 'text' or type/target_id = 'quote']|field_paragraphs/field_media[bundle/target_id = 'image']" />
                 <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
             </description>
             <guid isPermaLink="true"><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::getFrontendBaseUrl')" /><xsl:value-of select="url" /></guid>
