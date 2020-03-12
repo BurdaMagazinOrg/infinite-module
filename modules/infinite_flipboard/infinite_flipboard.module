@@ -5,8 +5,8 @@
  * Contains infinite_flipboard_node_view.module.
  */
 
-use Drupal\views\ViewExecutable;
 use Drupal\Core\Url;
+use Drupal\views\ViewExecutable;
 
 function infinite_flipboard_views_post_render(ViewExecutable $view, &$output, $cache) {
   /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase $display */
@@ -23,5 +23,25 @@ function infinite_flipboard_views_post_render(ViewExecutable $view, &$output, $c
              ]);
       $output['#rows'][$idx]['#row']->link = $url->toString();
     }
+  }
+}
+
+/**
+ * Prepares variables for RSS feed templates.
+ *
+ * Default template: views-view-rss.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - view: A ViewExecutable object.
+ *   - rows: The raw row data.
+ */
+function infinite_flipboard_preprocess_views_view_flipboard_rss(array &$variables) {
+  $view = $variables['view'];
+  if ($view->id() == 'infinite_taxonomy_term' && $view->getDisplay()->display['id'] == 'flipboard_rss') {
+    // For some reason, the link comes out with an encoded asterisk at the
+    // end, we replace it and use the aliased path.
+    $actual_link = Url::fromRoute('<current>')->setAbsolute()->toString();
+    $variables['link'] = $actual_link;
   }
 }
