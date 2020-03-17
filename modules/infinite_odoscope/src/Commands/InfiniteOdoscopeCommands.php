@@ -105,7 +105,7 @@ class InfiniteOdoscopeCommands extends DrushCommands {
         $this->_odoscope_infinite_execute_view($args_create);
         // open the generated file. This sadly depends on executing drush with
         // -u 1 because the filename starts with the user ID.
-        $fids = Drupal::entityQuery('file')
+        $fids = \Drupal::entityQuery('file')
               ->condition('status', FILE_STATUS_PERMANENT, '<>')
               ->condition('created', REQUEST_TIME - 120, '>')
               ->condition('filemime', 'text/csv')
@@ -120,7 +120,7 @@ class InfiniteOdoscopeCommands extends DrushCommands {
             // No file found, alert slack
             $ah_env = isset($_ENV['AH_SITE_ENVIRONMENT']) ? $_ENV['AH_SITE_ENVIRONMENT'] : '';
             $message = t('No file created by odoscope view or file not found on @env.', ['@env' => $ah_env]);
-            Drupal::service('slack.slack_service')->sendMessage($message);
+            \Drupal::service('slack.slack_service')->sendMessage($message);
             break;
           case 1:
             $file = reset($files);
@@ -296,7 +296,7 @@ class InfiniteOdoscopeCommands extends DrushCommands {
     $batch_definition = [
       'operations' => [
         [
-          ['Drupal\views_data_export\Plugin\views\display\DataExport', 'Drupal\views_data_export\Plugin\views\display\DataExport::processBatch'],
+          ['\Drupal\views_data_export\Plugin\views\display\DataExport', '\Drupal\views_data_export\Plugin\views\display\DataExport::processBatch'],
           [
             $view->id(),
             $view->current_display,
