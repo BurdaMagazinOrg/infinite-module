@@ -52,6 +52,13 @@ class InfiniteOdoscopeCommands extends DrushCommands {
     $this->accountSwitcher = $account_switcher;
   }
   
+  /**
+   * Fill queue for odoscope.
+   *
+   *
+   * @command infinite:odoscope-queue
+   * @aliases infinite-odoscope-queue
+   */
   public function drush_infinite_odoscope_odoscope_queue() {
     $this->accountSwitcher->switchTo(new UserSession(['uid' => 1]));
 
