@@ -102,7 +102,7 @@ class InfiniteOdoscopeCommands extends DrushCommands {
       }
       if (count($claims_create)) {
         // execute the view
-        _odoscope_infinite_execute_view($args_create);
+        $this->_odoscope_infinite_execute_view($args_create);
         // open the generated file. This sadly depends on executing drush with
         // -u 1 because the filename starts with the user ID.
         $fids = Drupal::entityQuery('file')
