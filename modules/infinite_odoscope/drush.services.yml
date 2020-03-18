@@ -1,0 +1,6 @@
+services:
+  infinite_odoscope.commands:
+    class: \Drupal\infinite_odoscope\Commands\InfiniteOdoscopeCommands
+    arguments: ['@account_switcher']
+    tags:
+      - { name: drush.command }
