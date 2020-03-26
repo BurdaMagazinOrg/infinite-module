@@ -250,7 +250,7 @@ function _infinite_blocks_get_dyn_region_blocks($allowed_regions) {
 
     // Capture viewable blocks for dynBlocks.
     foreach ($blocks as $key => $block) {
-      if ($block->access('view')) {
+      if ($block->status() === TRUE && $block->access('view')) {
         $dynBlocks[] = $block;
       }
     }
