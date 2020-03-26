@@ -2,7 +2,7 @@
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\media_entity\Entity\Media;
+use Drupal\media\Entity\Media;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 
 /**

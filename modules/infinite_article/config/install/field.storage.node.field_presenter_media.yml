@@ -3,7 +3,7 @@ langcode: de
 status: true
 dependencies:
   module:
-    - media_entity
+    - media
     - node
 id: node.field_presenter_media
 field_name: field_presenter_media

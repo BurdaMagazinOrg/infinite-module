@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_header_media
-    - media_entity.bundle.image
+    - media.type.image
     - taxonomy.vocabulary.events
 id: taxonomy_term.events.field_header_media
 field_name: field_header_media
