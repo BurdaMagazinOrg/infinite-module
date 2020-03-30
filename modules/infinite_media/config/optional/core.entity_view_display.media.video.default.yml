@@ -9,7 +9,7 @@ dependencies:
     - field.field.media.video.field_source
     - field.field.media.video.field_video_id
     - field.field.media.video.field_video_url
-    - media_entity.bundle.video
+    - media.type.video
   module:
     - text
 id: media.video.default

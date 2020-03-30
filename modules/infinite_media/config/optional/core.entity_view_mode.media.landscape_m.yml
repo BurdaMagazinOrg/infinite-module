@@ -2,7 +2,7 @@ langcode: de
 status: true
 dependencies:
   module:
-    - media_entity
+    - media
 id: media.landscape_m
 label: 'Landscape M'
 targetEntityType: media

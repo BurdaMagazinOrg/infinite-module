@@ -8,11 +8,6 @@ use Drupal\infinite_ad_injection\AdInjectionContentInjection;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\DomCrawler\Crawler;
 
-function infinite_ad_injection_entity_display_build_alter(&$build, $context)
-{
-  return;
-}
-
 /**
  * Implements hook_preprocess_views().
  */
@@ -93,7 +88,7 @@ function infinite_ad_injection_taxonomy_term_view_alter(array &$build, EntityInt
  */
 function infinite_ad_injection_term_inject_content($children, $elements) {
   $config = Drupal::config('infinite_ad_injection.settings');
-  $contents = $config->get("ad_enable_debug")>0 ? infinite_ad_injection_get_content__dummy() :
+  $contents = $config->get("ad_enable_debug")>0 ? infinite_ad_injection_get_content__dummy(['dyn_blocks_taxonomy_term_page']) :
     infinite_ad_injection_get_content(['dyn_blocks_taxonomy_term_page']);
   if (empty($contents)) {
     return $children;
@@ -310,11 +305,23 @@ function infinite_ad_injection_recalculate_each($value) {
   return $value;
 }
 
-function infinite_ad_injection_get_content__dummy() {
+function infinite_ad_injection_get_content__dummy($regions = ['dyn_blocks_node']) {
+  $count = 0;
   $contents = [];
-  $contents[] = '<div style="background-color: #f00">Ad injection 1</div>';
-  $contents[] = '<div style="background-color: #0f0">Ad injection 2</div>';
-  $contents[] = '<div style="background-color: #00f">Ad injection 3</div>';
+  $colors = [
+    'green',
+    'yellow',
+    'red',
+  ];
+
+  $blocks = _infinite_blocks_get_dyn_region_blocks($regions);
+  foreach($blocks as $block) {
+    $contents[] = '<div style="background-color: '. $colors[$count] .'">' . $block->label() . '</div>';
+    $count++;
+    if ($count >= count($colors)) {
+      $count = 0;
+    }
+  }
   return $contents;
 }
 
