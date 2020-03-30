@@ -8,6 +8,7 @@ dependencies:
   - infinite_blocks
   - views
   - views_load_more
+  - xsl_process
 config_devel:
   - views.view.infinite_author
   - views.view.infinite_channel_presenter
