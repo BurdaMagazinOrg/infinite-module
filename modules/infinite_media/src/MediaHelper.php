@@ -4,6 +4,7 @@ namespace Drupal\infinite_media;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Url;
+use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 
 class MediaHelper {
@@ -25,7 +26,8 @@ class MediaHelper {
     if ($entity->hasField($fieldName) &&
       !empty($entity->get($fieldName)->entity) &&  // todo: check why some media entity reference seems to be empty here after isEmpty() check? example: node 6001
       $entity->get($fieldName)->entity->hasField($imageFieldName) &&
-      !$entity->get($fieldName)->entity->field_image->isEmpty()
+      !$entity->get($fieldName)->entity->field_image->isEmpty() &&
+      $entity->get($fieldName)->entity->field_image->entity instanceof File
     ) {
 
       if ($imageStyle) {
