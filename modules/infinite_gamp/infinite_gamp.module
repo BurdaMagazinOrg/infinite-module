@@ -11,7 +11,17 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 function infinite_gamp_page_attachments_alter(array &$attachments) {
 
   // Check if it's a views page of a term.
-  if (\Drupal::routeMatch()->getParameter('view_id') && \Drupal::routeMatch()->getParameter('taxonomy_term') && !\Drupal::service('path.matcher')->isFrontPage()) {
+  if (\Drupal::routeMatch()->getParameter('view_id')
+    && \Drupal::routeMatch()->getParameter('taxonomy_term')
+    && !\Drupal::service('path.matcher')->isFrontPage()) {
+
+    // INREL-7476: No AMP link for /shop-it URLs from taxonomy_term entity.
+    $current_path = \Drupal::service('path.current')->getPath();
+    $current_alias = \Drupal::service('path.alias_manager')->getAliasByPath($current_path);
+    if (\Drupal::service('path.matcher')->matchPath($current_alias, '/shop-it*')) {
+      return;
+    }
+
     $taxonomyTerm = \Drupal::routeMatch()->getParameter('taxonomy_term');
     // If we only got back the entity ID, load the entity.
     if (!is_object($taxonomyTerm) && is_numeric($taxonomyTerm)) {
