@@ -1,8 +1,5 @@
 <?php
 
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\acquia_purge\HostingInfo;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\Process\Process;
@@ -13,50 +10,24 @@ use Symfony\Component\Process\Process;
  */
 
 /**
- * Implements hook_entity_base_field_info().
- */
-function infinite_taxonomy_entity_base_field_info(EntityTypeInterface $entity_type) {
-  if ($entity_type->id() === 'taxonomy_term') {
-    $fields['status'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Published'))
-      ->setRevisionable(TRUE)
-      ->setTranslatable(TRUE)
-      ->setDefaultValue(FALSE)
-      ->setDisplayOptions('form', [
-        'type' => 'boolean_checkbox',
-        'settings' => [
-          'display_label' => TRUE,
-        ],
-        'weight' => 16,
-      ])
-      ->setDisplayConfigurable('form', TRUE);
-
-    return $fields;
-  }
-}
-
-/**
- * @param Term $term
+ * Implements hook_ENTITY_TYPE_update() for taxonomy_term entities.
  */
 function infinite_taxonomy_taxonomy_term_update(Term $term) {
-  /** @var HostingInfo $hostingInfo */
-  $hostingInfo = \Drupal::service('acquia_purge.hostinginfo');
-  $site = $hostingInfo->getSiteIdentifier();
-  $url = Url::fromRoute('entity.taxonomy_term.canonical', ['taxonomy_term' => $term->id()])
-    ->setAbsolute(true)
-    ->toString();
-  $command = sprintf(
-    'curl -X PURGE -H "X-Acquia-Purge:%s" -H "Accept-Encoding: gzip" %s',
-    $site,
-    $url
-  );
-  $process = new Process($command);
-  $process->run();
-  if (false === $process->isSuccessful()) {
-    drupal_set_message(sprintf(
-      'Unable to clear varnish cache for url %s on site %s',
-      $url,
-      $site
-    ), 'error');
+  if ((\Drupal::hasService('acquia_purge.hostinginfo'))
+    && $hostingInfo = \Drupal::service('acquia_purge.hostinginfo')) {
+
+    /** @var \Drupal\acquia_purge\HostingInfo $hostingInfo */
+    $site = $hostingInfo->getSiteIdentifier();
+    $url = Url::fromRoute('entity.taxonomy_term.canonical', ['taxonomy_term' => $term->id()])
+      ->setAbsolute(true)
+      ->toString();
+
+    $command = sprintf('curl -X PURGE -H "X-Acquia-Purge:%s" -H "Accept-Encoding: gzip" %s', $site, $url);
+    $process = new Process($command);
+    $process->run();
+    if (!$process->isSuccessful()) {
+      $errorMsg = sprintf('Unable to clear varnish cache for url %s on site %s', $url, $site);
+      \Drupal::messenger()->addError($errorMsg);
+    }
   }
 }
