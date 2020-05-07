@@ -36,7 +36,7 @@
     <xsl:template match="item">
         <item>
             <title><xsl:value-of select="title/value" /></title>
-            <link><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::getFrontendBaseUrl')" /><xsl:value-of select="url" /></link>
+            <link><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::getCompleteUrl', url)" /></link>
             <dcterms:created><xsl:value-of select="created/value" /></dcterms:created>
             <dcterms:modified><xsl:value-of select="changed/value" /></dcterms:modified>
             <dc:creator><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::userDisplayName', uid/target_id)"/></dc:creator>
@@ -52,7 +52,7 @@
                 <xsl:apply-templates select="field_paragraphs[type/target_id = 'text' or type/target_id = 'quote']|field_paragraphs/field_media[bundle/target_id = 'image']|field_paragraphs/field_media[bundle/target_id = 'instagram']" />
                 <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
             </description>
-            <guid isPermaLink="true"><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::getFrontendBaseUrl')" /><xsl:value-of select="url" /></guid>
+            <guid isPermaLink="true"><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::getCompleteUrl', url)" /></guid>
         </item>
     </xsl:template>
 
