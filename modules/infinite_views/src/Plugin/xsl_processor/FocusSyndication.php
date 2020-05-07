@@ -1,10 +1,6 @@
 <?php
-/**
- *
- */
 
 namespace Drupal\infinite_views\Plugin\xsl_processor;
-
 
 use Drupal\xsl_process\XslProcessorBase;
 
