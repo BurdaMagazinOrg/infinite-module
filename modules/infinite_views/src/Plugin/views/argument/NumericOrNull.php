@@ -3,6 +3,7 @@
 namespace Drupal\infinite_views\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\NumericArgument;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Argument handler to accept an ingredient id.
@@ -10,6 +11,10 @@ use Drupal\views\Plugin\views\argument\NumericArgument;
  * @ViewsArgument("numeric_or_null")
  */
 class NumericOrNull extends NumericArgument {
+
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -18,6 +23,9 @@ class NumericOrNull extends NumericArgument {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
@@ -31,6 +39,9 @@ class NumericOrNull extends NumericArgument {
 
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query($group_by = FALSE) {
     $this->ensureMyTable();
 
