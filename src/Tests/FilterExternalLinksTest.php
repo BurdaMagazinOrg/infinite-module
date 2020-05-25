@@ -9,7 +9,7 @@ namespace Drupal\infinite_base\Tests;
 
 use Drupal\Component\Utility\Html;
 use Drupal\filter\FilterPluginCollection;
-use Drupal\simpletest\KernelTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests FilterExternalLinks filter.
