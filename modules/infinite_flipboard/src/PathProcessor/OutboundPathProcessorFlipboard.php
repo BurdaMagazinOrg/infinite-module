@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 class OutboundPathProcessorFlipboard implements OutboundPathProcessorInterface {
 
   function processOutbound($path, &$options = array(), Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
-    if (strpos($path, '.xml') !== FALSE && strpos($path, '/taxonomy/term/') === 0) {
+    if ((strpos($path, 'flipboard.xml') !== FALSE || strpos($path, 'rss.xml') !== FALSE) && strpos($path, '/taxonomy/term/') === 0) {
       $path_args = explode("/", ltrim($path, "/"));
       if (count($path_args) == 4 && is_numeric($path_args[2])) {
         // Get absolute URL from node alias URL.

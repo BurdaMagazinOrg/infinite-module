@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 class InboundPathProcessorFlipboard implements InboundPathProcessorInterface {
 
   function processInbound($path, Request $request) {
-    if (strpos($path, '.xml') !== FALSE && strpos($path, '/taxonomy/term/') !== 0) {
+    if ((strpos($path, 'flipboard.xml') !== FALSE || strpos($path, 'rss.xml') !== FALSE) && strpos($path, '/taxonomy/term/') !== 0) {
       $path_args = explode("/", ltrim($path, "/"));
       $last = array_pop($path_args);
       $alias = '/' . implode('/', $path_args);
