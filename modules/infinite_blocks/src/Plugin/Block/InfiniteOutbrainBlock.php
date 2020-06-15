@@ -147,7 +147,7 @@ class InfiniteOutbrainBlock extends BlockBase implements ContainerFactoryPluginI
         ],
         '#attached' => [
           'library' => [
-            'infinite_blocks/consent_js',
+            'infinite_blocks/outbrain_js',
           ],
         ],
         '#cache' => [
