@@ -67,17 +67,17 @@
     </xsl:template>
 
     <xsl:template match="field_paragraphs/field_media[bundle/target_id = 'image']">
-        <figure>
+        <div>
             <img>
                 <xsl:attribute name="src"><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::imageUrl', field_image/uri/value, 'msn_feed')"/></xsl:attribute>
                 <xsl:attribute name="title"><xsl:value-of select="field_image/title" /></xsl:attribute>
                 <xsl:attribute name="alt"><xsl:value-of select="field_image/alt" /></xsl:attribute>
             </img>
-            <figcaption>
+            <p>
                 <xsl:value-of select="field_image/title" />
                 <span class="copyright"><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::concat', ', ', field_source/value, field_copyright/value)"/></span>
-            </figcaption>
-        </figure>
+            </p>
+        </div>
     </xsl:template>
 
     <xsl:template match="field_paragraphs/field_media[bundle/target_id = 'gallery']">
