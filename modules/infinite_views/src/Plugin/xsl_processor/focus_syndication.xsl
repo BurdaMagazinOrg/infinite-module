@@ -69,7 +69,7 @@
     <xsl:template match="field_paragraphs/field_media[bundle/target_id = 'image']">
         <div>
             <img>
-                <xsl:attribute name="src"><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::imageUrl', field_image/uri/value, 'msn_feed')"/></xsl:attribute>
+                <xsl:attribute name="src"><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::imageUrl', field_image/uri/value, 'og_image')"/></xsl:attribute>
                 <xsl:attribute name="title"><xsl:value-of select="field_image/title" /></xsl:attribute>
                 <xsl:attribute name="alt"><xsl:value-of select="field_image/alt" /></xsl:attribute>
             </img>
@@ -95,7 +95,7 @@
     <!-- media templates -->
 
     <xsl:template match="field_teaser_media[bundle/target_id = 'image']|field_images[bundle/target_id = 'image']|field_media_images[bundle/target_id = 'image']">
-        <media:content url="{php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::imageUrl', field_image/uri/value, 'msn_feed')}" type="{field_image/filemime/value}">
+        <media:content url="{php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::imageUrl', field_image/uri/value, 'og_image')}" type="{field_image/filemime/value}">
             <media:thumbnail url="{php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::imageUrl', thumbnail/uri/value, 'thumbnail')}"/>
             <media:credit><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::concat', ', ©', field_source/value, field_copyright/value)"/></media:credit>
             <media:title><xsl:value-of select="field_image/title" /></media:title>
