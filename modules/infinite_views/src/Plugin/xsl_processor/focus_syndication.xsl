@@ -41,7 +41,7 @@
             <dcterms:modified><xsl:value-of select="changed/value" /></dcterms:modified>
             <dc:creator><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::userDisplayName', uid/target_id)"/></dc:creator>
             <pubDate><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::dateRfc', created/value)" /></pubDate>
-            <xsl:apply-templates select="field_teaser_media|field_paragraphs/field_media[bundle/target_id = 'gallery']" />
+            <xsl:apply-templates select="field_teaser_media" />
             <description>
                 <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
                 <xsl:apply-templates select="field_paragraphs[type/target_id = 'text' or type/target_id = 'quote']|field_paragraphs/field_media[bundle/target_id = 'image']" />
