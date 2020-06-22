@@ -332,9 +332,9 @@ function infinite_base_user_format_name_alter(&$name, $account) {
 /**
  * Replaces meta tag in html head with given content.
  *
- * @param type $name
+ * @param string $name
  *
- * @param type $content
+ * @param string $content
  *
  * @param array $attachments
  */
@@ -366,7 +366,7 @@ function infinite_base_replace_tag($name, $content, array &$attachments) {
 /**
  * Finds the index of a meta tag in the html head.
  *
- * @param type $name
+ * @param string $name
  *
  * @param array $attachments
  *
