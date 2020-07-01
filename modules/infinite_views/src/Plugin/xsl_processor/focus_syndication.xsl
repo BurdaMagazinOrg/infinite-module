@@ -75,7 +75,7 @@
             </img>
             <p>
                 <xsl:value-of select="field_image/title" />
-                <span class="copyright"><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::concat', ' ', field_source/value, '©', field_copyright/value)"/></span>
+                <span class="copyright"><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::concat', ' ', '©', field_copyright/value, field_source/value)"/></span>
             </p>
         </div>
     </xsl:template>
