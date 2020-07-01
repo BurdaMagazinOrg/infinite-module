@@ -41,7 +41,7 @@
             <dcterms:modified><xsl:value-of select="changed/value" /></dcterms:modified>
             <dc:creator><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::userDisplayName', uid/target_id)"/></dc:creator>
             <pubDate><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::dateRfc', created/value)" /></pubDate>
-            <xsl:apply-templates select="field_teaser_media|field_paragraphs/field_media[bundle/target_id = 'gallery']" />
+            <xsl:apply-templates select="field_teaser_media" />
             <description>
                 <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
                 <xsl:apply-templates select="field_paragraphs[type/target_id = 'text' or type/target_id = 'quote']|field_paragraphs/field_media[bundle/target_id = 'image']" />
@@ -67,17 +67,17 @@
     </xsl:template>
 
     <xsl:template match="field_paragraphs/field_media[bundle/target_id = 'image']">
-        <figure>
+        <div>
             <img>
-                <xsl:attribute name="src"><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::imageUrl', field_image/uri/value, 'msn_feed')"/></xsl:attribute>
+                <xsl:attribute name="src"><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::imageUrl', field_image/uri/value, 'og_image')"/></xsl:attribute>
                 <xsl:attribute name="title"><xsl:value-of select="field_image/title" /></xsl:attribute>
                 <xsl:attribute name="alt"><xsl:value-of select="field_image/alt" /></xsl:attribute>
             </img>
-            <figcaption>
+            <p>
                 <xsl:value-of select="field_image/title" />
-                <span class="copyright"><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::concat', ', ', field_source/value, field_copyright/value)"/></span>
-            </figcaption>
-        </figure>
+                <span class="copyright"><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::concat', ' ', '©', field_copyright/value, field_source/value)"/></span>
+            </p>
+        </div>
     </xsl:template>
 
     <xsl:template match="field_paragraphs/field_media[bundle/target_id = 'gallery']">
@@ -95,9 +95,9 @@
     <!-- media templates -->
 
     <xsl:template match="field_teaser_media[bundle/target_id = 'image']|field_images[bundle/target_id = 'image']|field_media_images[bundle/target_id = 'image']">
-        <media:content url="{php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::imageUrl', field_image/uri/value, 'msn_feed')}" type="{field_image/filemime/value}">
+        <media:content url="{php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::imageUrl', field_image/uri/value, 'og_image')}" type="{field_image/filemime/value}">
             <media:thumbnail url="{php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::imageUrl', thumbnail/uri/value, 'thumbnail')}"/>
-            <media:credit><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::concat', ', ', field_source/value, field_copyright/value)"/></media:credit>
+            <media:credit><xsl:value-of select="php:functionString('Drupal\xsl_process\DefaultPhpFunctionsProvider::concat', ' ', '©', field_copyright/value, field_source/value)"/></media:credit>
             <media:title><xsl:value-of select="field_image/title" /></media:title>
             <media:text><xsl:value-of select="field_image/alt" /></media:text>
         </media:content>
