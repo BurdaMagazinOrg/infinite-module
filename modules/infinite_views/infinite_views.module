@@ -403,11 +403,3 @@ function infinite_views_page_attachments_alter(array &$attachments) {
     }
   }
 }
-
-
-/**
- * Implements hook_views_data_alter().
- */
-function infinite_views_views_data_alter(&$data) {
-  $data['node__field_first_published']['field_first_published_value']['filter']['id'] = 'date';
-}
