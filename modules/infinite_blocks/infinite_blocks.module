@@ -57,6 +57,7 @@ function infinite_blocks_theme() {
         'instagram_page_url' => NULL,
         'pinterest_page_url' => NULL,
         'twitter_page_url' => NULL,
+        'youtube_page_url' => NULL,
       )
     ),
   ];

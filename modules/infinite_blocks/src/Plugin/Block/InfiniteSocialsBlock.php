@@ -34,6 +34,7 @@ class InfiniteSocialsBlock extends BlockBase {
       '#instagram_page_url' => !empty($config['instagram_page_url']) ? $config['instagram_page_url'] : '',
       '#pinterest_page_url' => !empty($config['pinterest_page_url']) ? $config['pinterest_page_url'] : '',
       '#twitter_page_url' => !empty($config['twitter_page_url']) ? $config['twitter_page_url'] : '',
+      '#youtube_page_url' => !empty($config['youtube_page_url']) ? $config['youtube_page_url'] : '',
       'variables' => [],
     );
   }
@@ -73,6 +74,12 @@ class InfiniteSocialsBlock extends BlockBase {
       '#default_value' => $config['twitter_page_url'],
     ];
 
+    $form['youtube_page_url'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Youtube channel url'),
+        '#default_value' => $config['youtube_page_url'],
+    ];
+
     return $form;
   }
 
@@ -85,6 +92,7 @@ class InfiniteSocialsBlock extends BlockBase {
     $this->configuration['instagram_page_url'] = $form_state->getValue('instagram_page_url');
     $this->configuration['pinterest_page_url'] = $form_state->getValue('pinterest_page_url');
     $this->configuration['twitter_page_url'] = $form_state->getValue('twitter_page_url');
+    $this->configuration['youtube_page_url'] = $form_state->getValue('youtube_page_url');
   }
 
 }
